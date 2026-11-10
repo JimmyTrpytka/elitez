@@ -60,6 +60,10 @@ Obrazovky: můj profil, úprava profilu, moje garáž, detail vozidla, přidat/u
 
 **Hotovo, když:** uživatel vytvoří auto s fotkami; soukromé auto cizí uživatel neuvidí (ověřit druhým účtem).
 
+**Stav (11. 11. 2026):** ✅ splněno – úkoly 1–6 hotové, otestováno ručně (localhost) a automaticky (`npm run test:db`: soukromé vozidlo, úpravy, fotky i soubory cizí uživatel nevidí).
+- Rozhodnutí k profilu a garáži: SPEC.md 5.1a
+- Do Milníku 4: `vehicle_has_event_history()` napojit na `event_registrations`
+
 ---
 
 ## Milník 3 – Eventy a sezóny (administrace)
