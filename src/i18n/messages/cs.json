@@ -87,7 +87,9 @@
     "cancel": "Zrušit",
     "notSelected": "Nevybráno",
     "visibilityPublic": "Veřejné",
-    "visibilityPrivate": "Soukromé"
+    "visibilityPrivate": "Soukromé",
+    "date": "Datum",
+    "time": "Čas"
   },
   "Account": {
     "finishProfileTitle": "Dokonči svůj profil.",

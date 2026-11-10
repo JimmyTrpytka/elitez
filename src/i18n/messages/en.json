@@ -87,7 +87,9 @@
     "cancel": "Cancel",
     "notSelected": "Not selected",
     "visibilityPublic": "Public",
-    "visibilityPrivate": "Private"
+    "visibilityPrivate": "Private",
+    "date": "Date",
+    "time": "Time"
   },
   "Account": {
     "finishProfileTitle": "Finish your profile.",
