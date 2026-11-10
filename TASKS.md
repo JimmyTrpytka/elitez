@@ -38,6 +38,10 @@ Obrazovky: úvodní stránka (jen jednoduchá), přihlášení, registrace, obno
 
 **Hotovo, když:** nový uživatel se zaregistruje a přihlásí na živé testovací adrese, přepíná cs/en.
 
+**Stav (10. 11. 2026):** ✅ splněno, otestováno na telefonu na https://elitez-cyan.vercel.app
+- Hotovo: úkoly 1, 2, 3, 5, 6 a z úkolu 4 přihlášení e-mailem + heslem, odhlášení, obnova hesla
+- Zbývá: přihlášení přes Google (úkol 4)
+
 ---
 
 ## Milník 2 – Profil a garáž
@@ -55,6 +59,10 @@ Obrazovky: úvodní stránka (jen jednoduchá), přihlášení, registrace, obno
 Obrazovky: můj profil, úprava profilu, moje garáž, detail vozidla, přidat/upravit vozidlo, archiv, veřejný profil.
 
 **Hotovo, když:** uživatel vytvoří auto s fotkami; soukromé auto cizí uživatel neuvidí (ověřit druhým účtem).
+
+**Stav (11. 11. 2026):** ✅ splněno – úkoly 1–6 hotové, otestováno ručně (localhost) a automaticky (`npm run test:db`: soukromé vozidlo, úpravy, fotky i soubory cizí uživatel nevidí).
+- Rozhodnutí k profilu a garáži: SPEC.md 5.1a
+- Do Milníku 4: `vehicle_has_event_history()` napojit na `event_registrations`
 
 ---
 

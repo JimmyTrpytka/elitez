@@ -61,9 +61,17 @@ Vlastník projektu **není programátor**. Proto:
 - Vývoj: `npm run dev`
 - Kontrola kódu: `npm run lint`
 - Sestavení (odhalí i chyby typů): `npm run build`
-- Testy: `npm test` (zatím nejsou, doplní se)
+- Testy: `npm test` (unit testy, Vitest) a `npm run test:db` (test pravidel RLS proti databázi, vše se vrací rollbackem)
+- Migrace do databáze: `npm run db:push` (Supabase CLI, projekt je propojený přes `supabase link`)
+- Typy z databáze po migraci: `npm run db:types` → `src/lib/supabase/database.types.ts`
 
 ## Technické poznámky (Milník 1)
 - Next.js 16: „middleware“ se jmenuje `src/proxy.ts`. Zapnuté `cacheComponents` – cokoli, co čte cookies/přihlášení nebo parametry adresy, musí být uvnitř `<Suspense>`.
 - Překlady: `next-intl`, jazyk z adresy přes `next/root-params`. Serverové akce nemůžou číst jazyk z adresy – posílej ho skrytým polem `locale` a vracej klíč chyby, text přeloží formulář.
 - Supabase: `src/lib/supabase/server.ts` (server), `src/lib/supabase/proxy.ts` (obnova přihlášení). Přihlášeného uživatele zjišťuj přes `getCurrentUser()` v `src/lib/auth/user.ts`.
+
+## Technické poznámky (Milník 2)
+- Úložiště `avatars` a `vehicle-photos` jsou SOUKROMÁ; obrázky se zobrazují přes podepsané odkazy (`signFiles` v `src/lib/storage.ts`), které Supabase vydá jen při splnění RLS.
+- Fotky se zmenšují v prohlížeči (`src/lib/images/resize.ts`) do sm/md/lg; Safari neumí WebP → JPEG (`vehicle_photos.format`). Cesta: `{vehicle_id}/{photo_id}-{size}.{format}`.
+- `public.vehicle_has_event_history()` vrací zatím `false`; v Milníku 4 ji přepiš na kontrolu `event_registrations` (blokuje mazání vozidel z eventů).
+- Při úpravě RLS doplň případ do `supabase/tests/rls_test.sql`.

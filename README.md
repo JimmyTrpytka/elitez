@@ -2,6 +2,8 @@
 
 Klub a platforma pro automobilovou komunitu. Rozsah: `SPEC.md`, plán: `TASKS.md`, pravidla: `CLAUDE.md`.
 
+**Testovací adresa:** https://elitez-cyan.vercel.app (Vercel nasazuje automaticky každou změnu ve větvi `main`).
+
 ## Spuštění na vlastním počítači
 
 ```bash

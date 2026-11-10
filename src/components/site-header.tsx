@@ -15,7 +15,10 @@ export async function SiteHeader() {
           <Logo />
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
-          <LanguageSwitcher />
+          {/* Přepínač čte aktuální adresu – na stránkách s ID se zjistí až při požadavku */}
+          <Suspense fallback={<div className="h-8 w-[76px] rounded-full bg-muted" aria-hidden />}>
+            <LanguageSwitcher />
+          </Suspense>
           {/* Stav přihlášení se čte při každém požadavku, proto je v Suspense */}
           <Suspense fallback={<div className="h-11 w-28" aria-hidden />}>
             <AuthLinks />
