@@ -43,6 +43,10 @@ do $$ begin
   end if;
 end $$;
 
+-- Alice nahraje soubor fotky do složky svého soukromého vozidla
+insert into storage.objects (bucket_id, name)
+values ('vehicle-photos', '00000000-0000-4000-b000-00000000000b/test-sm.webp');
+
 -- Alice si nesmí sama udělit Verified ani roli admin
 do $$ begin
   begin
@@ -77,6 +81,16 @@ do $$ begin
   if not exists (select 1 from public.vehicles where id = '00000000-0000-4000-b000-00000000000a') then
     raise exception 'FAIL: cizí uživatel nevidí VEŘEJNÉ vozidlo';
   end if;
+  if exists (select 1 from storage.objects
+             where name like '00000000-0000-4000-b000-00000000000b/%') then
+    raise exception 'FAIL: cizí uživatel vidí SOUBORY fotek soukromého vozidla';
+  end if;
+  begin
+    insert into storage.objects (bucket_id, name)
+    values ('vehicle-photos', '00000000-0000-4000-b000-00000000000a/podvrh-sm.webp');
+    raise exception 'FAIL: cizí uživatel nahrál soubor k cizímu vozidlu';
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 
 -- Bob nesmí upravit ani smazat cizí vozidlo (příkaz proběhne, ale nic nezmění)

@@ -1,20 +1,23 @@
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import type { Database } from "./database.types";
 import { getSupabaseEnv } from "./env";
+
+export type TypedSupabaseClient = SupabaseClient<Database>;
 
 /**
  * Supabase klient pro server (stránky, serverové akce, route handlery).
  * Vrací null, pokud Supabase ještě není nastavené v `.env.local`.
  */
-export async function createClient(): Promise<SupabaseClient | null> {
+export async function createClient(): Promise<TypedSupabaseClient | null> {
   // cookies() čteme vždy jako první: stránka se tak vyhodnotí při každém
   // požadavku a nikdy se neuloží jako statická (ani bez nastavení Supabase).
   const cookieStore = await cookies();
   const env = getSupabaseEnv();
   if (!env) return null;
 
-  return createServerClient(env.url, env.key, {
+  return createServerClient<Database>(env.url, env.key, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
