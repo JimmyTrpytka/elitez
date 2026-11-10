@@ -39,3 +39,10 @@ export function vehiclePhotoPath(
 ): string {
   return `${vehicleId}/${photoId}-${size}.${format}`;
 }
+
+export const EVENT_IMAGES_BUCKET = "event-images";
+
+/** Cesta k obrázku eventu: `{event_id}/{image_id}-{velikost}.{format}` (coverPath = bez přípony). */
+export function eventImagePath(coverPath: string, size: PhotoSize, format: string): string {
+  return `${coverPath}-${size}.${format}`;
+}
