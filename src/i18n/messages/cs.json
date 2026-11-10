@@ -1,0 +1,83 @@
+{
+  "Metadata": {
+    "description": "Klub a platforma pro automobilovou komunitu: garáž, srazy a odznaky za účast."
+  },
+  "Nav": {
+    "home": "ELITEZ – úvod",
+    "login": "Přihlásit se",
+    "register": "Registrace",
+    "account": "Můj účet",
+    "language": "Jazyk"
+  },
+  "Home": {
+    "eyebrow": "Klub automobilové komunity",
+    "title": "Tvoje auto. Tvoje garáž. Tvůj klub.",
+    "subtitle": "Tuning, youngtimery, americká auta, veteráni i motorky. Garáž, srazy a odznaky za účast na jednom místě.",
+    "ctaRegister": "Založit účet",
+    "ctaLogin": "Už mám účet",
+    "featureGarageTitle": "Garáž",
+    "featureGarageText": "Všechna tvoje auta a motorky na jednom profilu.",
+    "featureEventsTitle": "Srazy",
+    "featureEventsText": "Přihlášky na eventy a jejich schválení pořadatelem.",
+    "featureBadgesTitle": "Odznaky",
+    "featureBadgesText": "Za každou ověřenou účast na srazu.",
+    "comingSoon": "Připravujeme"
+  },
+  "Auth": {
+    "emailLabel": "E-mail",
+    "passwordLabel": "Heslo",
+    "newPasswordLabel": "Nové heslo",
+    "passwordHint": "Alespoň 8 znaků.",
+    "ageLabel": "Je mi alespoň 16 let.",
+    "loginTitle": "Přihlášení",
+    "loginSubmit": "Přihlásit se",
+    "loginNoAccount": "Ještě nemáš účet?",
+    "loginRegisterLink": "Zaregistruj se",
+    "forgotLink": "Zapomenuté heslo?",
+    "registerTitle": "Registrace",
+    "registerSubtitle": "Založ si účet v klubu ELITEZ.",
+    "registerSubmit": "Založit účet",
+    "registerHasAccount": "Už máš účet?",
+    "registerLoginLink": "Přihlas se",
+    "registerCheckEmail": "Hotovo! Poslali jsme ti e-mail s odkazem pro potvrzení účtu. Otevři ho ve stejném prohlížeči.",
+    "forgotTitle": "Zapomenuté heslo",
+    "forgotSubtitle": "Zadej svůj e-mail a pošleme ti odkaz pro nastavení nového hesla.",
+    "forgotSubmit": "Poslat odkaz",
+    "forgotSent": "Pokud u nás účet s tímto e-mailem existuje, poslali jsme na něj odkaz pro nastavení nového hesla.",
+    "backToLogin": "Zpět na přihlášení",
+    "resetTitle": "Nové heslo",
+    "resetSubtitle": "Zvol si nové heslo k účtu.",
+    "resetSubmit": "Uložit heslo",
+    "resetDone": "Heslo je změněné.",
+    "resetNeedsLink": "Pro změnu hesla otevři odkaz z e-mailu. Pokud odkaz vypršel, požádej o nový.",
+    "requestNewLink": "Poslat nový odkaz",
+    "accountTitle": "Můj účet",
+    "accountSignedInAs": "Přihlášen(a) jako",
+    "accountProfileSoon": "Profil a garáž doplníme v dalším kroku.",
+    "logout": "Odhlásit se",
+    "loading": "Načítám…",
+    "submitting": "Odesílám…"
+  },
+  "Errors": {
+    "invalidCredentials": "Nesprávný e-mail nebo heslo.",
+    "emailNotConfirmed": "E-mail ještě není potvrzený. Otevři odkaz, který jsme ti poslali.",
+    "invalidEmail": "Zadej platný e-mail.",
+    "passwordTooShort": "Heslo musí mít alespoň 8 znaků.",
+    "weakPassword": "Heslo je příliš slabé. Zkus delší nebo méně běžné.",
+    "samePassword": "Nové heslo musí být jiné než současné.",
+    "ageRequired": "Registrace je možná od 16 let.",
+    "rateLimited": "Příliš mnoho pokusů. Zkus to prosím za chvíli.",
+    "notSignedIn": "Platnost odkazu vypršela nebo nejsi přihlášen(a).",
+    "linkInvalid": "Odkaz je neplatný nebo vypršel. Zkus to prosím znovu.",
+    "notConfigured": "Aplikace zatím není připojená k databázi (chybí nastavení Supabase).",
+    "generic": "Něco se pokazilo. Zkus to prosím znovu."
+  },
+  "NotFound": {
+    "title": "Stránka nenalezena",
+    "text": "Tahle stránka neexistuje nebo byla přesunuta.",
+    "back": "Zpět na úvod"
+  },
+  "Footer": {
+    "tagline": "ELITEZ – klub automobilové komunity"
+  }
+}

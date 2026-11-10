@@ -57,7 +57,13 @@ Vlastník projektu **není programátor**. Proto:
 4. Při nejasnosti produktového rozhodnutí **zeptej se**, neodhaduj.
 5. Změny rozsahu zapisuj do `SPEC.md`.
 
-## Příkazy (doplní se po založení projektu)
+## Příkazy
 - Vývoj: `npm run dev`
 - Kontrola kódu: `npm run lint`
-- Testy: `npm test`
+- Sestavení (odhalí i chyby typů): `npm run build`
+- Testy: `npm test` (zatím nejsou, doplní se)
+
+## Technické poznámky (Milník 1)
+- Next.js 16: „middleware“ se jmenuje `src/proxy.ts`. Zapnuté `cacheComponents` – cokoli, co čte cookies/přihlášení nebo parametry adresy, musí být uvnitř `<Suspense>`.
+- Překlady: `next-intl`, jazyk z adresy přes `next/root-params`. Serverové akce nemůžou číst jazyk z adresy – posílej ho skrytým polem `locale` a vracej klíč chyby, text přeloží formulář.
+- Supabase: `src/lib/supabase/server.ts` (server), `src/lib/supabase/proxy.ts` (obnova přihlášení). Přihlášeného uživatele zjišťuj přes `getCurrentUser()` v `src/lib/auth/user.ts`.

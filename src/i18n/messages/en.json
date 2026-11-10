@@ -1,0 +1,83 @@
+{
+  "Metadata": {
+    "description": "A club and platform for the car community: garage, meets and badges for attendance."
+  },
+  "Nav": {
+    "home": "ELITEZ – home",
+    "login": "Sign in",
+    "register": "Sign up",
+    "account": "My account",
+    "language": "Language"
+  },
+  "Home": {
+    "eyebrow": "The car community club",
+    "title": "Your car. Your garage. Your club.",
+    "subtitle": "Tuning, youngtimers, American cars, classics and bikes. Garage, meets and attendance badges in one place.",
+    "ctaRegister": "Create account",
+    "ctaLogin": "I already have an account",
+    "featureGarageTitle": "Garage",
+    "featureGarageText": "All your cars and bikes on one profile.",
+    "featureEventsTitle": "Meets",
+    "featureEventsText": "Apply for events and get approved by the organizer.",
+    "featureBadgesTitle": "Badges",
+    "featureBadgesText": "For every verified attendance at a meet.",
+    "comingSoon": "Coming soon"
+  },
+  "Auth": {
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "newPasswordLabel": "New password",
+    "passwordHint": "At least 8 characters.",
+    "ageLabel": "I am at least 16 years old.",
+    "loginTitle": "Sign in",
+    "loginSubmit": "Sign in",
+    "loginNoAccount": "Don't have an account yet?",
+    "loginRegisterLink": "Sign up",
+    "forgotLink": "Forgot password?",
+    "registerTitle": "Sign up",
+    "registerSubtitle": "Create your ELITEZ club account.",
+    "registerSubmit": "Create account",
+    "registerHasAccount": "Already have an account?",
+    "registerLoginLink": "Sign in",
+    "registerCheckEmail": "Done! We've sent you an email with a link to confirm your account. Open it in the same browser.",
+    "forgotTitle": "Forgot password",
+    "forgotSubtitle": "Enter your email and we'll send you a link to set a new password.",
+    "forgotSubmit": "Send link",
+    "forgotSent": "If an account with this email exists, we've sent it a link to set a new password.",
+    "backToLogin": "Back to sign in",
+    "resetTitle": "New password",
+    "resetSubtitle": "Choose a new password for your account.",
+    "resetSubmit": "Save password",
+    "resetDone": "Your password has been changed.",
+    "resetNeedsLink": "To change your password, open the link from the email. If the link has expired, request a new one.",
+    "requestNewLink": "Send a new link",
+    "accountTitle": "My account",
+    "accountSignedInAs": "Signed in as",
+    "accountProfileSoon": "Profile and garage are coming in the next step.",
+    "logout": "Sign out",
+    "loading": "Loading…",
+    "submitting": "Sending…"
+  },
+  "Errors": {
+    "invalidCredentials": "Incorrect email or password.",
+    "emailNotConfirmed": "Your email isn't confirmed yet. Open the link we sent you.",
+    "invalidEmail": "Enter a valid email.",
+    "passwordTooShort": "The password must be at least 8 characters long.",
+    "weakPassword": "The password is too weak. Try a longer or less common one.",
+    "samePassword": "The new password must be different from the current one.",
+    "ageRequired": "You must be at least 16 to sign up.",
+    "rateLimited": "Too many attempts. Please try again in a moment.",
+    "notSignedIn": "The link has expired or you are not signed in.",
+    "linkInvalid": "The link is invalid or has expired. Please try again.",
+    "notConfigured": "The app isn't connected to the database yet (Supabase settings are missing).",
+    "generic": "Something went wrong. Please try again."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "text": "This page doesn't exist or has been moved.",
+    "back": "Back to home"
+  },
+  "Footer": {
+    "tagline": "ELITEZ – the car community club"
+  }
+}
