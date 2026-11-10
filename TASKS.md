@@ -38,6 +38,10 @@ Obrazovky: úvodní stránka (jen jednoduchá), přihlášení, registrace, obno
 
 **Hotovo, když:** nový uživatel se zaregistruje a přihlásí na živé testovací adrese, přepíná cs/en.
 
+**Stav (10. 11. 2026):** ✅ splněno, otestováno na telefonu na https://elitez-cyan.vercel.app
+- Hotovo: úkoly 1, 2, 3, 5, 6 a z úkolu 4 přihlášení e-mailem + heslem, odhlášení, obnova hesla
+- Zbývá: přihlášení přes Google (úkol 4)
+
 ---
 
 ## Milník 2 – Profil a garáž
