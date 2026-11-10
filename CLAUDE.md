@@ -1,0 +1,63 @@
+# CLAUDE.md – pravidla projektu ELITEZ
+
+## Co projekt je
+ELITEZ je mezinárodní **klub** a platforma pro automobilovou komunitu (tuning, youngtimery, americká auta, veteráni, motorky): garáž, eventy s registrací a schvalováním pořadatelem, odznaky za účast, status Verified, později SPOTy/challenge a bazar.
+ELITEZ není pořadatel. Eventy pořádají promotéři (zpočátku vlastník projektu).
+Podrobnosti jsou v `SPEC.md` (zdroj pravdy o rozsahu). Před každým větším úkolem si ho přečti.
+
+## Důležité o uživateli
+Vlastník projektu **není programátor**. Proto:
+- Vysvětluj kroky srozumitelně a česky, bez zbytečného žargonu.
+- Před větší změnou stručně řekni, co a proč uděláš.
+- Dělej **malé kroky**, po každém spusť aplikaci/testy a řekni, jak si výsledek vyzkoušet.
+- Nic nenasazuj ani nemaž bez výslovného souhlasu. Žádné destruktivní příkazy (reset databáze, force push) bez potvrzení.
+- Nikdy nevkládej tajné klíče do kódu ani do gitu.
+
+## Technologie
+- Next.js (App Router) + TypeScript + Tailwind CSS, PWA
+- Supabase (PostgreSQL, Auth, Storage, Row Level Security)
+- E-maily: Resend. Mapy: MapLibre/OpenStreetMap
+- i18n od začátku (čeština, angličtina; texty nikdy natvrdo v komponentách)
+
+## Pravidla pro kód
+- TypeScript striktně, žádné `any` bez důvodu.
+- Databázové změny **jen přes migrace** ve složce `supabase/migrations`.
+- **Row Level Security zapnutá na každé tabulce.** Každá nová tabulka musí mít politiky ještě před použitím.
+- Oprávnění vždy kontroluj na serveru/databázi, nikdy jen v UI.
+- Garáž a vozidla mají viditelnost **public / private**; respektuj ji v každém dotazu i v politikách RLS. Prodaná vozidla se archivují, nemažou.
+- Status **Verified** uděluje jen admin; uživatel si ho nesmí změnit sám.
+- Soukromé vozidlo přihlášené na event vidí jen pořadatel tohoto eventu, dokud majitel nepovolí zveřejnění.
+- Eventy mají přístup **public / verified_only / invite_only** a oddělená okna registrace pro Verified a ostatní. Pozvánkové eventy jsou pro nepozvané neviditelné (i v API/RLS).
+- Pořadatel vidí a spravuje **jen své eventy** (model je připravený na více pořadatelů, i když zpočátku je jen jeden).
+- Soukromá data (videa pro Verified, e-maily, přesné údaje) nesmí být veřejně čitelná. Videa jsou v soukromém bucketu a po ověření se mažou.
+- Fotky se při nahrání zmenšují a ukládají ve více velikostech (řízení nákladů).
+- Žádné fotky SPZ nesmí být zveřejněné (viz SPEC).
+- Peníze/ticketing ve v1 neřešíme. Nepřidávej platby bez zadání.
+
+## Design
+- Světlý, minimalistický, moderní (styl Apple), luxusní nádech, obsah před formou.
+- Černá + žlutá: žlutá je **akcent** (tlačítka, odznaky). Na bílém pozadí **nikdy žlutý text** (kontrast); na žlutých plochách černý text.
+- Velké fotky aut, hodně prázdného místa, čistý bezpatkový font.
+- Mobil na prvním místě (většina uživatelů bude na telefonu).
+
+## Struktura projektu (návrh)
+```
+/src/app            stránky a routy
+/src/components     UI komponenty
+/src/lib            pomocné funkce, klient Supabase
+/src/i18n           překlady (cs, en)
+/supabase/migrations  databázové migrace
+/docs               SPEC, rozhodnutí, poznámky
+```
+
+## Postup práce
+1. Před úkolem: přečti `SPEC.md`, shrň plán, počkej na souhlas u větších změn.
+2. Implementuj po malých částech, spusť `npm run lint` a testy.
+3. Po dokončení: stručně popiš, co se změnilo, jak to vyzkoušet a co zbývá.
+4. Při nejasnosti produktového rozhodnutí **zeptej se**, neodhaduj.
+5. Změny rozsahu zapisuj do `SPEC.md`.
+
+## Příkazy (doplní se po založení projektu)
+- Vývoj: `npm run dev`
+- Kontrola kódu: `npm run lint`
+- Testy: `npm test`
