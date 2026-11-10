@@ -82,6 +82,10 @@ Obrazovky: seznam eventů, detail eventu, administrace pořadatele (seznam, tvor
 
 **Hotovo, když:** založíš Underground meeting 3 a Tuning show Trojhalí a vidíš je ve veřejném seznamu.
 
+**Stav (11. 11. 2026):** ✅ splněno – úkoly 1–6 hotové; oba eventy založené v Sezóně 2027 a zveřejněné, otestováno ručně (localhost) a automaticky (`npm run test:db`).
+- Rozhodnutí k eventům: SPEC.md 5.1b
+- Do Milníku 6: pozvaní do RLS eventů na pozvánky (`event_invites`)
+
 ---
 
 ## Milník 4 – Registrace a schvalování
