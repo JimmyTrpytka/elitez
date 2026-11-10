@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/*
+ * ELITEZ – designové základy
+ * Světlý, minimalistický vzhled. Černá je hlavní barva textu a tlačítek,
+ * žlutá je jen AKCENT (tlačítka, odznaky). Na bílém pozadí nikdy žlutý text.
+ */
+@theme {
+  /* Barvy */
+  --color-ink: #0a0a0a; /* černá – text, tmavá tlačítka */
+  --color-ink-soft: #3a3a3c; /* tmavě šedá – vedlejší text */
+  --color-subtle: #6e6e73; /* šedá – popisky, nápovědy */
+  --color-line: #e5e5ea; /* jemné linky a okraje */
+  --color-muted: #f5f5f7; /* světle šedé plochy */
+  --color-surface: #ffffff; /* bílé pozadí */
+  --color-accent: #ffd60a; /* žlutý akcent – jen plochy, s černým textem */
+  --color-accent-strong: #f5c400; /* žlutá při najetí myší */
+  --color-danger: #b42318; /* chyby */
+  --color-danger-soft: #fef3f2;
+  --color-success: #067647; /* úspěch */
+  --color-success-soft: #ecfdf3;
+
+  /* Písmo */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  /* Zaoblení */
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Viditelné zvýraznění při ovládání klávesnicí */
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}
