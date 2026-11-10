@@ -101,6 +101,19 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Fotky:** max. 20 na vozidlo, zmenšení v prohlížeči do 3 velikostí (WebP). Při nahrání uživatel potvrdí, že SPZ je zakrytá/rozmazaná. Automatické rozpoznání SPZ ve v1 není.
 - **Země:** evropské země, nahoře ČR, SK, PL.
 
+### 5.1b Eventy a sezóny – upřesnění (rozhodnuto 11. 11. 2026, Milník 3)
+- **Pořadatel** = záznam v `organizers` navázaný na profil, se stavem (čeká / schválený / pozastavený). Spravuje jen své sezóny a eventy. Admin vidí vše.
+- **Stavy eventu:** koncept (vidí jen pořadatel) → zveřejněný → uzavřený (vidět, nelze se hlásit); navíc **zrušený** (vidět s jasným označením). Smazat jde jen koncept.
+- **Viditelnost:** veřejné a „jen Verified“ eventy vidí po zveřejnění kdokoli; event **na pozvánky** vidí jen pořadatel (od Milníku 6 i pozvaní).
+- **Adresa eventu:** `/e/<slug>` z názvu a roku (např. `underground-meeting-3-2027`), lze upravit.
+- **Místo:** název, adresa a bod na mapě (kliknutím). Mapa MapLibre + podklad OpenFreeMap (bez klíče). Bez automatického hledání adres.
+- **Program, pravidla, popis selekce:** prosté texty s odstavci.
+- **Obrázek:** jeden hlavní obrázek, zmenšený do 3 velikostí (jako fotky aut), soukromé úložiště s RLS.
+- **Kategorie eventu:** Tuning, Youngtimer, Americké, Veterán, Klasik, Motorky, Mix.
+- **Registrace (použije Milník 4):** otevření registrace, předstih pro Verified (žádný / 24 h / 3 dny / 1 týden / 1 měsíc; termín pro Verified se dopočítá), „upřednostnit Verified“, uzávěrka. Limit míst = počet vozidel, prázdné = bez limitu.
+- **Čas:** ukládá se v UTC, zadává a zobrazuje v pražském čase (Europe/Prague); jiné zóny později.
+- **Duplikace:** kopie eventu včetně obrázku jako koncept. **Hromadné založení:** v sezóně více řádků (název + datum) → koncepty.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

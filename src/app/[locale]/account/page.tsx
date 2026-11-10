@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { getMyProfile } from "@/lib/data/profiles";
 import { getCurrentUser } from "@/lib/auth/user";
+import { getMyOrganizer } from "@/lib/data/events";
 import { signOut } from "@/lib/auth/actions";
 import { PageShell } from "@/components/page-shell";
 import { Avatar } from "@/components/avatar";
@@ -29,12 +30,13 @@ export default async function AccountPage() {
 }
 
 async function AccountContent() {
-  const [t, tAccount, locale, user, profile] = await Promise.all([
+  const [t, tAccount, locale, user, profile, organizer] = await Promise.all([
     getTranslations("Auth"),
     getTranslations("Account"),
     getLocale(),
     getCurrentUser(),
     getMyProfile(),
+    getMyOrganizer(),
   ]);
 
   // Kontrola na serveru: nepřihlášený uživatel sem nesmí.
@@ -66,6 +68,21 @@ async function AccountContent() {
           <p className="mt-1 text-sm break-all text-subtle">{user.email}</p>
         </div>
       </Card>
+
+      {organizer ? (
+        <Link
+          href="/organizer"
+          className="flex items-center justify-between rounded-card bg-ink px-6 py-5 text-white transition-colors hover:bg-ink-soft"
+        >
+          <span>
+            <span className="block text-lg font-semibold">{tAccount("organizer")}</span>
+            <span className="text-sm text-white/70">{organizer.name}</span>
+          </span>
+          <span aria-hidden className="text-2xl text-accent">
+            →
+          </span>
+        </Link>
+      ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Link href="/garage" className={buttonClasses("primary", "lg")}>

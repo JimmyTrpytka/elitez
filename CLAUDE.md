@@ -75,3 +75,10 @@ Vlastník projektu **není programátor**. Proto:
 - Fotky se zmenšují v prohlížeči (`src/lib/images/resize.ts`) do sm/md/lg; Safari neumí WebP → JPEG (`vehicle_photos.format`). Cesta: `{vehicle_id}/{photo_id}-{size}.{format}`.
 - `public.vehicle_has_event_history()` vrací zatím `false`; v Milníku 4 ji přepiš na kontrolu `event_registrations` (blokuje mazání vozidel z eventů).
 - Při úpravě RLS doplň případ do `supabase/tests/rls_test.sql`.
+
+## Technické poznámky (Milník 3)
+- Oprávnění pořadatele: `public.my_organizer_ids()` (jen schválení) a `public.is_admin()`; obě security definer. Stav pořadatele mění jen admin funkcí `admin_set_organizer_status`.
+- Event na pozvánky (`invite_only`) je v RLS viditelný jen pořadateli – v Milníku 6 doplň pozvané (`event_invites`) do politiky `events: read visible` i do úložiště `event-images`.
+- Časy: v DB UTC, ve formulářích a zobrazení `src/lib/dates.ts` (Europe/Prague). `registration_verified_opens_at` počítá trigger z předstihu.
+- Účet `gastoys` je admin a pořadatel „ELITEZ“ (nastaveno ručně SQL, ne migrací).
+- Po `npm run build` při běžícím `npm run dev` může dev server držet staré překlady – restartuj ho.

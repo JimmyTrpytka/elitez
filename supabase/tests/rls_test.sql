@@ -156,6 +156,142 @@ begin
   end;
 end $$;
 
+-- =====================================================================
+-- Milník 3: pořadatelé a eventy
+-- Alice = schválená pořadatelka, Bob = běžný člen (pak pořadatel čekající na schválení)
+-- =====================================================================
+insert into public.organizers (id, profile_id, name, status)
+values ('00000000-0000-4000-c000-00000000000a', '00000000-0000-4000-a000-00000000a11c', 'Alice Events', 'approved');
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+
+insert into public.seasons (id, organizer_id, name, year)
+values ('00000000-0000-4000-d000-00000000000a', '00000000-0000-4000-c000-00000000000a', 'Sezóna 2027', 2027);
+
+insert into public.events
+  (id, organizer_id, season_id, slug, title, starts_at, ends_at, status, access,
+   registration_opens_at, verified_head_start_hours)
+values
+  ('00000000-0000-4000-e000-000000000001', '00000000-0000-4000-c000-00000000000a', '00000000-0000-4000-d000-00000000000a',
+   'rls-koncept', 'Koncept', '2027-05-15 08:00+00', '2027-05-15 20:00+00', 'draft', 'public', null, 0),
+  ('00000000-0000-4000-e000-000000000002', '00000000-0000-4000-c000-00000000000a', '00000000-0000-4000-d000-00000000000a',
+   'rls-verejny', 'Veřejný', '2027-06-19 08:00+00', '2027-06-20 20:00+00', 'published', 'public',
+   '2027-03-01 08:00+00', 24),
+  ('00000000-0000-4000-e000-000000000003', '00000000-0000-4000-c000-00000000000a', null,
+   'rls-pozvanky', 'Na pozvánky', '2027-07-01 08:00+00', '2027-07-01 20:00+00', 'published', 'invite_only', null, 0),
+  ('00000000-0000-4000-e000-000000000004', '00000000-0000-4000-c000-00000000000a', null,
+   'rls-verified', 'Jen Verified', '2027-08-01 08:00+00', '2027-08-01 20:00+00', 'published', 'verified_only', null, 0);
+
+do $$ begin
+  if (select count(*) from public.events where slug like 'rls-%') <> 4 then
+    raise exception 'FAIL: pořadatel nevidí všechny své eventy';
+  end if;
+  if (select registration_verified_opens_at from public.events where slug = 'rls-verejny')
+     <> '2027-02-28 08:00+00'::timestamptz then
+    raise exception 'FAIL: termín registrace pro Verified se nespočítal správně';
+  end if;
+  if (select published_at from public.events where slug = 'rls-verejny') is null then
+    raise exception 'FAIL: chybí datum zveřejnění';
+  end if;
+  -- Pořadatel si nesmí sám změnit stav (schválení)
+  begin
+    update public.organizers set status = 'approved' where profile_id = auth.uid();
+    raise exception 'FAIL: pořadatel změnil stav schválení';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+
+-- Zveřejněný event smazat nejde (jen koncept)
+delete from public.events where slug = 'rls-verejny';
+delete from public.events where slug = 'rls-koncept';
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.events where slug = 'rls-verejny') then
+    raise exception 'FAIL: pořadatel smazal ZVEŘEJNĚNÝ event';
+  end if;
+  if exists (select 1 from public.events where slug = 'rls-koncept') then
+    raise exception 'FAIL: pořadatel nemohl smazat koncept';
+  end if;
+end $$;
+
+-- Koncept znovu pro další testy
+insert into public.events (id, organizer_id, slug, title, starts_at, ends_at, status)
+values ('00000000-0000-4000-e000-000000000001', '00000000-0000-4000-c000-00000000000a',
+        'rls-koncept', 'Koncept', '2027-05-15 08:00+00', '2027-05-15 20:00+00', 'draft');
+
+-- ---------- Bob (běžný člen) ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+
+do $$ begin
+  if exists (select 1 from public.events where slug = 'rls-koncept') then
+    raise exception 'FAIL: cizí uživatel vidí KONCEPT eventu';
+  end if;
+  if exists (select 1 from public.events where slug = 'rls-pozvanky') then
+    raise exception 'FAIL: nepozvaný uživatel vidí event NA POZVÁNKY';
+  end if;
+  if not exists (select 1 from public.events where slug = 'rls-verejny') then
+    raise exception 'FAIL: uživatel nevidí zveřejněný veřejný event';
+  end if;
+  if not exists (select 1 from public.events where slug = 'rls-verified') then
+    raise exception 'FAIL: uživatel nevidí zveřejněný event „jen Verified“';
+  end if;
+  begin
+    insert into public.organizers (profile_id, name) values (auth.uid(), 'Bob');
+    raise exception 'FAIL: běžný uživatel se sám udělal pořadatelem';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.events (organizer_id, slug, title, starts_at, ends_at)
+    values ('00000000-0000-4000-c000-00000000000a', 'rls-podvrh', 'X', now(), now());
+    raise exception 'FAIL: cizí uživatel založil event za pořadatele';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+
+update public.events set title = 'hacked' where slug = 'rls-verejny';
+reset role;
+
+do $$ begin
+  if (select title from public.events where slug = 'rls-verejny') <> 'Veřejný' then
+    raise exception 'FAIL: cizí uživatel upravil cizí event';
+  end if;
+end $$;
+
+-- Bob jako pořadatel ČEKAJÍCÍ na schválení zatím nesmí zakládat eventy
+insert into public.organizers (id, profile_id, name, status)
+values ('00000000-0000-4000-c000-00000000000b', '00000000-0000-4000-a000-000000000b0b', 'Bob Events', 'pending');
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    insert into public.events (organizer_id, slug, title, starts_at, ends_at)
+    values ('00000000-0000-4000-c000-00000000000b', 'rls-bob', 'Bob', now(), now());
+    raise exception 'FAIL: neschválený pořadatel založil event';
+  exception when insufficient_privilege then null;
+  end;
+  if exists (select 1 from public.events where slug = 'rls-koncept') then
+    raise exception 'FAIL: jiný pořadatel vidí cizí koncept';
+  end if;
+end $$;
+reset role;
+
+-- Nepřihlášený návštěvník vidí jen zveřejněné veřejné / jen Verified
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select count(*) from public.events where slug like 'rls-%') <> 2 then
+    raise exception 'FAIL: návštěvník vidí jiné eventy, než má';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;
