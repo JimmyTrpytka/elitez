@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
+import { DateTimeField } from "@/components/ui/date-time-field";
 import { Field } from "@/components/ui/field";
 import { SelectField } from "@/components/ui/select";
 import { TextareaField } from "@/components/ui/textarea";
@@ -93,19 +94,19 @@ export function EventForm({
           </SelectField>
         </div>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field
+          <DateTimeField
             label={t("startsLabel")}
             name="starts_at"
-            type="datetime-local"
             required
             defaultValue={values.starts_at}
+            defaultTime="10:00"
           />
-          <Field
+          <DateTimeField
             label={t("endsLabel")}
             name="ends_at"
-            type="datetime-local"
             required
             defaultValue={values.ends_at}
+            defaultTime="18:00"
           />
         </div>
         <p className="-mt-3 text-xs text-subtle">{t("timezoneHint")}</p>
@@ -198,17 +199,17 @@ export function EventForm({
           hint={t("capacityHint")}
         />
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field
+          <DateTimeField
             label={t("opensLabel")}
             name="registration_opens_at"
-            type="datetime-local"
             defaultValue={values.registration_opens_at}
+            defaultTime="10:00"
           />
-          <Field
+          <DateTimeField
             label={t("closesLabel")}
             name="registration_closes_at"
-            type="datetime-local"
             defaultValue={values.registration_closes_at}
+            defaultTime="23:59"
           />
         </div>
         <SelectField
