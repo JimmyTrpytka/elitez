@@ -91,6 +91,16 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
   - **jen pro Verified**
   - **soukromý na pozvánky** – kapacitně omezený, vidí ho a hlásí se na něj jen pozvaní (pozvánky rozesílá pořadatel nebo se udělují vybraným Verified)
 
+### 5.1a Profil a garáž – upřesnění (rozhodnuto 10. 11. 2026, Milník 2)
+- **Výchozí viditelnost:** nový profil i nové vozidlo jsou **veřejné**; majitel může přepnout na soukromé.
+- **Soukromý profil:** cizí uživatel nevidí profil ani žádné vozidlo v něm (ani veřejně nastavené).
+- **Mazání vozidla:** smazat lze jen vozidlo, které **nikdy nebylo přihlášené na event** (omylem založené). Jinak jen „Prodáno“ → archiv „Bývalá auta“.
+- **Uživatelské jméno:** povinné, jedinečné, 3–30 znaků (malá písmena a–z, číslice, tečka, podtržítko). Je v adrese veřejného profilu `/u/<jmeno>`.
+- **Kategorie vozidel:** Tuning, Youngtimer, Americké, Veterán, Klasik, Motorka, Ostatní. Typ: auto / motorka.
+- **Výkon:** zadává se v koních (k), kW se dopočítá.
+- **Fotky:** max. 20 na vozidlo, zmenšení v prohlížeči do 3 velikostí (WebP). Při nahrání uživatel potvrdí, že SPZ je zakrytá/rozmazaná. Automatické rozpoznání SPZ ve v1 není.
+- **Země:** evropské země, nahoře ČR, SK, PL.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.
