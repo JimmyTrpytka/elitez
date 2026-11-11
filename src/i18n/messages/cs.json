@@ -14,7 +14,8 @@
     "members": "Členové",
     "menu": "Hlavní menu",
     "openMenu": "Otevřít menu",
-    "closeMenu": "Zavřít menu"
+    "closeMenu": "Zavřít menu",
+    "leaderboard": "Žebříčky"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -64,7 +65,12 @@
     },
     "ctaTitleA": "Staň se součástí",
     "ctaTitleB": "klubu",
-    "ctaText": "Registrace je zdarma. Garáž si můžeš nechat jen pro sebe, nebo ji ukázat celé komunitě."
+    "ctaText": "Registrace je zdarma. Garáž si můžeš nechat jen pro sebe, nebo ji ukázat celé komunitě.",
+    "carOfWeekBadge": "Auto týdne",
+    "carOfWeekOwner": "garáž {name}",
+    "carOfWeekTurbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}} za 7 dní",
+    "carOfWeekCta": "Prohlédnout a dát turbo",
+    "carOfWeekLeaderboard": "Celý žebříček"
   },
   "Auth": {
     "emailLabel": "E-mail",
@@ -141,7 +147,9 @@
     "registrations": "Moje registrace",
     "notifications": "Upozornění",
     "contactTitle": "Kontakt",
-    "contactViaForm": "Napiš nám přes formulář"
+    "contactViaForm": "Napiš nám přes formulář",
+    "leaderboard": "Žebříčky",
+    "dreams": "Garáž snů"
   },
   "Common": {
     "save": "Uložit",
@@ -151,7 +159,8 @@
     "visibilityPublic": "Veřejné",
     "visibilityPrivate": "Soukromé",
     "date": "Datum",
-    "time": "Čas"
+    "time": "Čas",
+    "turbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}"
   },
   "Account": {
     "finishProfileTitle": "Dokonči svůj profil.",
@@ -161,10 +170,30 @@
     "myGarage": "Moje garáž",
     "viewPublicProfile": "Zobrazit veřejný profil",
     "organizer": "Pořadatel",
-    "myRegistrations": "Moje registrace",
+    "myRegistrations": "Registrace na eventy",
     "feedbackAdmin": "Připomínky testerů",
     "adminTitle": "Administrace",
-    "adminUsers": "Uživatelé"
+    "adminUsers": "Uživatelé",
+    "statTurbos": "Turba garáže",
+    "statFollowers": "Sledující",
+    "statBadges": "Odznaky",
+    "statStreak": "Série",
+    "sectionMine": "Moje",
+    "sectionRoles": "Správa",
+    "dreams": "Garáž snů",
+    "notifications": "Upozornění",
+    "hallOfFame": "Síň slávy",
+    "settings": "Profil a nastavení",
+    "settingsMeta": "Jméno, fotka, jazyk, viditelnost",
+    "vehiclesCount": "{count, plural, =0 {Zatím žádné auto} one {# auto} few {# auta} many {# auta} other {# aut}}",
+    "dreamsCount": "{count, plural, =0 {Zatím žádný sen} one {# sen} few {# sny} many {# snu} other {# snů}}",
+    "registrationsCount": "{count, plural, =0 {Žádná aktivní přihláška} one {# aktivní přihláška} few {# aktivní přihlášky} many {# aktivní přihlášky} other {# aktivních přihlášek}}",
+    "unreadCount": "{count, plural, one {# nepřečtené} few {# nepřečtená} many {# nepřečteného} other {# nepřečtených}}",
+    "allRead": "Vše přečteno",
+    "badgesCount": "{count, plural, =0 {Zatím bez odznaků} one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}",
+    "streakTitle": "Série {count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
+    "streakText": "Dnes jsi ještě nedal(a) turbo. Dej aspoň jedno, ať o sérii nepřijdeš.",
+    "streakCta": "Najít auta"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -199,7 +228,7 @@
   },
   "Garage": {
     "title": "Moje garáž",
-    "add": "Přidat vozidlo",
+    "add": "Přidat auto",
     "addFirst": "Přidat první vozidlo",
     "archiveLink": "Bývalá auta →",
     "archiveTitle": "Bývalá auta",
@@ -216,7 +245,16 @@
     "viewPublic": "Zobrazit stránku vozidla",
     "photosTitle": "Fotky",
     "modsTitle": "Úpravy",
-    "settingsTitle": "Nastavení"
+    "settingsTitle": "Nastavení",
+    "dreamsLink": "Garáž snů →",
+    "noCarDreams": "Nemám auto – Garáž snů",
+    "fanHint": "Bez auta jsi v klubu jako Petrolhead; s prvním autem se staneš Driverem.",
+    "tabsLabel": "Části garáže",
+    "tabCars": "Moje auta",
+    "tabDreams": "Garáž snů",
+    "tabFormer": "Předchozí auta",
+    "addDream": "Přidat sen",
+    "qrSticker": "QR samolepka"
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",
@@ -330,7 +368,18 @@
     "garageTitle": "Garáž",
     "garageEmpty": "Zatím žádná veřejná vozidla.",
     "formerTitle": "Bývalá auta",
-    "ownerPrivateNotice": "Tvůj profil je soukromý – tuhle stránku vidíš jen ty."
+    "ownerPrivateNotice": "Tvůj profil je soukromý – tuhle stránku vidíš jen ty.",
+    "garageTurbos": "Turba garáže",
+    "streak": "Série",
+    "streakDays": "{count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
+    "garageTurboHint": "Turbo pro celou garáž, nebo jednotlivým fotkám u každého auta.",
+    "fan": "Petrolhead",
+    "owner": "Driver",
+    "fanHint": "Petrolhead – zatím bez auta, sbírá sny v Garáži snů.",
+    "dreamsTitle": "Garáž snů",
+    "dreamsSubtitle": "Auta, o kterých sní, plánuje je nebo je hledá.",
+    "dreamsManage": "Spravovat Garáž snů",
+    "dreamsEmptyOwner": "Zatím tu nic není. Přidej auto, o kterém sníš."
   },
   "PublicVehicle": {
     "metaTitle": "Vozidlo",
@@ -341,7 +390,8 @@
     "mods": "Úpravy",
     "gallery": "Galerie",
     "manage": "Spravovat vozidlo",
-    "ownerPrivateNotice": "Vozidlo je soukromé – tuhle stránku vidíš jen ty."
+    "ownerPrivateNotice": "Vozidlo je soukromé – tuhle stránku vidíš jen ty.",
+    "noPhotosForTurbo": "Turbo se dává fotkám – tohle auto zatím žádné nemá."
   },
   "EventStatus": {
     "draft": "Koncept",
@@ -747,7 +797,22 @@
         "title": "Zpráva od pořadatele",
         "text": ""
       }
-    }
+    },
+    "openVehicle": "Zobrazit auto",
+    "openGarage": "Zobrazit garáž",
+    "openProfile": "Zobrazit profil",
+    "openHallOfFame": "Síň slávy",
+    "someone": "{count, plural, one {Jeden člen} few {# členové} many {# člena} other {# členů}}",
+    "andOthers": "a {count, plural, one {# další} few {# další} many {# dalších} other {# dalších}}",
+    "turboVehicleTitle": "Turbo pro {vehicle}",
+    "turboVehicleText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvému {vehicle}.",
+    "turboGarageTitle": "Turbo pro tvou garáž",
+    "turboGarageText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvé garáži.",
+    "followerTitle": "Nový sledující",
+    "followerText": "{name} tě začal(a) sledovat.",
+    "followerAnonymous": "Někdo tě začal sledovat.",
+    "badgeTitle": "Nový odznak v Síni slávy!",
+    "badgeText": "Získal(a) jsi odznak „{badge}“."
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -924,7 +989,8 @@
     "pagination": "Stránkování",
     "previous": "← Předchozí",
     "next": "Další →",
-    "eyebrow": "Komunita"
+    "eyebrow": "Komunita",
+    "fan": "Petrolhead"
   },
   "AdminUsers": {
     "title": "Uživatelé",
@@ -953,5 +1019,177 @@
       "cannot_demote_self": "Sám sobě roli administrátora odebrat nemůžeš.",
       "generic": "Změna se nepovedla. Zkus to prosím znovu."
     }
+  },
+  "Social": {
+    "turboCount": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}",
+    "give": "Dát turbo",
+    "remove": "Odebrat turbo",
+    "guestHint": "Přihlas se a dej turbo",
+    "ownHint": "Turba, která jsi dostal(a)",
+    "follow": "Sledovat",
+    "following": "Sleduješ ✓",
+    "followersLabel": "{count, plural, one {sledující} few {sledující} many {sledujících} other {sledujících}}",
+    "vehicleTotal": "{count, plural, one {# turbo celkem} few {# turba celkem} many {# turba celkem} other {# turb celkem}}",
+    "giversTitle": "Turbo dali:",
+    "andOthers": "a {count, plural, one {# další} few {# další} many {# dalších} other {# dalších}}",
+    "andMore": "a další",
+    "members": "{count, plural, one {# člen} few {# členové} many {# člena} other {# členů}}",
+    "errors": {
+      "notAuthenticated": "Přihlas se, prosím.",
+      "usernameRequired": "Nejdřív si v profilu nastav uživatelské jméno.",
+      "ownContent": "Vlastnímu obsahu turbo dát nejde.",
+      "notFound": "Tohle už není k dispozici.",
+      "unknown": "Něco se nepovedlo, zkus to prosím znovu."
+    },
+    "doubleTapHint": "dvojklik na fotku = turbo"
+  },
+  "Leaderboard": {
+    "title": "Žebříčky",
+    "eyebrow": "Turba komunity",
+    "subtitle": "Auta a garáže s nejvíc turby a nejaktivnější fanoušci. Dávej turba a posuň své oblíbence nahoru.",
+    "periodLabel": "Období",
+    "periods": {
+      "week": "Týden",
+      "month": "Měsíc",
+      "year": "Rok",
+      "all": "Celkem"
+    },
+    "vehiclesTitle": "Auta",
+    "garagesTitle": "Garáže",
+    "fansTitle": "Nejaktivnější fanoušci",
+    "fansHint": "Kdo rozdal nejvíc turb.",
+    "empty": "Za toto období zatím žádná turba. Buď první!",
+    "emptyFans": "Za toto období zatím nikdo turbo nedal."
+  },
+  "HallOfFame": {
+    "title": "Síň slávy",
+    "count": "{count, plural, one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}",
+    "unique": "Unikátní",
+    "rarity": {
+      "common": "Běžný",
+      "rare": "Vzácný",
+      "epic": "Epický",
+      "legendary": "Legendární"
+    },
+    "empty": "Zatím bez odznaků.",
+    "emptyOwner": "Zatím tu nic není. Dávej turba, sbírej turba a jezdi na eventy – odznaky přijdou.",
+    "nextTitle": "Na cestě k dalším odznakům",
+    "hint": {
+      "turbo_received": "Získaná turba",
+      "turbo_given": "Rozdaná turba",
+      "streak": "Dny v řadě s turbem"
+    }
+  },
+  "Dreams": {
+    "title": "Garáž snů",
+    "newTitle": "Nový sen",
+    "editTitle": "Upravit sen",
+    "backToGarage": "← Zpět do garáže",
+    "backToDreams": "← Zpět do Garáže snů",
+    "add": "Přidat sen",
+    "addFirst": "Přidat první sen",
+    "intro": "Auta, o kterých sníš, která plánuješ koupit nebo aktivně hledáš. Veřejné sny uvidí ostatní na tvém profilu.",
+    "emptyTitle": "Garáž snů je zatím prázdná",
+    "emptyText": "Přidej auto ručně, nebo u auta jiného člena klikni na „Tohle chci!“.",
+    "placeholder": "Garáž snů",
+    "linkedFrom": "Inspirace: @{username}",
+    "status": {
+      "dreaming": "Sním o něm",
+      "planning": "Plánuji koupit",
+      "searching": "Aktivně hledám"
+    },
+    "statusText": {
+      "dreaming": "Srdcovka, jednou možná.",
+      "planning": "Šetřím a chystám se.",
+      "searching": "Hledám konkrétní kus – ozvi se mi."
+    },
+    "makeLabel": "Značka",
+    "modelLabel": "Model",
+    "yearFromLabel": "Rok (od)",
+    "yearToLabel": "Rok (do)",
+    "yearHint": "Jeden rok, nebo rozsah – obojí je nepovinné.",
+    "statusLabel": "Stav",
+    "noteLabel": "Poznámka",
+    "noteHint": "Barva, výbava, proč zrovna tohle auto…",
+    "visibilityLabel": "Kdo sen uvidí",
+    "visibilityPublicText": "Uvidí ho všichni na tvém veřejném profilu.",
+    "visibilityPrivateText": "Jen ty.",
+    "createSubmit": "Přidat do Garáže snů",
+    "createdNotice": "Sen je v garáži. Můžeš přidat i vlastní fotku.",
+    "photoTitle": "Fotka",
+    "detailsTitle": "Údaje",
+    "photoEmpty": "Bez fotky se sen zobrazí jako elegantní karta s názvem. Fotku můžeš přidat jen vlastní – obrázky z internetu nepoužíváme.",
+    "photoFromLinked": "Teď se ukazuje fotka auta, které tě inspirovalo. Vlastní fotka ji nahradí.",
+    "photoAdd": "Nahrát fotku",
+    "photoReplace": "Nahrát jinou fotku",
+    "photoRemove": "Odebrat fotku",
+    "photoUploading": "Nahrávám…",
+    "photoFailed": "Fotku se nepodařilo nahrát. Zkus to prosím znovu.",
+    "linkedNotice": "Tenhle sen je propojený s autem jiného člena.",
+    "linkedOpen": "Zobrazit auto",
+    "delete": "Smazat sen",
+    "deleteConfirm": "Opravdu smazat tento sen?",
+    "want": "Tohle chci!",
+    "wanted": "V Garáži snů ✓",
+    "inDreamsOf": "Je v garáži snů u {count, plural, one {# člověka} few {# lidí} many {# lidí} other {# lidí}}",
+    "errors": {
+      "makeRequired": "Vyplň značku.",
+      "modelRequired": "Vyplň model.",
+      "tooLong": "Některý text je moc dlouhý.",
+      "yearInvalid": "Rok musí být číslo mezi 1885 a příštím rokem.",
+      "yearOrder": "Rok „do“ musí být stejný nebo pozdější než „od“.",
+      "usernameRequired": "Nejdřív si v profilu nastav uživatelské jméno.",
+      "limit": "V Garáži snů může být nejvýš 50 aut.",
+      "ownVehicle": "Vlastní auto do Garáže snů přidat nejde.",
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    }
+  },
+  "Qr": {
+    "title": "QR samolepka",
+    "intro": "Vytiskni si samolepku za okno auta. Na srazu si ji lidé vyfotí telefonem a hned jsou na tvé garáži nebo u auta – můžou dát turbo a začít tě sledovat.",
+    "stickerHeadline": "Dej mi turbo",
+    "garageTitle": "Moje garáž",
+    "targetLabel": "Kam má QR vést",
+    "targetGarage": "Celá garáž (profil)",
+    "qrAlt": "QR kód: {title}",
+    "download": "Stáhnout obrázek",
+    "print": "Vytisknout",
+    "tip1": "Na samolepku stačí šířka 8–10 cm, QR se dobře načte i přes sklo.",
+    "tip2": "Tiskni na matný papír nebo samolepicí fólii – lesk za sklem odráží.",
+    "tip3": "Auto musí být veřejné, jinak ho ostatní neuvidí.",
+    "privateWarning": "Tvůj profil je soukromý – ostatní ho po načtení QR neuvidí. Přepni ho v nastavení profilu na veřejný."
+  },
+  "Share": {
+    "share": "Sdílet",
+    "copied": "Odkaz zkopírován ✓",
+    "copyPrompt": "Zkopíruj si odkaz:"
+  },
+  "Calendar": {
+    "add": "Do kalendáře",
+    "ics": "Apple / Android / Outlook",
+    "icsHint": "Stáhne soubor .ics – otevři ho a potvrď přidání.",
+    "google": "Google Kalendář"
+  },
+  "Progress": {
+    "title": "Dokonči profil",
+    "subtitle": "Pár kroků a tvůj profil bude kompletní.",
+    "done": "hotovo",
+    "todo": "zbývá",
+    "steps": {
+      "avatar": "Nahraj profilovou fotku",
+      "car": "Přidej auto nebo sen do Garáže snů",
+      "photos": "Přidej aspoň 3 fotky auta",
+      "turbo": "Dej první turbo",
+      "follow": "Začni sledovat první garáž",
+      "bio": "Napiš pár slov o sobě"
+    }
+  },
+  "Install": {
+    "title": "Přidej si ELITEZ na plochu",
+    "text": "Otevřeš ho jedním klepnutím jako aplikaci – bez hledání v prohlížeči.",
+    "iosText": "V Safari klepni dole na Sdílet (čtvereček se šipkou) a vyber „Přidat na plochu“.",
+    "install": "Přidat na plochu",
+    "dismiss": "Teď ne"
   }
 }

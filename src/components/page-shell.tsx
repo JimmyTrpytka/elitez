@@ -21,7 +21,7 @@ export function PageShell({
   const container = width === "lg" ? "max-w-6xl" : "max-w-2xl";
   return (
     <div className="flex flex-1 flex-col">
-      <div className="glow-accent border-b border-white/10 bg-night">
+      <div className="glow-accent border-b border-white/10 bg-night print:hidden">
         <div className={cn("mx-auto w-full px-4 pt-10 pb-8 sm:px-6 sm:pt-14 sm:pb-10", container)}>
           <h1 className="reveal font-display text-4xl leading-[0.95] font-extrabold break-words text-white uppercase sm:text-6xl">
             {title}

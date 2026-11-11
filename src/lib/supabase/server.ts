@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createClient as createSupabaseClient, type SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { connection } from "next/server";
 import type { Database } from "./database.types";
@@ -37,5 +37,18 @@ export async function createClient(): Promise<TypedSupabaseClient | null> {
         }
       },
     },
+  });
+}
+
+/**
+ * Klient „jako nepřihlášený návštěvník“ (bez cookies). Vidí jen veřejná data –
+ * používá se pro náhledy odkazů, aby se do nich nikdy nedostal soukromý obsah.
+ */
+export async function createPublicClient(): Promise<TypedSupabaseClient | null> {
+  await connection();
+  const env = getSupabaseEnv();
+  if (!env) return null;
+  return createSupabaseClient<Database>(env.url, env.key, {
+    auth: { persistSession: false, autoRefreshToken: false },
   });
 }

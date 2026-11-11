@@ -4,16 +4,23 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
-import { getVehicle, isMyVehicle } from "@/lib/data/vehicles";
+import { getVehicle } from "@/lib/data/vehicles";
+import { getVehicleShare, shareMetadata } from "@/lib/data/share";
+import { ShareButton } from "@/components/share-button";
+import { getCurrentUser } from "@/lib/auth/user";
+import { getPhotoTurbos, getVehicleSocial, listTurboGivers } from "@/lib/data/social";
+import { TurboGivers } from "@/components/social/turbo-givers";
+import { isVehicleInMyDreams } from "@/lib/data/dreams";
+import { WantButton } from "@/components/dreams/want-button";
 import { hpToKw } from "@/lib/validation";
 import { Alert } from "@/components/ui/alert";
 import { HeroGallery } from "@/components/lightbox";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("PublicVehicle");
-  return { title: t("metaTitle") };
+export async function generateMetadata({ params }: PageProps<"/[locale]/v/[id]">): Promise<Metadata> {
+  const [{ id }, t] = await Promise.all([params, getTranslations("PublicVehicle")]);
+  return shareMetadata(await getVehicleShare(id), t("metaTitle"));
 }
 
 export default async function PublicVehiclePage({ params }: PageProps<"/[locale]/v/[id]">) {
@@ -38,7 +45,19 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
   ]);
   // RLS vrátí soukromé vozidlo jen majiteli
   if (!vehicle) notFound();
-  const isOwner = await isMyVehicle(vehicle);
+  const photoIds = vehicle.photos.map((p) => p.id);
+  const [user, photoTurbos, social, givers, inMyDreams] = await Promise.all([
+    getCurrentUser(),
+    getPhotoTurbos(photoIds),
+    getVehicleSocial([vehicle.id]),
+    listTurboGivers({ vehicleId: vehicle.id }),
+    isVehicleInMyDreams(vehicle.id),
+  ]);
+  const isOwner = user?.id === vehicle.owner_id;
+  // Turba jen u veřejného vozidla (soukromé vidí jen majitel / pořadatel)
+  const showTurbo = vehicle.visibility === "public";
+  const turboMode = isOwner ? "own" : user ? "active" : "guest";
+  const vehicleTurbos = social.get(vehicle.id)?.turbos ?? 0;
 
   const title = `${vehicle.make} ${vehicle.model}`;
   const specs: Array<[string, string]> = [
@@ -60,6 +79,19 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
         photos={vehicle.photos.map((p) => ({ id: p.id, thumb: p.urls.md ?? null, full: p.urls.lg ?? p.urls.md ?? null }))}
         alt={title}
         galleryTitle={t("gallery")}
+        turbo={
+          showTurbo
+            ? {
+                mode: turboMode,
+                initial: Object.fromEntries(
+                  photoIds.map((id) => {
+                    const s = photoTurbos.get(id);
+                    return [id, { given: s?.mine ?? false, count: s?.count ?? 0 }];
+                  }),
+                ),
+              }
+            : undefined
+        }
         overlay={
           <>
             {vehicle.status === "former" ? (
@@ -95,6 +127,28 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
               </Link>
             </div>
           </div>
+        ) : null}
+
+        {showTurbo ? (
+          <div className="mb-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <WantButton
+                vehicleId={vehicle.id}
+                mode={turboMode}
+                initialWanted={inMyDreams}
+                initialDreamers={social.get(vehicle.id)?.dreamers ?? 0}
+              />
+              <ShareButton title={title} />
+            </div>
+          </div>
+        ) : null}
+        {showTurbo && vehicleTurbos > 0 && givers.length > 0 ? (
+          <div className="mb-8">
+            <TurboGivers givers={givers} />
+          </div>
+        ) : null}
+        {showTurbo && vehicle.photos.length === 0 && !isOwner ? (
+          <p className="mb-8 text-sm text-night-subtle">{t("noPhotosForTurbo")}</p>
         ) : null}
 
         {vehicle.description ? (

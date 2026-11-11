@@ -725,6 +725,249 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 5b: turba, sledování, odznaky, Garáž snů
+-- Carol = veřejný profil s veřejným Mustangem, Bob = soukromý profil
+-- =====================================================================
+insert into public.vehicle_photos (id, vehicle_id, position)
+values ('00000000-0000-4000-f000-0000000000c1', '00000000-0000-4000-b000-0000000000c1', 0);
+
+-- Testovací odznaky s nízkou hranicí; Objevitel už od 1 turba
+insert into public.badges (code, category, icon, rarity, is_unique, threshold, name_cs, name_en, description_cs, description_en)
+values
+  ('rls_test_given', 'turbo_given', 'fan', 'common', false, 1, 'T', 'T', '', ''),
+  ('rls_test_unique', 'turbo_received', 'crown', 'legendary', true, 1, 'U', 'U', '', '');
+update public.badges set threshold = 1 where code = 'discoverer';
+
+-- ---------- Bob dává turba a sleduje ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r record;
+begin
+  select * into r from public.toggle_turbo(p_photo_id => '00000000-0000-4000-f000-0000000000c1');
+  if not r.given or r.total <> 1 then raise exception 'FAIL: turbo na fotku se nepřidalo'; end if;
+  select * into r from public.toggle_turbo(p_photo_id => '00000000-0000-4000-f000-0000000000c1');
+  if r.given or r.total <> 0 then raise exception 'FAIL: turbo se opakovaným klepnutím neodebralo'; end if;
+  select * into r from public.toggle_turbo(p_photo_id => '00000000-0000-4000-f000-0000000000c1');
+  if not r.given or r.total <> 1 then raise exception 'FAIL: turbo nejde dát znovu'; end if;
+  select * into r from public.toggle_turbo(p_profile_id => '00000000-0000-4000-a000-0000000ca201');
+  if not r.given then raise exception 'FAIL: turbo na garáž se nepřidalo'; end if;
+
+  begin
+    insert into public.turbos (giver_id, receiver_id, profile_id)
+    values (auth.uid(), '00000000-0000-4000-a000-0000000ca201', '00000000-0000-4000-a000-0000000ca201');
+    raise exception 'FAIL: turbo jde zapsat přímo do tabulky';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.user_badges (user_id, badge_code) values (auth.uid(), 'turbo_gold');
+    raise exception 'FAIL: uživatel si sám udělil odznak';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.admin_award_badge(auth.uid(), 'garage_of_year');
+    raise exception 'FAIL: běžný člen udělil odznak';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+
+  select * into r from public.toggle_follow('00000000-0000-4000-a000-0000000ca201');
+  if not r.following or r.followers <> 1 then raise exception 'FAIL: sledování nefunguje'; end if;
+  select * into r from public.toggle_follow('00000000-0000-4000-a000-0000000ca201');
+  if r.following or r.followers <> 0 then raise exception 'FAIL: zrušení sledování nefunguje'; end if;
+  perform public.toggle_follow('00000000-0000-4000-a000-0000000ca201');
+  begin
+    insert into public.follows (follower_id, following_id) values (auth.uid(), '00000000-0000-4000-a000-0000000ca201');
+    raise exception 'FAIL: sledování jde zapsat přímo do tabulky';
+  exception when insufficient_privilege then null;
+  end;
+
+  if not exists (select 1 from public.user_badges where user_id = auth.uid() and badge_code = 'rls_test_given') then
+    raise exception 'FAIL: odznak za daná turba se neudělil';
+  end if;
+  if not exists (select 1 from public.user_badges where user_id = auth.uid() and badge_code = 'discoverer') then
+    raise exception 'FAIL: odznak Objevitel se neudělil';
+  end if;
+  if not exists (select 1 from public.notifications where user_id = auth.uid() and type = 'badge_awarded') then
+    raise exception 'FAIL: chybí upozornění na nový odznak';
+  end if;
+  if (select count(*) from public.turbos) <> 2 then
+    raise exception 'FAIL: dárce nevidí svá turba';
+  end if;
+
+  -- Garáž snů: odkaz na cizí veřejné auto ano, na vlastní ne
+  insert into public.dream_cars (owner_id, make, model, linked_vehicle_id)
+  values (auth.uid(), 'Ford', 'Mustang', '00000000-0000-4000-b000-0000000000c1');
+  begin
+    insert into public.dream_cars (owner_id, make, model, linked_vehicle_id)
+    values (auth.uid(), 'Škoda', 'Vlastní', '00000000-0000-4000-b000-0000000000b1');
+    raise exception 'FAIL: do Garáže snů jde přidat vlastní auto';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.dream_cars (owner_id, make, model)
+    values ('00000000-0000-4000-a000-0000000ca201', 'Cizí', 'Sen');
+    raise exception 'FAIL: jde zapsat sen za jiného člena';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+-- ---------- Carol (příjemce) ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare n record;
+begin
+  begin
+    perform public.toggle_turbo(p_photo_id => '00000000-0000-4000-f000-0000000000c1');
+    raise exception 'FAIL: turbo jde dát vlastní fotce';
+  exception when raise_exception then
+    if sqlerrm <> 'own_content' then raise; end if;
+  end;
+  begin
+    perform public.toggle_turbo(p_profile_id => '00000000-0000-4000-a000-000000000b0b');
+    raise exception 'FAIL: turbo jde dát soukromé garáži';
+  exception when raise_exception then
+    if sqlerrm <> 'not_found' then raise; end if;
+  end;
+  begin
+    perform public.toggle_follow('00000000-0000-4000-a000-000000000b0b');
+    raise exception 'FAIL: jde sledovat soukromý profil';
+  exception when raise_exception then
+    if sqlerrm <> 'not_found' then raise; end if;
+  end;
+
+  -- Souhrnné upozornění: jedno na auto, opakované klepnutí stejného člověka se nepočítá
+  if (select count(*) from public.notifications where type = 'turbo_received'
+        and payload ->> 'key' = '00000000-0000-4000-b000-0000000000c1') <> 1 then
+    raise exception 'FAIL: upozornění na turba se neslučují';
+  end if;
+  select * into n from public.notifications where type = 'turbo_received'
+    and payload ->> 'key' = '00000000-0000-4000-b000-0000000000c1';
+  if (n.payload ->> 'count')::integer <> 1 then
+    raise exception 'FAIL: opakované turbo od stejného člověka se započítalo dvakrát';
+  end if;
+  if jsonb_array_length(n.payload -> 'givers') <> 0 then
+    raise exception 'FAIL: upozornění prozradilo jméno soukromého profilu';
+  end if;
+  if (select count(*) from public.notifications where type = 'new_follower') <> 1 then
+    raise exception 'FAIL: upozornění na sledování chybí nebo se opakuje';
+  end if;
+  if not exists (select 1 from public.user_badges where user_id = auth.uid() and badge_code = 'rls_test_unique') then
+    raise exception 'FAIL: odznak za získaná turba se neudělil';
+  end if;
+  if exists (select 1 from public.turbos) then
+    raise exception 'FAIL: příjemce vidí řádky turb jiných lidí';
+  end if;
+
+  -- Carol nesmí odkázat na Bobovo soukromé auto
+  begin
+    insert into public.dream_cars (owner_id, make, model, linked_vehicle_id)
+    values (auth.uid(), 'Škoda', 'Tajná', '00000000-0000-4000-b000-0000000000b1');
+    raise exception 'FAIL: do Garáže snů jde odkázat na soukromé auto';
+  exception when insufficient_privilege then null;
+  end;
+  insert into public.dream_cars (owner_id, make, model, status) values (auth.uid(), 'Porsche', '911', 'searching');
+  insert into public.dream_cars (owner_id, make, model, visibility) values (auth.uid(), 'Ferrari', 'F40', 'private');
+  update public.dream_cars set note = 'cizí' where owner_id = '00000000-0000-4000-a000-000000000b0b';
+  -- Fotku snu jde nahrát jen do vlastní složky a k vlastnímu snu
+  insert into storage.objects (bucket_id, name)
+  select 'dream-photos', auth.uid()::text || '/' || id::text || '/k-sm.webp'
+  from public.dream_cars where owner_id = auth.uid() and make = 'Porsche';
+  begin
+    insert into storage.objects (bucket_id, name)
+    select 'dream-photos', '00000000-0000-4000-a000-000000000b0b/' || id::text || '/k-sm.webp'
+    from public.dream_cars where owner_id = auth.uid() and make = 'Porsche';
+    raise exception 'FAIL: fotku snu jde nahrát do cizí složky';
+  exception when insufficient_privilege then null;
+  end;
+  if exists (select 1 from public.dream_cars where note = 'cizí') then
+    raise exception 'FAIL: jde upravit cizí sen';
+  end if;
+end $$;
+reset role;
+
+-- Unikátní odznak už nikdo další nedostane
+do $$ begin
+  if public.award_badge('00000000-0000-4000-a000-000000000b0b', 'rls_test_unique') then
+    raise exception 'FAIL: unikátní odznak získal druhý člověk';
+  end if;
+  if public.user_streak('00000000-0000-4000-a000-000000000b0b') <> 1 then
+    raise exception 'FAIL: denní série se nepočítá';
+  end if;
+end $$;
+
+-- ---------- Nepřihlášený návštěvník ----------
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$
+declare s record;
+begin
+  select * into s from public.profile_social_stats('00000000-0000-4000-a000-0000000ca201');
+  if s.garage_turbos <> 2 or s.profile_turbos <> 1 or s.followers <> 1 then
+    raise exception 'FAIL: statistiky garáže nesedí (%)', row_to_json(s);
+  end if;
+  if exists (select 1 from public.profile_social_stats('00000000-0000-4000-a000-000000000b0b')) then
+    raise exception 'FAIL: statistiky soukromého profilu jsou veřejné';
+  end if;
+  if (select turbos from public.photo_turbo_stats(array['00000000-0000-4000-f000-0000000000c1'::uuid])) <> 1 then
+    raise exception 'FAIL: počet turb fotky nesedí';
+  end if;
+  if (select dreamers from public.vehicle_social_stats(array['00000000-0000-4000-b000-0000000000c1'::uuid])) <> 1 then
+    raise exception 'FAIL: „v garáži snů u N lidí“ nesedí';
+  end if;
+  if exists (select 1 from public.vehicle_social_stats(array['00000000-0000-4000-b000-0000000000b1'::uuid])) then
+    raise exception 'FAIL: statistiky soukromého vozidla jsou veřejné';
+  end if;
+  if exists (select 1 from public.turbo_givers(p_photo_id => '00000000-0000-4000-f000-0000000000c1')) then
+    raise exception 'FAIL: seznam dárců ukazuje soukromý profil';
+  end if;
+  if not exists (select 1 from public.leaderboard_vehicles('week', 100)
+                 where vehicle_id = '00000000-0000-4000-b000-0000000000c1' and turbos = 1) then
+    raise exception 'FAIL: auto chybí v žebříčku';
+  end if;
+  if not exists (select 1 from public.leaderboard_garages('all', 100) where username = 'rls_carol' and turbos = 2) then
+    raise exception 'FAIL: garáž chybí v žebříčku';
+  end if;
+  if exists (select 1 from public.leaderboard_fans('all', 100) where username = 'rls_bob') then
+    raise exception 'FAIL: soukromý profil je v žebříčku fanoušků';
+  end if;
+  if not exists (select 1 from public.user_badges ub join public.profiles p on p.id = ub.user_id where p.username = 'rls_carol') then
+    raise exception 'FAIL: odznaky veřejného profilu nejsou vidět';
+  end if;
+  if exists (select 1 from public.user_badges where user_id = '00000000-0000-4000-a000-000000000b0b') then
+    raise exception 'FAIL: odznaky soukromého profilu jsou vidět';
+  end if;
+  if (select count(*) from public.dream_cars where owner_id = '00000000-0000-4000-a000-0000000ca201') <> 1 then
+    raise exception 'FAIL: návštěvník má vidět jen veřejné sny';
+  end if;
+  if exists (select 1 from public.dream_cars where owner_id = '00000000-0000-4000-a000-000000000b0b') then
+    raise exception 'FAIL: sny soukromého profilu jsou vidět';
+  end if;
+  if exists (select 1 from public.turbos) or exists (select 1 from public.follows) then
+    raise exception 'FAIL: návštěvník čte turba nebo sledování přímo';
+  end if;
+end $$;
+reset role;
+
+-- ---------- Admin (Alice) udělí ruční odznak ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not public.admin_award_badge('00000000-0000-4000-a000-0000000ca201', 'garage_of_year', '2026') then
+    raise exception 'FAIL: admin neudělil ruční odznak';
+  end if;
+  if public.admin_award_badge('00000000-0000-4000-a000-0000000ca201', 'garage_of_year', '2026') then
+    raise exception 'FAIL: stejný odznak se udělil dvakrát';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

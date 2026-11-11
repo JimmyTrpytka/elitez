@@ -16,6 +16,7 @@ export async function SiteFooter() {
         { href: "/", label: t("home") },
         { href: "/events", label: t("events") },
         { href: "/members", label: t("members") },
+        { href: "/leaderboard", label: t("leaderboard") },
         { href: "/register", label: t("register") },
       ],
     },
@@ -24,6 +25,7 @@ export async function SiteFooter() {
       links: [
         { href: "/account", label: t("account") },
         { href: "/garage", label: t("garage") },
+        { href: "/garage/dreams", label: t("dreams") },
         { href: "/account/registrations", label: t("registrations") },
         { href: "/account/notifications", label: t("notifications") },
       ],

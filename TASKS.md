@@ -130,6 +130,45 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 
 ---
 
+## Milník 5b – Turba, sledování a Síň slávy
+
+**Cíl:** komunita má důvod se vracet – dávat turba, sledovat garáže, sbírat odznaky.
+
+Úkoly:
+1. Turba na fotky a garáže (animace, kdo dal turbo, souhrnná upozornění)
+2. Sledování garáží (počet sledujících, upozornění)
+3. Síň slávy: obecný systém odznaků (turbo ocenění, Fanoušek, Série, Objevitel, Zakládající člen, unikátní, ruční od admina)
+4. Žebříčky (auta, garáže, fanoušci; týden / měsíc / rok / celkem)
+5. Garáž snů s „Tohle chci!“ a štítek Petrolhead / Driver
+
+**Hotovo, když:** dva účty si navzájem dají turbo a sledování, přijde souhrnné upozornění, odznak se udělí po dosažení hranice a žebříček ukazuje správné pořadí.
+
+Pravidla: SPEC.md 5.1e
+
+**Stav (12. 11. 2026):** hotovo na localhost, čeká na vyzkoušení se dvěma účty – turba (fotky, garáž) s animací, souhrnná upozornění, sledování, Síň slávy (odznaky + postup), Žebříčky, Garáž snů s „Tohle chci!“, štítek Petrolhead/Driver. Databáze nahraná, `npm run test:db` prošel.
+
+
+**Rychlá vylepšení (12. 11. 2026, inspirace oblíbenými aplikacemi):** dvojklik na fotku = turbo, QR samolepka garáže/auta (Garáž → QR samolepka), Auto týdne na úvodní stránce, náhledy odkazů při sdílení + tlačítko Sdílet, připomínka denní série a „Dokonči profil“ v Můj účet, přidání eventu do kalendáře (.ics / Google), nabídka „Přidat na plochu“.
+
+**Na později (větší):** Novinky od sledovaných (přehled nových aut a fotek sledovaných garáží), Týdenní shrnutí („tvoje garáž tento týden získala 23 turb“).
+---
+
+## Milník 5c – Pořadatelé (přehled a sledování)
+
+**Cíl:** lidé najdou pořadatele, sledují je a nezmeškají jejich akce.
+
+Úkoly:
+1. Profil pořadatele: adresa `/o/<slug>`, logo, odkazy, přepínač proběhlých eventů (nastavení pro pořadatele)
+2. Stránka Pořadatelé (seznam) + profil s nadcházejícími a proběhlými eventy
+3. Sledování pořadatelů (počet sledujících)
+4. Upozornění v aplikaci: nový event, otevření registrace, zrušení eventu
+
+**Hotovo, když:** člen začne sledovat pořadatele, pořadatel zveřejní event a člen dostane upozornění ve zvonku.
+
+Pravidla: SPEC.md 5.1f
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.

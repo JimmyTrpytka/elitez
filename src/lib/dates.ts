@@ -119,3 +119,8 @@ export function formatTime(iso: string, locale: string, tz: string = DEFAULT_EVE
     minute: "2-digit",
   }).format(new Date(iso));
 }
+
+/** Už skončilo? (porovnání s aktuálním časem serveru) */
+export function hasEnded(iso: string): boolean {
+  return new Date(iso).getTime() <= Date.now();
+}

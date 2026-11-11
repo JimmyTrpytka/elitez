@@ -1,10 +1,13 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { getEventShare, shareMetadata } from "@/lib/data/share";
+import { ShareButton } from "@/components/share-button";
+import { AddToCalendar } from "@/components/events/add-to-calendar";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
-import { formatDateTime, formatEventDates, formatTime } from "@/lib/dates";
+import { formatDateTime, formatEventDates, formatTime, hasEnded } from "@/lib/dates";
 import { getEventBySlug, getMyOrganizer } from "@/lib/data/events";
 import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
@@ -13,9 +16,9 @@ import { Alert } from "@/components/ui/alert";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Events");
-  return { title: t("detailMetaTitle") };
+export async function generateMetadata({ params }: PageProps<"/[locale]/e/[slug]">): Promise<Metadata> {
+  const [{ slug }, t] = await Promise.all([params, getTranslations("Events")]);
+  return shareMetadata(await getEventShare(slug), t("detailMetaTitle"));
 }
 
 export default async function EventDetailPage({ params }: PageProps<"/[locale]/e/[slug]">) {
@@ -114,6 +117,12 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
       </header>
 
       <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
+        <div className="mb-8 flex flex-wrap gap-3">
+          {event.status !== "cancelled" && !hasEnded(event.ends_at) ? (
+            <AddToCalendar event={event} />
+          ) : null}
+          <ShareButton title={event.title} />
+        </div>
         {isOrganizer ? (
           <div className="mb-8">
             <Link href={`/organizer/events/${event.id}`} className={buttonClasses("light")}>

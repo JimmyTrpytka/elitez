@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { VehicleCardView } from "@/lib/data/vehicles";
 import { cn } from "@/lib/cn";
+import { TurboIcon } from "@/components/social/turbo-icon";
 
 /** Karta vozidla se zmenšenou hlavní fotkou. */
 export async function VehicleCard({
@@ -9,12 +10,15 @@ export async function VehicleCard({
   href,
   showVisibility = false,
   tone = "light",
+  turbos,
 }: {
   vehicle: VehicleCardView;
   href: string;
   showVisibility?: boolean;
   /** „dark“ pro tmavé výkladní stránky */
   tone?: "light" | "dark";
+  /** Počet turb (zobrazí se přes fotku, když je > 0) */
+  turbos?: number;
 }) {
   const dark = tone === "dark";
   const t = await getTranslations("Vehicle");
@@ -45,6 +49,13 @@ export async function VehicleCard({
             {t("noPhoto")}
           </div>
         )}
+        {turbos ? (
+          <span className="absolute right-3 bottom-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-sm font-semibold text-white tabular-nums backdrop-blur">
+            <TurboIcon className="h-4 w-4 text-accent" />
+            {turbos}
+            <span className="sr-only">{tCommon("turbos", { count: turbos })}</span>
+          </span>
+        ) : null}
         {showVisibility && vehicle.visibility === "private" ? (
           <span className="absolute top-3 left-3 rounded-full bg-ink px-3 py-1 text-xs font-semibold text-white">
             {tCommon("visibilityPrivate")}

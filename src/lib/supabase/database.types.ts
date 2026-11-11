@@ -14,6 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
+      badges: {
+        Row: {
+          active: boolean
+          category: string
+          code: string
+          created_at: string
+          description_cs: string
+          description_en: string
+          icon: string
+          is_unique: boolean
+          name_cs: string
+          name_en: string
+          rarity: Database["public"]["Enums"]["badge_rarity"]
+          sort: number
+          threshold: number | null
+        }
+        Insert: {
+          active?: boolean
+          category: string
+          code: string
+          created_at?: string
+          description_cs: string
+          description_en: string
+          icon: string
+          is_unique?: boolean
+          name_cs: string
+          name_en: string
+          rarity?: Database["public"]["Enums"]["badge_rarity"]
+          sort?: number
+          threshold?: number | null
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          code?: string
+          created_at?: string
+          description_cs?: string
+          description_en?: string
+          icon?: string
+          is_unique?: boolean
+          name_cs?: string
+          name_en?: string
+          rarity?: Database["public"]["Enums"]["badge_rarity"]
+          sort?: number
+          threshold?: number | null
+        }
+        Relationships: []
+      }
+      dream_cars: {
+        Row: {
+          created_at: string
+          id: string
+          linked_vehicle_id: string | null
+          make: string
+          model: string
+          note: string | null
+          owner_id: string
+          photo_format: string | null
+          photo_key: string | null
+          position: number
+          status: Database["public"]["Enums"]["dream_status"]
+          updated_at: string
+          visibility: Database["public"]["Enums"]["visibility"]
+          year_from: number | null
+          year_to: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          linked_vehicle_id?: string | null
+          make: string
+          model: string
+          note?: string | null
+          owner_id: string
+          photo_format?: string | null
+          photo_key?: string | null
+          position?: number
+          status?: Database["public"]["Enums"]["dream_status"]
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["visibility"]
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          linked_vehicle_id?: string | null
+          make?: string
+          model?: string
+          note?: string | null
+          owner_id?: string
+          photo_format?: string | null
+          photo_key?: string | null
+          position?: number
+          status?: Database["public"]["Enums"]["dream_status"]
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["visibility"]
+          year_from?: number | null
+          year_to?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dream_cars_linked_vehicle_id_fkey"
+            columns: ["linked_vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dream_cars_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_outbox: {
         Row: {
           attempts: number
@@ -362,6 +479,39 @@ export type Database = {
           },
         ]
       }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "follows_following_id_fkey"
+            columns: ["following_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       message_broadcasts: {
         Row: {
           body: string
@@ -586,6 +736,150 @@ export type Database = {
           },
         ]
       }
+      turbo_days: {
+        Row: {
+          day: string
+          user_id: string
+        }
+        Insert: {
+          day: string
+          user_id: string
+        }
+        Update: {
+          day?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turbo_days_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      turbos: {
+        Row: {
+          created_at: string
+          giver_id: string
+          id: string
+          photo_id: string | null
+          profile_id: string | null
+          receiver_id: string
+          vehicle_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          giver_id: string
+          id?: string
+          photo_id?: string | null
+          profile_id?: string | null
+          receiver_id: string
+          vehicle_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          giver_id?: string
+          id?: string
+          photo_id?: string | null
+          profile_id?: string | null
+          receiver_id?: string
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turbos_giver_id_fkey"
+            columns: ["giver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turbos_photo_id_fkey"
+            columns: ["photo_id"]
+            isOneToOne: false
+            referencedRelation: "vehicle_photos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turbos_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turbos_receiver_id_fkey"
+            columns: ["receiver_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turbos_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_badges: {
+        Row: {
+          awarded_at: string
+          awarded_by: string | null
+          badge_code: string
+          context_key: string
+          id: string
+          note: string | null
+          source: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_code: string
+          context_key?: string
+          id?: string
+          note?: string | null
+          source?: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_code?: string
+          context_key?: string
+          id?: string
+          note?: string | null
+          source?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_awarded_by_fkey"
+            columns: ["awarded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_badges_badge_code_fkey"
+            columns: ["badge_code"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vehicle_mods: {
         Row: {
           category: Database["public"]["Enums"]["mod_category"]
@@ -735,6 +1029,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_award_badge: {
+        Args: {
+          p_code: string
+          p_context?: string
+          p_note?: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
       admin_list_users: {
         Args: { p_limit?: number; p_search?: string }
         Returns: {
@@ -753,6 +1056,10 @@ export type Database = {
           visibility: Database["public"]["Enums"]["visibility"]
         }[]
       }
+      admin_revoke_badge: {
+        Args: { p_user_badge_id: string }
+        Returns: undefined
+      }
       admin_set_admin: {
         Args: { p_enabled: boolean; p_user_id: string }
         Returns: undefined
@@ -766,6 +1073,22 @@ export type Database = {
           p_organizer_id: string
           p_status: Database["public"]["Enums"]["organizer_status"]
         }
+        Returns: undefined
+      }
+      award_badge: {
+        Args: {
+          p_by?: string
+          p_code: string
+          p_context?: string
+          p_note?: string
+          p_notify?: boolean
+          p_source?: string
+          p_user: string
+        }
+        Returns: boolean
+      }
+      award_threshold_badges: {
+        Args: { p_category: string; p_user: string; p_value: number }
         Returns: undefined
       }
       broadcast_recipient_count: {
@@ -901,8 +1224,68 @@ export type Database = {
         Args: { p_registration_id: string }
         Returns: boolean
       }
+      leaderboard_fans: {
+        Args: { p_limit?: number; p_period?: string }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          profile_id: string
+          turbos: number
+          username: string
+          verified_at: string
+        }[]
+      }
+      leaderboard_garages: {
+        Args: { p_limit?: number; p_period?: string }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          profile_id: string
+          turbos: number
+          username: string
+          verified_at: string
+        }[]
+      }
+      leaderboard_vehicles: {
+        Args: { p_limit?: number; p_period?: string }
+        Returns: {
+          cover_format: string
+          cover_photo_id: string
+          make: string
+          model: string
+          owner_display_name: string
+          owner_username: string
+          turbos: number
+          vehicle_id: string
+          year: number
+        }[]
+      }
       my_organizer_ids: { Args: never; Returns: string[] }
       owns_vehicle: { Args: { p_vehicle_id: string }; Returns: boolean }
+      period_start: { Args: { p_period: string }; Returns: string }
+      photo_turbo_stats: {
+        Args: { p_photo_ids: string[] }
+        Returns: {
+          mine: boolean
+          photo_id: string
+          turbos: number
+        }[]
+      }
+      prague_today: { Args: never; Returns: string }
+      profile_social_stats: {
+        Args: { p_profile_id: string }
+        Returns: {
+          followers: number
+          following: number
+          garage_turbos: number
+          given_total: number
+          i_follow: boolean
+          i_turboed: boolean
+          profile_turbos: number
+          received_total: number
+          streak: number
+        }[]
+      }
       public_members: {
         Args: { p_limit?: number; p_offset?: number; p_search?: string }
         Returns: {
@@ -996,18 +1379,58 @@ export type Database = {
         }
         Returns: string
       }
+      toggle_follow: {
+        Args: { p_profile_id: string }
+        Returns: {
+          followers: number
+          following: boolean
+        }[]
+      }
+      toggle_turbo: {
+        Args: { p_photo_id?: string; p_profile_id?: string }
+        Returns: {
+          given: boolean
+          total: number
+        }[]
+      }
+      turbo_givers: {
+        Args: {
+          p_limit?: number
+          p_photo_id?: string
+          p_profile_id?: string
+          p_vehicle_id?: string
+        }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          given_at: string
+          username: string
+        }[]
+      }
+      user_streak: { Args: { p_user: string }; Returns: number }
       vehicle_has_event_history: {
         Args: { p_vehicle_id: string }
         Returns: boolean
       }
+      vehicle_is_visible: { Args: { p_vehicle_id: string }; Returns: boolean }
+      vehicle_social_stats: {
+        Args: { p_vehicle_ids: string[] }
+        Returns: {
+          dreamers: number
+          turbos: number
+          vehicle_id: string
+        }[]
+      }
     }
     Enums: {
+      badge_rarity: "common" | "rare" | "epic" | "legendary"
       broadcast_segment:
         | "approved"
         | "pending"
         | "waitlist"
         | "approved_verified"
         | "all_active"
+      dream_status: "dreaming" | "planning" | "searching"
       email_status: "queued" | "sending" | "sent" | "failed"
       event_access: "public" | "verified_only" | "invite_only"
       event_category:
@@ -1037,6 +1460,9 @@ export type Database = {
         | "registration_promoted"
         | "registration_cancelled"
         | "broadcast"
+        | "turbo_received"
+        | "new_follower"
+        | "badge_awarded"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -1183,6 +1609,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      badge_rarity: ["common", "rare", "epic", "legendary"],
       broadcast_segment: [
         "approved",
         "pending",
@@ -1190,6 +1617,7 @@ export const Constants = {
         "approved_verified",
         "all_active",
       ],
+      dream_status: ["dreaming", "planning", "searching"],
       email_status: ["queued", "sending", "sent", "failed"],
       event_access: ["public", "verified_only", "invite_only"],
       event_category: [
@@ -1221,6 +1649,9 @@ export const Constants = {
         "registration_promoted",
         "registration_cancelled",
         "broadcast",
+        "turbo_received",
+        "new_follower",
+        "badge_awarded",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

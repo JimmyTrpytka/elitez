@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/user";
 import { listPublicEvents } from "@/lib/data/events";
 import { listLatestPublicVehicles } from "@/lib/data/vehicles";
+import { getCarOfTheWeek } from "@/lib/data/social";
+import { TurboIcon } from "@/components/social/turbo-icon";
 import { DarkSection, DisplayHeading, Eyebrow, Highlight } from "@/components/brand";
 import { EventCard } from "@/components/events/event-card";
 import { VehicleCard } from "@/components/garage/vehicle-card";
@@ -74,6 +76,11 @@ export default async function HomePage() {
           </Suspense>
         </div>
       </DarkSection>
+
+      {/* Auto týdne (vítěz týdenního žebříčku) – jen když nějaké je */}
+      <Suspense fallback={null}>
+        <CarOfTheWeekSection />
+      </Suspense>
 
       {/* 3) Z garáží členů */}
       <section className="bg-surface">
@@ -188,5 +195,48 @@ async function LatestVehicles() {
         <VehicleCard key={v.id} vehicle={v} href={`/v/${v.id}`} />
       ))}
     </div>
+  );
+}
+
+async function CarOfTheWeekSection() {
+  const [t, car] = await Promise.all([getTranslations("Home"), getCarOfTheWeek()]);
+  if (!car) return null;
+  return (
+    <section className="relative isolate overflow-hidden bg-night text-white">
+      {car.coverLargeUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={car.coverLargeUrl}
+          alt=""
+          className="absolute inset-0 -z-10 h-full w-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <div className="glow-accent absolute inset-0 -z-10" aria-hidden />
+      )}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-night via-night/60 to-night/10" aria-hidden />
+      <div className="mx-auto flex min-h-[70svh] w-full max-w-6xl flex-col justify-end px-4 py-16 sm:px-6 sm:py-24">
+        <span className="mb-5 inline-flex w-fit items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-xs font-bold tracking-[0.2em] text-ink uppercase">
+          <TurboIcon className="h-4 w-4" filled />
+          {t("carOfWeekBadge")}
+        </span>
+        <DisplayHeading as="h2" size="xl" className="max-w-4xl text-white">
+          {car.title}
+        </DisplayHeading>
+        <p className="mt-4 text-lg text-white/80">
+          {car.year ? `${car.year} · ` : ""}
+          {t("carOfWeekOwner", { name: car.ownerName })} ·{" "}
+          <span className="font-semibold text-accent">{t("carOfWeekTurbos", { count: car.turbos })}</span>
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href={`/v/${car.vehicleId}`} className={buttonClasses("primary", "lg")}>
+            {t("carOfWeekCta")}
+          </Link>
+          <Link href="/leaderboard" className={buttonClasses("outlineDark", "lg")}>
+            {t("carOfWeekLeaderboard")}
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }
