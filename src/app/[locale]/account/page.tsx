@@ -104,6 +104,12 @@ async function AccountContent() {
         ) : null}
       </div>
 
+      {profile.role === "admin" ? (
+        <Link href="/admin/feedback" className={buttonClasses("ghost", "lg", "self-start")}>
+          {tAccount("feedbackAdmin")}
+        </Link>
+      ) : null}
+
       <form action={signOut} className="border-t border-line pt-6">
         <input type="hidden" name="locale" value={locale} />
         <Button type="submit" variant="ghost">

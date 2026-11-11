@@ -321,6 +321,47 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          contact_email: string | null
+          created_at: string
+          id: string
+          message: string
+          page_path: string | null
+          resolved_at: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          page_path?: string | null
+          resolved_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          contact_email?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          page_path?: string | null
+          resolved_at?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       message_broadcasts: {
         Row: {
           body: string
@@ -874,6 +915,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      resolve_feedback: {
+        Args: { p_id: string; p_resolved: boolean }
+        Returns: undefined
+      }
       season_belongs_to: {
         Args: { p_organizer_id: string; p_season_id: string }
         Returns: boolean
@@ -901,6 +946,15 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      submit_feedback: {
+        Args: {
+          p_contact_email: string
+          p_message: string
+          p_page_path: string
+          p_user_agent: string
+        }
+        Returns: string
       }
       vehicle_has_event_history: {
         Args: { p_vehicle_id: string }
