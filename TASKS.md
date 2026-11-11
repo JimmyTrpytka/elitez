@@ -130,6 +130,23 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 
 ---
 
+## Milník 5b – Turba, sledování a Síň slávy
+
+**Cíl:** komunita má důvod se vracet – dávat turba, sledovat garáže, sbírat odznaky.
+
+Úkoly:
+1. Turba na fotky a garáže (animace, kdo dal turbo, souhrnná upozornění)
+2. Sledování garáží (počet sledujících, upozornění)
+3. Síň slávy: obecný systém odznaků (turbo ocenění, Fanoušek, Série, Objevitel, Zakládající člen, unikátní, ruční od admina)
+4. Žebříčky (auta, garáže, fanoušci; týden / měsíc / rok / celkem)
+5. Garáž snů s „Tohle chci!“ a režim Fanoušek
+
+**Hotovo, když:** dva účty si navzájem dají turbo a sledování, přijde souhrnné upozornění, odznak se udělí po dosažení hranice a žebříček ukazuje správné pořadí.
+
+Pravidla: SPEC.md 5.1e
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.

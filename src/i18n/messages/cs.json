@@ -151,7 +151,8 @@
     "visibilityPublic": "Veřejné",
     "visibilityPrivate": "Soukromé",
     "date": "Datum",
-    "time": "Čas"
+    "time": "Čas",
+    "turbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}"
   },
   "Account": {
     "finishProfileTitle": "Dokonči svůj profil.",
@@ -330,7 +331,11 @@
     "garageTitle": "Garáž",
     "garageEmpty": "Zatím žádná veřejná vozidla.",
     "formerTitle": "Bývalá auta",
-    "ownerPrivateNotice": "Tvůj profil je soukromý – tuhle stránku vidíš jen ty."
+    "ownerPrivateNotice": "Tvůj profil je soukromý – tuhle stránku vidíš jen ty.",
+    "garageTurbos": "Turba garáže",
+    "streak": "Série",
+    "streakDays": "{count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
+    "garageTurboHint": "Turbo pro celou garáž, nebo jednotlivým fotkám u každého auta."
   },
   "PublicVehicle": {
     "metaTitle": "Vozidlo",
@@ -341,7 +346,8 @@
     "mods": "Úpravy",
     "gallery": "Galerie",
     "manage": "Spravovat vozidlo",
-    "ownerPrivateNotice": "Vozidlo je soukromé – tuhle stránku vidíš jen ty."
+    "ownerPrivateNotice": "Vozidlo je soukromé – tuhle stránku vidíš jen ty.",
+    "noPhotosForTurbo": "Turbo se dává fotkám – tohle auto zatím žádné nemá."
   },
   "EventStatus": {
     "draft": "Koncept",
@@ -747,7 +753,22 @@
         "title": "Zpráva od pořadatele",
         "text": ""
       }
-    }
+    },
+    "openVehicle": "Zobrazit auto",
+    "openGarage": "Zobrazit garáž",
+    "openProfile": "Zobrazit profil",
+    "openHallOfFame": "Síň slávy",
+    "someone": "{count, plural, one {Jeden člen} few {# členové} many {# člena} other {# členů}}",
+    "andOthers": "a {count, plural, one {# další} few {# další} many {# dalších} other {# dalších}}",
+    "turboVehicleTitle": "Turbo pro {vehicle}",
+    "turboVehicleText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvému {vehicle}.",
+    "turboGarageTitle": "Turbo pro tvou garáž",
+    "turboGarageText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvé garáži.",
+    "followerTitle": "Nový sledující",
+    "followerText": "{name} tě začal(a) sledovat.",
+    "followerAnonymous": "Někdo tě začal sledovat.",
+    "badgeTitle": "Nový odznak v Síni slávy!",
+    "badgeText": "Získal(a) jsi odznak „{badge}“."
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -952,6 +973,28 @@
       "not_allowed": "K této akci nemáš oprávnění.",
       "cannot_demote_self": "Sám sobě roli administrátora odebrat nemůžeš.",
       "generic": "Změna se nepovedla. Zkus to prosím znovu."
+    }
+  },
+  "Social": {
+    "turboCount": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}",
+    "give": "Dát turbo",
+    "remove": "Odebrat turbo",
+    "guestHint": "Přihlas se a dej turbo",
+    "ownHint": "Turba, která jsi dostal(a)",
+    "follow": "Sledovat",
+    "following": "Sleduješ ✓",
+    "followersLabel": "{count, plural, one {sledující} few {sledující} many {sledujících} other {sledujících}}",
+    "vehicleTotal": "{count, plural, one {# turbo celkem} few {# turba celkem} many {# turba celkem} other {# turb celkem}}",
+    "giversTitle": "Turbo dali:",
+    "andOthers": "a {count, plural, one {# další} few {# další} many {# dalších} other {# dalších}}",
+    "andMore": "a další",
+    "members": "{count, plural, one {# člen} few {# členové} many {# člena} other {# členů}}",
+    "errors": {
+      "notAuthenticated": "Přihlas se, prosím.",
+      "usernameRequired": "Nejdřív si v profilu nastav uživatelské jméno.",
+      "ownContent": "Vlastnímu obsahu turbo dát nejde.",
+      "notFound": "Tohle už není k dispozici.",
+      "unknown": "Něco se nepovedlo, zkus to prosím znovu."
     }
   }
 }

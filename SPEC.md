@@ -133,6 +133,25 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Export:** CSV pro Excel (UTF-8, středníky) a tisková stránka (Uložit jako PDF) se seznamem a políčkem na odškrtnutí jako papírová záloha.
 - **Push notifikace** odloženy (Milník 7/8).
 
+### 5.1e Turba, sledování, Síň slávy a Garáž snů – upřesnění (rozhodnuto 11. 11. 2026, Milník 5b)
+- **Turbo** = jednoduchý „like“ s ikonou turbodmychadla. Dává se **fotce vozidla** nebo **garáži** (profilu). Jeden uživatel = nejvýš jedno turbo na položku, opakovaným klepnutím se odebere. Žádná peněženka ani limity. Vlastnímu obsahu turbo dát nejde. Jen přihlášení, jen na veřejný obsah.
+- **Součty:** vozidlo = turba jeho fotek; garáž = turba garáže + turba fotek jejích (veřejných) vozidel. U položky je vidět, kdo turbo dal (pár jmen + „a další“).
+- **Upozornění** se slučují: „@tuner22 a 4 další dali turbo tvému BMW E30“ – jedno upozornění na položku, dokud ho majitel nepřečte. Bez e-mailu.
+- **Sledování garáže:** tlačítko Sledovat, počet sledujících, upozornění „X tě začal(a) sledovat“. Vlastní garáž sledovat nejde.
+- **Žebříčky:** auta, garáže, nejaktivnější fanoušci (dané turbo); období týden / měsíc / rok / celkem; jen veřejné profily a vozidla.
+- **Síň slávy:** zeď odznaků na profilu. Obecný systém: odznak má ikonu, název a popis (cs/en), vzácnost (běžný / vzácný / epický / legendární – barevně), datum a zdroj udělení, případně příznak **unikátní** (jen jeden člověk vůbec).
+  - Turbo ocenění za **získaná** turba: bronzové 100, stříbrné 500, zlaté 1000. Unikátní: „První, kdo získal 1000 turb“.
+  - Za **daná** turba: Nadšenec 50, Fanoušek scény 250, Legenda komunity 1000.
+  - **Série** 🔥 (aspoň jedno turbo denně, pražský čas): 7 / 30 / 100 dní.
+  - **Objevitel:** dal turbo mezi prvními 10 autu (fotkám vozidla), které později dosáhlo 100 turb.
+  - **Zakládající člen:** prvních 100 registrovaných.
+  - Ruční odznaky od admina (např. Garáž roku); později odznaky za účast na eventu (Milník 7) a výzvy (v1.5).
+  - Odebrané turbo už udělený odznak nebere.
+- **Garáž snů:** druhá sekce profilu. Položka: značka, model, rok nebo rozsah, poznámka, stav (💭 Sním o něm / 🎯 Plánuji koupit / 🔍 Aktivně hledám), viditelnost veřejná/soukromá. Fotka jen vlastní, nebo žádná (elegantní karta bez fotky); obrázky z internetu ne.
+  - **„Tohle chci!“** u vozidla jiného člena přidá auto do Garáže snů s odkazem a jeho fotkou; u auta je vidět „Je v garáži snů u N lidí“.
+  - „Aktivně hledám“ se později propojí s bazarem (v3).
+- **Fanoušek / Majitel:** člen bez vozidla má štítek Fanoušek a používá Garáž snů; s prvním vozidlem se stává Majitelem.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

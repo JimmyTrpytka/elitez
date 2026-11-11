@@ -107,3 +107,11 @@ Vlastník projektu **není programátor**. Proto:
 - Veřejní členové: `public_members()` – jen veřejné profily, bez e-mailů. Stránka `/members`.
 - Prohlížeč fotek: `src/components/lightbox.tsx` (`Lightbox`, `PhotoGrid`, `HeroGallery`).
 - Pruh „Testovací verze“ vypíná `SITE.beta` v `src/lib/site-config.ts`.
+
+## Technické poznámky (Milník 5b – turba, sledování, Síň slávy, Garáž snů)
+- Do `turbos`, `follows`, `user_badges` aplikace NEZAPISUJE přímo. Turbo/sledování jen přes `toggle_turbo` / `toggle_follow` (`src/lib/social/actions.ts`); řádky turb vidí jen dárce.
+- Počty a seznamy čti funkcemi `profile_social_stats`, `photo_turbo_stats`, `vehicle_social_stats`, `turbo_givers`, `leaderboard_*` (jen veřejná data) – `src/lib/data/social.ts`.
+- Odznaky: katalog `badges` (nové odznaky = nový řádek; automatické podle `category` + `threshold`), udělení `award_badge` (interní) / `admin_award_badge`. Unikátní odznak hlídá zámek. Odebrané turbo odznak nebere.
+- Trigger `turbo_after_insert`: denní série (`turbo_days`, pražský den), odznaky, Objevitel, souhrnné upozornění (jedno nepřečtené na auto/garáž; jména jen veřejných profilů).
+- Garáž snů: `dream_cars` (RLS), fotky v soukromém bucketu `dream-photos`: `{owner_id}/{dream_id}/{photo_key}-{size}.{format}`.
+- Migrace se dají vyzkoušet předem v paměťové databázi PGlite (náhrada `auth`/`storage` schémat) – nahrání do ostré DB (`npm run db:push`) spouští vlastník.

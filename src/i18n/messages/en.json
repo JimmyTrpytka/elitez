@@ -151,7 +151,8 @@
     "visibilityPublic": "Public",
     "visibilityPrivate": "Private",
     "date": "Date",
-    "time": "Time"
+    "time": "Time",
+    "turbos": "{count, plural, one {# turbo} other {# turbos}}"
   },
   "Account": {
     "finishProfileTitle": "Finish your profile.",
@@ -330,7 +331,11 @@
     "garageTitle": "Garage",
     "garageEmpty": "No public vehicles yet.",
     "formerTitle": "Former vehicles",
-    "ownerPrivateNotice": "Your profile is private – only you can see this page."
+    "ownerPrivateNotice": "Your profile is private – only you can see this page.",
+    "garageTurbos": "Garage turbos",
+    "streak": "Streak",
+    "streakDays": "{count, plural, one {# day} other {# days}}",
+    "garageTurboHint": "Give a turbo to the whole garage, or to individual photos of each car."
   },
   "PublicVehicle": {
     "metaTitle": "Vehicle",
@@ -341,7 +346,8 @@
     "mods": "Mods",
     "gallery": "Gallery",
     "manage": "Manage vehicle",
-    "ownerPrivateNotice": "This vehicle is private – only you can see this page."
+    "ownerPrivateNotice": "This vehicle is private – only you can see this page.",
+    "noPhotosForTurbo": "Turbos go to photos – this car doesn't have any yet."
   },
   "EventStatus": {
     "draft": "Draft",
@@ -747,7 +753,22 @@
         "title": "Message from the organizer",
         "text": ""
       }
-    }
+    },
+    "openVehicle": "View car",
+    "openGarage": "View garage",
+    "openProfile": "View profile",
+    "openHallOfFame": "Hall of Fame",
+    "someone": "{count, plural, one {One member} other {# members}}",
+    "andOthers": "and {count, plural, one {# other} other {# others}}",
+    "turboVehicleTitle": "Turbo for your {vehicle}",
+    "turboVehicleText": "{who} gave your {vehicle} a turbo.",
+    "turboGarageTitle": "Turbo for your garage",
+    "turboGarageText": "{who} gave your garage a turbo.",
+    "followerTitle": "New follower",
+    "followerText": "{name} started following you.",
+    "followerAnonymous": "Someone started following you.",
+    "badgeTitle": "New badge in your Hall of Fame!",
+    "badgeText": "You earned the “{badge}” badge."
   },
   "Broadcast": {
     "title": "Messages to participants",
@@ -952,6 +973,28 @@
       "not_allowed": "You are not allowed to do this.",
       "cannot_demote_self": "You can't remove your own administrator role.",
       "generic": "The change failed. Please try again."
+    }
+  },
+  "Social": {
+    "turboCount": "{count, plural, one {# turbo} other {# turbos}}",
+    "give": "Give a turbo",
+    "remove": "Take back turbo",
+    "guestHint": "Sign in to give a turbo",
+    "ownHint": "Turbos you received",
+    "follow": "Follow",
+    "following": "Following ✓",
+    "followersLabel": "{count, plural, one {follower} other {followers}}",
+    "vehicleTotal": "{count, plural, one {# turbo in total} other {# turbos in total}}",
+    "giversTitle": "Turbos from:",
+    "andOthers": "and {count, plural, one {# other} other {# others}}",
+    "andMore": "and others",
+    "members": "{count, plural, one {# member} other {# members}}",
+    "errors": {
+      "notAuthenticated": "Please sign in.",
+      "usernameRequired": "Set your username in your profile first.",
+      "ownContent": "You can't give a turbo to your own content.",
+      "notFound": "This is no longer available.",
+      "unknown": "Something went wrong, please try again."
     }
   }
 }

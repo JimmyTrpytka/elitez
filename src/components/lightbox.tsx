@@ -3,6 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronIcon, CloseIcon } from "@/components/icons";
+import {
+  TurboButton,
+  type TurboMode,
+  type TurboState,
+} from "@/components/social/turbo-button";
+import { TurboIcon } from "@/components/social/turbo-icon";
 import { cn } from "@/lib/cn";
 
 export type LightboxPhoto = {
@@ -23,12 +29,15 @@ export function Lightbox({
   onClose,
   onIndex,
   alt,
+  extra,
 }: {
   photos: LightboxPhoto[];
   index: number;
   onClose: () => void;
   onIndex: (i: number) => void;
   alt: string;
+  /** Doplněk do horní lišty pro aktuální fotku (např. turbo) */
+  extra?: (photo: LightboxPhoto) => React.ReactNode;
 }) {
   const t = useTranslations("Lightbox");
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -79,6 +88,8 @@ export function Lightbox({
         <span className="text-sm font-semibold tabular-nums">
           {count > 1 ? `${index + 1} / ${count}` : ""}
         </span>
+        <div className="flex items-center gap-2">
+        {photo && extra ? extra(photo) : null}
         <button
           ref={closeRef}
           type="button"
@@ -88,6 +99,7 @@ export function Lightbox({
         >
           <CloseIcon className="h-6 w-6" />
         </button>
+        </div>
       </div>
 
       <div
@@ -209,6 +221,7 @@ export function HeroGallery({
   galleryTitle,
   overlay,
   children,
+  turbo,
 }: {
   photos: LightboxPhoto[];
   alt: string;
@@ -216,10 +229,27 @@ export function HeroGallery({
   /** Obsah přes spodek hlavní fotky (název, majitel…) */
   overlay?: React.ReactNode;
   children: React.ReactNode;
+  /** Turba u fotek: režim a výchozí stav podle id fotky */
+  turbo?: { mode: TurboMode; initial: Record<string, TurboState> };
 }) {
   const t = useTranslations("Lightbox");
+  const tSocial = useTranslations("Social");
   const [open, setOpen] = useState<number | null>(null);
+  const [turbos, setTurbos] = useState<Record<string, TurboState>>(turbo?.initial ?? {});
   const [cover, ...rest] = photos;
+  const total = Object.values(turbos).reduce((sum, s) => sum + s.count, 0);
+
+  const turboFor = (photo: LightboxPhoto, variant: "overlay" | "dark" = "overlay", size: "sm" | "md" = "md") =>
+    turbo ? (
+      <TurboButton
+        target={{ photoId: photo.id }}
+        mode={turbo.mode}
+        variant={variant}
+        size={size}
+        state={turbos[photo.id] ?? { given: false, count: 0 }}
+        onState={(s) => setTurbos((prev) => ({ ...prev, [photo.id]: s }))}
+      />
+    ) : null;
   return (
     <>
       <div className="relative overflow-hidden bg-night">
@@ -240,10 +270,19 @@ export function HeroGallery({
         ) : (
           <div className="glow-accent min-h-[40svh]" aria-hidden />
         )}
+        {cover && turbo ? (
+          <div className="absolute top-20 right-4 z-10 sm:top-24 sm:right-6">{turboFor(cover)}</div>
+        ) : null}
         {overlay ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-night via-night/70 to-transparent pt-32">
             <div className="pointer-events-auto mx-auto w-full max-w-5xl px-4 pb-8 sm:px-6 sm:pb-10">
               {overlay}
+              {turbo ? (
+                <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-black/40 px-4 py-2 text-sm text-white/85 backdrop-blur">
+                  <TurboIcon className={cn("h-5 w-5", total > 0 && "text-accent")} />
+                  {tSocial("vehicleTotal", { count: total })}
+                </p>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -258,21 +297,23 @@ export function HeroGallery({
             <div className="grid gap-3 sm:grid-cols-2">
               {rest.map((p, i) =>
                 p.thumb ? (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => setOpen(i + 1)}
-                    aria-label={t("open", { n: i + 2 })}
-                    className="group block cursor-zoom-in overflow-hidden rounded-control"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.thumb}
-                      alt=""
-                      loading="lazy"
-                      className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                    />
-                  </button>
+                  <div key={p.id} className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setOpen(i + 1)}
+                      aria-label={t("open", { n: i + 2 })}
+                      className="group block w-full cursor-zoom-in overflow-hidden rounded-control"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={p.thumb}
+                        alt=""
+                        loading="lazy"
+                        className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                      />
+                    </button>
+                    {turbo ? <div className="absolute right-3 bottom-3">{turboFor(p, "overlay", "sm")}</div> : null}
+                  </div>
                 ) : null,
               )}
             </div>
@@ -280,7 +321,14 @@ export function HeroGallery({
         ) : null}
       </div>
       {open !== null ? (
-        <Lightbox photos={photos} index={open} onIndex={setOpen} onClose={() => setOpen(null)} alt={alt} />
+        <Lightbox
+          photos={photos}
+          index={open}
+          onIndex={setOpen}
+          onClose={() => setOpen(null)}
+          alt={alt}
+          extra={turbo ? (p) => turboFor(p, "dark") : undefined}
+        />
       ) : null}
     </>
   );

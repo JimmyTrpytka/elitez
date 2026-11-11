@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { formatDateTime } from "@/lib/dates";
 import { listMyNotifications, type Notification } from "@/lib/data/notifications";
+import { getMyProfile } from "@/lib/data/profiles";
 import { fillPlaceholders } from "@/lib/email/placeholders";
 import { PageShell } from "@/components/page-shell";
 import { MarkNotificationsRead } from "@/components/notifications/mark-read";
@@ -40,13 +41,33 @@ type Payload = {
   subject?: string;
   body?: string;
   name?: string;
+  // turba
+  target?: "vehicle" | "garage";
+  vehicle_id?: string;
+  givers?: string[];
+  count?: number;
+  // sledování
+  username?: string | null;
+  display_name?: string | null;
+  // odznaky
+  name_cs?: string;
+  name_en?: string;
+};
+
+type Described = {
+  title: string;
+  text: string;
+  href: string | null;
+  linkLabel?: string;
+  eventTitle?: string;
 };
 
 async function NotificationsList() {
-  const [t, locale, items] = await Promise.all([
+  const [t, locale, items, me] = await Promise.all([
     getTranslations("Notifications"),
     getLocale(),
     listMyNotifications(),
+    getMyProfile(),
   ]);
   const hasUnread = items.some((n) => !n.read_at);
 
@@ -54,23 +75,68 @@ async function NotificationsList() {
     return <p className="rounded-card bg-muted p-8 text-ink-soft">{t("empty")}</p>;
   }
 
-  const describe = (n: Notification) => {
+  const myGarage = me?.username ? `/u/${me.username}` : "/account";
+
+  const describe = (n: Notification): Described => {
     const p = (n.payload ?? {}) as Payload;
     const vars = { event: p.event_title ?? "", vehicle: p.vehicle ?? "" };
-    if (n.type === "broadcast") {
-      return {
-        title: p.subject ?? t("broadcastTitle"),
-        text: fillPlaceholders(p.body ?? "", p.name ?? "", p.event_title ?? ""),
-        href: p.event_slug ? `/e/${p.event_slug}` : null,
-        eventTitle: p.event_title,
-      };
+    switch (n.type) {
+      case "broadcast":
+        return {
+          title: p.subject ?? t("broadcastTitle"),
+          text: fillPlaceholders(p.body ?? "", p.name ?? "", p.event_title ?? ""),
+          href: p.event_slug ? `/e/${p.event_slug}` : null,
+          linkLabel: t("openEvent"),
+          eventTitle: p.event_title,
+        };
+      case "turbo_received": {
+        // „@a, @b a 3 další“ – jména jen veřejných profilů, zbytek číslem
+        const count = p.count ?? 1;
+        const names = (p.givers ?? []).map((u) => `@${u}`);
+        const others = count - names.length;
+        const who = names.length
+          ? `${names.join(", ")}${others > 0 ? ` ${t("andOthers", { count: others })}` : ""}`
+          : t("someone", { count });
+        const vehicle = p.vehicle ?? "";
+        return p.target === "vehicle" && p.vehicle_id
+          ? {
+              title: t("turboVehicleTitle", { vehicle }),
+              text: t("turboVehicleText", { who, vehicle, count }),
+              href: `/v/${p.vehicle_id}`,
+              linkLabel: t("openVehicle"),
+            }
+          : {
+              title: t("turboGarageTitle"),
+              text: t("turboGarageText", { who, count }),
+              href: myGarage,
+              linkLabel: t("openGarage"),
+            };
+      }
+      case "new_follower":
+        return {
+          title: t("followerTitle"),
+          text: p.username
+            ? t("followerText", { name: p.display_name ?? `@${p.username}` })
+            : t("followerAnonymous"),
+          href: p.username ? `/u/${p.username}` : null,
+          linkLabel: t("openProfile"),
+        };
+      case "badge_awarded":
+        return {
+          title: t("badgeTitle"),
+          text: t("badgeText", { badge: (locale === "en" ? p.name_en : p.name_cs) ?? "" }),
+          href: `${myGarage}#sin-slavy`,
+          linkLabel: t("openHallOfFame"),
+        };
+      default:
+        return {
+          title: t(`types.${n.type}.title`, vars),
+          text: t(`types.${n.type}.text`, vars),
+          href: "/account/registrations",
+          linkLabel: t("openRegistrations"),
+          eventTitle: p.event_title,
+        };
     }
-    return {
-      title: t(`types.${n.type}.title`, vars),
-      text: t(`types.${n.type}.text`, vars),
-      href: "/account/registrations",
-      eventTitle: p.event_title,
-    };
   };
 
   return (
@@ -102,7 +168,7 @@ async function NotificationsList() {
               <p className="mt-2 whitespace-pre-line text-ink-soft">{d.text}</p>
               {d.href ? (
                 <Link href={d.href} className={cn(textLinkClass, "mt-3 inline-block text-sm")}>
-                  {n.type === "broadcast" ? t("openEvent") : t("openRegistrations")}
+                  {d.linkLabel}
                 </Link>
               ) : null}
             </li>
