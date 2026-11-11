@@ -28,10 +28,17 @@ describe("okno registrace", () => {
     expect(registrationWindow(base, false, at("2027-04-01T12:00:00Z")).kind).toBe("open");
   });
 
-  it("po uzávěrce a po začátku eventu je zavřeno", () => {
-    expect(registrationWindow(base, true, at("2027-06-01T12:00:00Z")).kind).toBe("closed");
-    const noDeadline = { ...base, registration_closes_at: null };
-    expect(registrationWindow(noDeadline, true, at("2027-06-19T09:00:00Z")).kind).toBe("closed");
+  it("po uzávěrce a po začátku eventu je zavřeno (s důvodem)", () => {
+    expect(registrationWindow(base, true, at("2027-06-01T12:00:00Z"))).toEqual({
+      kind: "closed",
+      reason: "deadline",
+    });
+    const lateDeadline = { ...base, registration_closes_at: "2027-06-25T00:00:00Z" };
+    expect(registrationWindow(lateDeadline, true, at("2027-06-19T09:00:00Z"))).toEqual({
+      kind: "closed",
+      reason: "started",
+      startsAt: base.starts_at,
+    });
   });
 
   it("stav a přístup eventu mají přednost", () => {

@@ -148,6 +148,7 @@ export type EventErrorKey =
   | "startInvalid"
   | "endBeforeStart"
   | "registrationOrder"
+  | "registrationAfterStart"
   | "slugInvalid"
   | "slugTaken"
   | "capacityInvalid"
@@ -212,6 +213,9 @@ export async function saveEvent(
     return { status: "error", error: "registrationOrder" };
   if (opensAt && closesAt && closesAt <= opensAt)
     return { status: "error", error: "registrationOrder" };
+  // Přihlašovat se dá jen do začátku eventu
+  if ((opensAt && opensAt >= startsAt) || (closesAt && closesAt > startsAt))
+    return { status: "error", error: "registrationAfterStart" };
   if (capacity === undefined) return { status: "error", error: "capacityInvalid" };
   if (lat === undefined || lng === undefined || (lat === null) !== (lng === null))
     return { status: "error", error: "locationInvalid" };

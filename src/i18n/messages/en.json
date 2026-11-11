@@ -466,7 +466,8 @@
       "countryInvalid": "Choose a country from the list.",
       "tooLong": "Some text is too long (max. 5000 characters).",
       "notAllowed": "You are not allowed to edit this event.",
-      "generic": "Saving failed. Please try again."
+      "generic": "Saving failed. Please try again.",
+      "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start)."
     }
   },
   "RegistrationStatus": {
@@ -521,7 +522,9 @@
     "submitting": "Sending…",
     "cancel": "Cancel application",
     "cancelConfirmText": "Really cancel?",
-    "cancelConfirm": "Yes, cancel"
+    "cancelConfirm": "Yes, cancel",
+    "closedStarted": "The event started {date} – applications were only possible until it started.",
+    "closedDeadline": "The deadline was {date}."
   },
   "RegistrationErrors": {
     "not_signed_in": "You are not signed in.",

@@ -466,7 +466,8 @@
       "countryInvalid": "Vyber zemi ze seznamu.",
       "tooLong": "Některý text je příliš dlouhý (nejvýš 5000 znaků).",
       "notAllowed": "Nemáš oprávnění upravovat tento event.",
-      "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
+      "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
+      "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku)."
     }
   },
   "RegistrationStatus": {
@@ -521,7 +522,9 @@
     "submitting": "Odesílám…",
     "cancel": "Zrušit přihlášku",
     "cancelConfirmText": "Opravdu zrušit?",
-    "cancelConfirm": "Ano, zrušit"
+    "cancelConfirm": "Ano, zrušit",
+    "closedStarted": "Event začal {date} – přihlášky šlo podávat jen do jeho začátku.",
+    "closedDeadline": "Uzávěrka byla {date}."
   },
   "RegistrationErrors": {
     "not_signed_in": "Nejsi přihlášen(a).",
