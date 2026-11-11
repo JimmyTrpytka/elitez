@@ -190,7 +190,10 @@
     "registrationsCount": "{count, plural, =0 {Žádná aktivní přihláška} one {# aktivní přihláška} few {# aktivní přihlášky} many {# aktivní přihlášky} other {# aktivních přihlášek}}",
     "unreadCount": "{count, plural, one {# nepřečtené} few {# nepřečtená} many {# nepřečteného} other {# nepřečtených}}",
     "allRead": "Vše přečteno",
-    "badgesCount": "{count, plural, =0 {Zatím bez odznaků} one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}"
+    "badgesCount": "{count, plural, =0 {Zatím bez odznaků} one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}",
+    "streakTitle": "Série {count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
+    "streakText": "Dnes jsi ještě nedal(a) turbo. Dej aspoň jedno, ať o sérii nepřijdeš.",
+    "streakCta": "Najít auta"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -1161,5 +1164,32 @@
     "share": "Sdílet",
     "copied": "Odkaz zkopírován ✓",
     "copyPrompt": "Zkopíruj si odkaz:"
+  },
+  "Calendar": {
+    "add": "Do kalendáře",
+    "ics": "Apple / Android / Outlook",
+    "icsHint": "Stáhne soubor .ics – otevři ho a potvrď přidání.",
+    "google": "Google Kalendář"
+  },
+  "Progress": {
+    "title": "Dokonči profil",
+    "subtitle": "Pár kroků a tvůj profil bude kompletní.",
+    "done": "hotovo",
+    "todo": "zbývá",
+    "steps": {
+      "avatar": "Nahraj profilovou fotku",
+      "car": "Přidej auto nebo sen do Garáže snů",
+      "photos": "Přidej aspoň 3 fotky auta",
+      "turbo": "Dej první turbo",
+      "follow": "Začni sledovat první garáž",
+      "bio": "Napiš pár slov o sobě"
+    }
+  },
+  "Install": {
+    "title": "Přidej si ELITEZ na plochu",
+    "text": "Otevřeš ho jedním klepnutím jako aplikaci – bez hledání v prohlížeči.",
+    "iosText": "V Safari klepni dole na Sdílet (čtvereček se šipkou) a vyber „Přidat na plochu“.",
+    "install": "Přidat na plochu",
+    "dismiss": "Teď ne"
   }
 }

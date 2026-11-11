@@ -7,9 +7,27 @@ export type MyCounts = {
   badges: number;
   unread: number;
   activeRegistrations: number;
+  /** Fotky ve všech vlastních autech */
+  photos: number;
+  /** Dal dnes (pražský den) aspoň jedno turbo? */
+  turboToday: boolean;
 };
 
-const ZERO: MyCounts = { vehicles: 0, former: 0, dreams: 0, badges: 0, unread: 0, activeRegistrations: 0 };
+const ZERO: MyCounts = {
+  vehicles: 0,
+  former: 0,
+  dreams: 0,
+  badges: 0,
+  unread: 0,
+  activeRegistrations: 0,
+  photos: 0,
+  turboToday: false,
+};
+
+/** Dnešní datum v pražském čase (YYYY-MM-DD) – stejně jako denní série v databázi. */
+function pragueToday(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Prague" }).format(new Date());
+}
 
 /** Počty pro záložky garáže a dlaždice „Můj účet“ (jen hlavičky, žádná data). */
 export async function getMyCounts(): Promise<MyCounts> {
@@ -20,7 +38,7 @@ export async function getMyCounts(): Promise<MyCounts> {
   const uid = auth.user.id;
   const head = { count: "exact" as const, head: true };
 
-  const [vehicles, former, dreams, badges, unread, regs] = await Promise.all([
+  const [vehicles, former, dreams, badges, unread, regs, photos, today] = await Promise.all([
     supabase.from("vehicles").select("id", head).eq("owner_id", uid).eq("status", "current"),
     supabase.from("vehicles").select("id", head).eq("owner_id", uid).eq("status", "former"),
     supabase.from("dream_cars").select("id", head).eq("owner_id", uid),
@@ -31,6 +49,8 @@ export async function getMyCounts(): Promise<MyCounts> {
       .select("id", head)
       .eq("user_id", uid)
       .in("status", ["pending", "approved", "waitlist"]),
+    supabase.from("vehicle_photos").select("id, vehicles!inner(owner_id)", head).eq("vehicles.owner_id", uid),
+    supabase.from("turbo_days").select("day", head).eq("user_id", uid).eq("day", pragueToday()),
   ]);
   return {
     vehicles: vehicles.count ?? 0,
@@ -39,5 +59,7 @@ export async function getMyCounts(): Promise<MyCounts> {
     badges: badges.count ?? 0,
     unread: unread.count ?? 0,
     activeRegistrations: regs.count ?? 0,
+    photos: photos.count ?? 0,
+    turboToday: (today.count ?? 0) > 0,
   };
 }

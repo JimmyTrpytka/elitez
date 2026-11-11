@@ -190,7 +190,10 @@
     "registrationsCount": "{count, plural, =0 {No active registration} one {# active registration} other {# active registrations}}",
     "unreadCount": "{count, plural, one {# unread} other {# unread}}",
     "allRead": "All caught up",
-    "badgesCount": "{count, plural, =0 {No badges yet} one {# badge} other {# badges}}"
+    "badgesCount": "{count, plural, =0 {No badges yet} one {# badge} other {# badges}}",
+    "streakTitle": "{count, plural, one {# day} other {# days}} streak",
+    "streakText": "You haven't given a turbo today. Give at least one to keep your streak.",
+    "streakCta": "Find cars"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -1161,5 +1164,32 @@
     "share": "Share",
     "copied": "Link copied ✓",
     "copyPrompt": "Copy the link:"
+  },
+  "Calendar": {
+    "add": "Add to calendar",
+    "ics": "Apple / Android / Outlook",
+    "icsHint": "Downloads an .ics file – open it and confirm.",
+    "google": "Google Calendar"
+  },
+  "Progress": {
+    "title": "Complete your profile",
+    "subtitle": "A few steps and your profile is complete.",
+    "done": "done",
+    "todo": "to do",
+    "steps": {
+      "avatar": "Upload a profile photo",
+      "car": "Add a car or a dream",
+      "photos": "Add at least 3 car photos",
+      "turbo": "Give your first turbo",
+      "follow": "Follow your first garage",
+      "bio": "Write a few words about yourself"
+    }
+  },
+  "Install": {
+    "title": "Add ELITEZ to your home screen",
+    "text": "Open it with one tap like an app – no searching in the browser.",
+    "iosText": "In Safari tap Share (square with an arrow) and choose “Add to Home Screen”.",
+    "install": "Add to home screen",
+    "dismiss": "Not now"
   }
 }

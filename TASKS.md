@@ -147,6 +147,10 @@ Pravidla: SPEC.md 5.1e
 
 **Stav (12. 11. 2026):** hotovo na localhost, čeká na vyzkoušení se dvěma účty – turba (fotky, garáž) s animací, souhrnná upozornění, sledování, Síň slávy (odznaky + postup), Žebříčky, Garáž snů s „Tohle chci!“, štítek Petrolhead/Driver. Databáze nahraná, `npm run test:db` prošel.
 
+
+**Rychlá vylepšení (12. 11. 2026, inspirace oblíbenými aplikacemi):** dvojklik na fotku = turbo, QR samolepka garáže/auta (Garáž → QR samolepka), Auto týdne na úvodní stránce, náhledy odkazů při sdílení + tlačítko Sdílet, připomínka denní série a „Dokonči profil“ v Můj účet, přidání eventu do kalendáře (.ics / Google), nabídka „Přidat na plochu“.
+
+**Na později (větší):** Novinky od sledovaných (přehled nových aut a fotek sledovaných garáží), Týdenní shrnutí („tvoje garáž tento týden získala 23 turb“).
 ---
 
 ## Milník 5c – Pořadatelé (přehled a sledování)

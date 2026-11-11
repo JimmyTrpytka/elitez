@@ -25,6 +25,8 @@ import {
   UserIcon,
 } from "@/components/icons";
 import { TurboIcon } from "@/components/social/turbo-icon";
+import { ProfileProgress } from "@/components/account/profile-progress";
+import { InstallHint } from "@/components/install-hint";
 import { cn } from "@/lib/cn";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -221,6 +223,39 @@ async function AccountContent() {
           </dl>
         ) : null}
       </section>
+
+      {/* Připomínka denní série (jako Duolingo) */}
+      {stats.streak > 0 && !counts.turboToday ? (
+        <section className="flex flex-col gap-4 rounded-card bg-accent p-6 text-ink sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-display text-3xl leading-none font-extrabold uppercase">
+              <span aria-hidden>🔥 </span>
+              {tA("streakTitle", { count: stats.streak })}
+            </p>
+            <p className="mt-2">{tA("streakText")}</p>
+          </div>
+          <Link href="/leaderboard" className={buttonClasses("secondary", "md", "shrink-0 border-ink")}>
+            {tA("streakCta")}
+          </Link>
+        </section>
+      ) : null}
+
+      {profile.username ? (
+        <ProfileProgress
+          steps={[
+            { key: "avatar", done: Boolean(profile.avatar_path), href: "/account/profile" },
+            { key: "car", done: counts.vehicles > 0 || counts.dreams > 0, href: "/garage" },
+            ...(counts.vehicles > 0
+              ? [{ key: "photos" as const, done: counts.photos >= 3, href: "/garage" }]
+              : []),
+            { key: "turbo", done: stats.givenTotal > 0, href: "/leaderboard" },
+            { key: "follow", done: stats.following > 0, href: "/members" },
+            { key: "bio", done: Boolean(profile.bio), href: "/account/profile" },
+          ]}
+        />
+      ) : null}
+
+      <InstallHint />
 
       {/* Moje věci */}
       <section>
