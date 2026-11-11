@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/cn";
+import { FieldMessage, fieldBorder } from "./field-message";
 
 /**
  * Datum a čas jako dvě samostatná pole (místo jednoho „datetime-local“,
@@ -15,6 +17,7 @@ export function DateTimeField({
   defaultValue,
   defaultTime,
   required,
+  error,
 }: {
   label: string;
   name: string;
@@ -23,6 +26,7 @@ export function DateTimeField({
   /** Čas, který se předvyplní k novému datu, např. „10:00“ */
   defaultTime: string;
   required?: boolean;
+  error?: string;
 }) {
   const t = useTranslations("Common");
   const [date, setDate] = useState(defaultValue.slice(0, 10));
@@ -31,7 +35,7 @@ export function DateTimeField({
   const timeId = `${name}-time`;
 
   return (
-    <fieldset className="flex flex-col gap-1.5">
+    <fieldset className="flex flex-col gap-1.5" data-field={name}>
       <legend className="mb-1.5 text-sm font-medium text-ink">{label}</legend>
       <div className="grid grid-cols-[1fr_7.5rem] gap-2">
         <label htmlFor={dateId} className="sr-only">
@@ -43,7 +47,11 @@ export function DateTimeField({
           value={date}
           required={required}
           onChange={(e) => setDate(e.target.value)}
-          className="h-12 min-w-0 rounded-control border border-line bg-surface px-3 text-base text-ink focus:border-ink focus:outline-none"
+          className={cn(
+            "h-12 min-w-0 rounded-control border bg-surface px-3 text-base text-ink focus:outline-none",
+            fieldBorder(error),
+          )}
+          aria-invalid={error ? true : undefined}
         />
         <label htmlFor={timeId} className="sr-only">
           {t("time")}
@@ -55,9 +63,14 @@ export function DateTimeField({
           required={Boolean(date)}
           step={300}
           onChange={(e) => setTime(e.target.value)}
-          className="h-12 min-w-0 rounded-control border border-line bg-surface px-3 text-base text-ink focus:border-ink focus:outline-none"
+          className={cn(
+            "h-12 min-w-0 rounded-control border bg-surface px-3 text-base text-ink focus:outline-none",
+            fieldBorder(error),
+          )}
+          aria-invalid={error ? true : undefined}
         />
       </div>
+      <FieldMessage id={`${name}-message`} error={error} />
       <input type="hidden" name={name} value={date && time ? `${date}T${time.slice(0, 5)}` : ""} />
     </fieldset>
   );

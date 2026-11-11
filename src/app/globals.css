@@ -50,3 +50,8 @@ body {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
+
+/* Pole s chybou: červené zvýraznění i při zaměření */
+[aria-invalid="true"]:focus-visible {
+  outline-color: var(--color-danger);
+}

@@ -1,10 +1,12 @@
 import type { ReactNode, SelectHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
+import { FieldMessage, fieldBorder } from "./field-message";
 
 type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label: string;
   name: string;
   hint?: string;
+  error?: string;
   children: ReactNode;
 };
 
@@ -12,15 +14,16 @@ export function SelectField({
   label,
   name,
   hint,
+  error,
   className,
   id,
   children,
   ...props
 }: SelectFieldProps) {
   const inputId = id ?? name;
-  const hintId = hint ? `${inputId}-hint` : undefined;
+  const messageId = `${inputId}-message`;
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5" data-field={name}>
       <label htmlFor={inputId} className="text-sm font-medium text-ink">
         {label}
       </label>
@@ -28,10 +31,12 @@ export function SelectField({
         <select
           id={inputId}
           name={name}
-          aria-describedby={hintId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={hint || error ? messageId : undefined}
           className={cn(
-            "h-12 w-full appearance-none rounded-control border border-line bg-surface px-4 pr-10 text-base text-ink",
-            "transition-colors focus:border-ink focus:outline-none",
+            "h-12 w-full appearance-none rounded-control border bg-surface px-4 pr-10 text-base text-ink",
+            "transition-colors focus:outline-none",
+            fieldBorder(error),
             className,
           )}
           {...props}
@@ -46,11 +51,7 @@ export function SelectField({
           <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </div>
-      {hint ? (
-        <p id={hintId} className="text-xs text-subtle">
-          {hint}
-        </p>
-      ) : null}
+      <FieldMessage id={messageId} hint={hint} error={error} />
     </div>
   );
 }

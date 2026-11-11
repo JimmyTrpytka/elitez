@@ -1,5 +1,6 @@
 "use client";
 
+import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
@@ -26,6 +27,7 @@ export function BroadcastForm({
 }) {
   const t = useTranslations("Broadcast");
   const [state, action, pending] = useActionState(sendBroadcast, initial);
+  const submit = useKeepValuesSubmit(action);
   const [segment, setSegment] = useState<Segment>("approved");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
@@ -49,7 +51,7 @@ export function BroadcastForm({
   }
 
   return (
-    <form action={action} className="flex flex-col gap-6">
+    <form onSubmit={submit} className="flex flex-col gap-6">
       <input type="hidden" name="event_id" value={eventId} />
       <input type="hidden" name="segment" value={segment} />
       {state.status === "error" ? <Alert tone="error">{t(`errors.${state.error}`)}</Alert> : null}

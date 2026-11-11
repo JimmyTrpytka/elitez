@@ -1,37 +1,38 @@
 import type { InputHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
+import { FieldMessage, fieldBorder } from "./field-message";
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
   hint?: string;
+  /** Chybová hláška k tomuto poli (zobrazí se pod ním, pole zčervená). */
+  error?: string;
 };
 
-/** Textové pole s popiskem a volitelnou nápovědou. */
-export function Field({ label, name, hint, className, id, ...props }: FieldProps) {
+/** Textové pole s popiskem, nápovědou a případnou chybou. */
+export function Field({ label, name, hint, error, className, id, ...props }: FieldProps) {
   const inputId = id ?? name;
-  const hintId = hint ? `${inputId}-hint` : undefined;
+  const messageId = `${inputId}-message`;
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1.5" data-field={name}>
       <label htmlFor={inputId} className="text-sm font-medium text-ink">
         {label}
       </label>
       <input
         id={inputId}
         name={name}
-        aria-describedby={hintId}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={hint || error ? messageId : undefined}
         className={cn(
-          "h-12 rounded-control border border-line bg-surface px-4 text-base text-ink placeholder:text-subtle",
-          "transition-colors focus:border-ink focus:outline-none",
+          "h-12 rounded-control border bg-surface px-4 text-base text-ink placeholder:text-subtle",
+          "transition-colors focus:outline-none",
+          fieldBorder(error),
           className,
         )}
         {...props}
       />
-      {hint ? (
-        <p id={hintId} className="text-xs text-subtle">
-          {hint}
-        </p>
-      ) : null}
+      <FieldMessage id={messageId} hint={hint} error={error} />
     </div>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
+import { useActionState, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
+import { useScrollToError } from "@/components/ui/use-scroll-to-error";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { DateTimeField } from "@/components/ui/date-time-field";
@@ -64,18 +66,26 @@ export function EventForm({
   const tAccess = useTranslations("EventAccess");
   const locale = useLocale();
   const [state, action, pending] = useActionState(saveEvent, initial);
+  const submit = useKeepValuesSubmit(action);
+  const formRef = useRef<HTMLFormElement>(null);
+  // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
+  const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country" };
+  const errField = state.status === "error" ? fieldOf[state.error] : undefined;
+  const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
+  const errorFor = (name: string) => (errField === name ? errMessage : undefined);
+  useScrollToError(state, errField, formRef);
   const countries = countryOptions(locale);
 
   return (
-    <form action={action} className="flex flex-col gap-8">
+    <form ref={formRef} onSubmit={submit} className="flex flex-col gap-8">
       <input type="hidden" name="locale" value={locale} />
       {values.id ? <input type="hidden" name="id" value={values.id} /> : null}
-      {state.status === "error" ? (
+      {state.status === "error" && !errField ? (
         <Alert tone="error">{t(`errors.${state.error}`)}</Alert>
       ) : null}
 
       <Section title={t("basicsTitle")}>
-        <Field label={t("titleLabel")} name="title" required maxLength={120} defaultValue={values.title} />
+        <Field label={t("titleLabel")} name="title" error={errorFor("title")} required maxLength={120} defaultValue={values.title} />
         <div className="grid gap-5 sm:grid-cols-2">
           <SelectField label={t("seasonLabel")} name="season_id" defaultValue={values.season_id}>
             <option value="">{t("noSeason")}</option>
@@ -97,6 +107,7 @@ export function EventForm({
           <DateTimeField
             label={t("startsLabel")}
             name="starts_at"
+            error={errorFor("starts_at")}
             required
             defaultValue={values.starts_at}
             defaultTime="10:00"
@@ -104,6 +115,7 @@ export function EventForm({
           <DateTimeField
             label={t("endsLabel")}
             name="ends_at"
+            error={errorFor("ends_at")}
             required
             defaultValue={values.ends_at}
             defaultTime="18:00"
@@ -120,6 +132,7 @@ export function EventForm({
         <Field
           label={t("slugLabel")}
           name="slug"
+          error={errorFor("slug")}
           maxLength={80}
           autoCapitalize="none"
           spellCheck={false}
@@ -131,7 +144,7 @@ export function EventForm({
       <Section title={t("placeTitle")}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label={t("venueNameLabel")} name="venue_name" maxLength={120} defaultValue={values.venue_name} />
-          <SelectField label={t("countryLabel")} name="country" defaultValue={values.country}>
+          <SelectField label={t("countryLabel")} name="country" error={errorFor("country")} defaultValue={values.country}>
             <option value="">{tCommon("notSelected")}</option>
             {countries.priority.map((c) => (
               <option key={c.code} value={c.code}>
@@ -192,6 +205,7 @@ export function EventForm({
         <Field
           label={t("capacityLabel")}
           name="capacity"
+          error={errorFor("capacity")}
           type="number"
           inputMode="numeric"
           min={1}
@@ -208,6 +222,7 @@ export function EventForm({
           <DateTimeField
             label={t("closesLabel")}
             name="registration_closes_at"
+            error={errorFor("registration_closes_at")}
             defaultValue={values.registration_closes_at}
             defaultTime="23:59"
           />
