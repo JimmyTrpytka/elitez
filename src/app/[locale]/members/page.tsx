@@ -7,6 +7,7 @@ import { listPublicMembers } from "@/lib/data/members";
 import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
+import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Members");
@@ -16,13 +17,22 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MembersPage({ searchParams }: PageProps<"/[locale]/members">) {
   const [t, tAuth] = await Promise.all([getTranslations("Members"), getTranslations("Auth")]);
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      <h1 className="mb-2 text-3xl font-bold tracking-tight sm:text-5xl">{t("title")}</h1>
-      <p className="mb-8 max-w-2xl text-lg text-ink-soft">{t("subtitle")}</p>
-      <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
-        <MembersList searchParams={searchParams} />
-      </Suspense>
-    </div>
+    <DarkSection className="flex-1">
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-20">
+        <Eyebrow dark className="reveal mb-4">
+          {t("eyebrow")}
+        </Eyebrow>
+        <DisplayHeading as="h1" size="lg" className="reveal reveal-delay-1 text-white">
+          {t("title")}
+        </DisplayHeading>
+        <p className="reveal reveal-delay-2 mt-4 mb-10 max-w-2xl text-lg text-white/75">
+          {t("subtitle")}
+        </p>
+        <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
+          <MembersList searchParams={searchParams} />
+        </Suspense>
+      </div>
+    </DarkSection>
   );
 }
 
@@ -51,15 +61,15 @@ async function MembersList({
           name="q"
           defaultValue={search}
           placeholder={t("searchPlaceholder")}
-          className="h-11 min-w-0 flex-1 rounded-control border border-line px-4 text-base focus:border-ink focus:outline-none"
+          className="h-12 min-w-0 flex-1 rounded-full border border-white/15 bg-white/5 px-5 text-base text-white placeholder:text-white/40 focus:border-accent focus:outline-none"
         />
-        <button type="submit" className={buttonClasses("secondary")}>
+        <button type="submit" className={buttonClasses("primary", "md", "h-12")}>
           {t("search")}
         </button>
       </form>
 
       {members.length === 0 ? (
-        <p className="rounded-card bg-muted p-8 text-ink-soft">
+        <p className="rounded-card bg-night-soft p-8 text-night-subtle">
           {search ? t("noResults") : t("empty")}
         </p>
       ) : (
@@ -73,19 +83,19 @@ async function MembersList({
               <li key={m.id}>
                 <Link
                   href={`/u/${m.username}`}
-                  className="flex items-center gap-4 rounded-card border border-line p-4 transition-colors hover:border-ink"
+                  className="group flex items-center gap-4 rounded-card bg-night-soft p-4 ring-1 ring-white/10 transition-all hover:-translate-y-0.5 hover:ring-accent/40"
                 >
                   <Avatar url={m.avatarUrl} name={name} size={56} />
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="truncate font-semibold text-ink">{name}</p>
+                      <p className="truncate font-display text-2xl leading-tight font-extrabold text-white uppercase">{name}</p>
                       {m.verified ? <Badge>Verified</Badge> : null}
                     </div>
-                    <p className="truncate text-sm text-subtle">
+                    <p className="truncate text-sm text-night-subtle">
                       @{m.username}
                       {place ? ` · ${place}` : ""}
                     </p>
-                    <p className="mt-0.5 text-sm text-ink-soft">
+                    <p className="mt-0.5 text-sm text-accent">
                       {t("vehicles", { count: m.vehicleCount })}
                     </p>
                   </div>
@@ -101,7 +111,7 @@ async function MembersList({
           {pageNumber > 0 ? (
             <Link
               href={{ pathname: "/members", query: { ...(search ? { q: search } : {}), page: pageNumber - 1 } }}
-              className={buttonClasses("ghost")}
+              className={buttonClasses("outlineDark")}
             >
               {t("previous")}
             </Link>
@@ -109,7 +119,7 @@ async function MembersList({
           {hasMore ? (
             <Link
               href={{ pathname: "/members", query: { ...(search ? { q: search } : {}), page: pageNumber + 1 } }}
-              className={buttonClasses("secondary")}
+              className={buttonClasses("light")}
             >
               {t("next")}
             </Link>

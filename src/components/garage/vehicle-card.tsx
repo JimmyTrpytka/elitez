@@ -1,17 +1,22 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { VehicleCardView } from "@/lib/data/vehicles";
+import { cn } from "@/lib/cn";
 
 /** Karta vozidla se zmenšenou hlavní fotkou. */
 export async function VehicleCard({
   vehicle,
   href,
   showVisibility = false,
+  tone = "light",
 }: {
   vehicle: VehicleCardView;
   href: string;
   showVisibility?: boolean;
+  /** „dark“ pro tmavé výkladní stránky */
+  tone?: "light" | "dark";
 }) {
+  const dark = tone === "dark";
   const t = await getTranslations("Vehicle");
   const tCommon = await getTranslations("Common");
   const title = `${vehicle.make} ${vehicle.model}`;
@@ -19,16 +24,21 @@ export async function VehicleCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col overflow-hidden rounded-card bg-muted transition-transform hover:-translate-y-0.5"
+      className={cn(
+        "group flex flex-col overflow-hidden rounded-card transition-all duration-500 hover:-translate-y-1",
+        dark
+          ? "bg-night-soft ring-1 ring-white/10 hover:shadow-[0_20px_60px_-24px_rgb(255_214_10/0.35)] hover:ring-accent/40"
+          : "bg-muted hover:shadow-lg",
+      )}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-line">
+      <div className={cn("relative aspect-[4/3] w-full overflow-hidden", dark ? "bg-white/5" : "bg-line")}>
         {vehicle.cover?.urls.md ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={vehicle.cover.urls.md}
             alt={title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-subtle">
@@ -41,9 +51,16 @@ export async function VehicleCard({
           </span>
         ) : null}
       </div>
-      <div className="p-4">
-        <p className="text-lg font-semibold text-ink">{title}</p>
-        <p className="text-sm text-subtle">
+      <div className="p-4 sm:p-5">
+        <p
+          className={cn(
+            "font-display text-2xl leading-tight font-extrabold uppercase",
+            dark ? "text-white" : "text-ink",
+          )}
+        >
+          {title}
+        </p>
+        <p className={cn("mt-0.5 text-sm", dark ? "text-night-subtle" : "text-subtle")}>
           {[vehicle.year, t(`categories.${vehicle.category}`)]
             .filter(Boolean)
             .join(" · ")}

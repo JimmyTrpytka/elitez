@@ -10,6 +10,7 @@ import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
+import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -32,8 +33,8 @@ function TextBlock({ title, text }: { title: string; text: string | null }) {
   if (!text) return null;
   return (
     <section className="mb-12">
-      <h2 className="mb-3 text-xl font-semibold">{title}</h2>
-      <p className="max-w-3xl leading-relaxed whitespace-pre-line text-ink-soft">{text}</p>
+      <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">{title}</h2>
+      <p className="max-w-3xl leading-relaxed whitespace-pre-line text-white/75">{text}</p>
     </section>
   );
 }
@@ -80,61 +81,69 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
   ];
 
   return (
-    <article className="pb-20">
-      {event.cover.lg ? (
-        <div className="w-full bg-ink">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+    <article className="flex-1 bg-night pb-20 text-night-text">
+      {/* Úvodní fotka s názvem */}
+      <header className="relative overflow-hidden">
+        {event.cover.lg ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={event.cover.lg}
-            alt={event.title}
-            className="mx-auto max-h-[70vh] w-full max-w-7xl object-cover"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-70"
           />
+        ) : null}
+        <div aria-hidden className="glow-accent absolute inset-0" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-night via-night/60 to-night/10" />
+        <div className="relative mx-auto flex min-h-[56svh] w-full max-w-5xl flex-col justify-end px-4 pt-24 pb-10 sm:min-h-[64svh] sm:px-6">
+          <div className="reveal mb-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold tracking-[0.12em] text-ink uppercase">
+              {formatEventDates(event.starts_at, event.ends_at, locale, event.timezone)}
+            </span>
+            <EventAccessBadge access={event.access} />
+            {isOrganizer ? <EventStatusBadge status={event.status} /> : null}
+          </div>
+          <DisplayHeading as="h1" size="lg" className="reveal reveal-delay-1 text-white">
+            {event.title}
+          </DisplayHeading>
+          {event.organizerName ? (
+            <p className="reveal reveal-delay-2 mt-3 text-white/70">
+              {t("organizedBy", { name: event.organizerName })}
+            </p>
+          ) : null}
         </div>
-      ) : null}
+      </header>
 
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6 sm:pt-12">
+      <div className="mx-auto w-full max-w-5xl px-4 sm:px-6">
         {isOrganizer ? (
-          <div className="mb-6 flex flex-wrap items-center gap-3">
-            <Link href={`/organizer/events/${event.id}`} className={buttonClasses("secondary")}>
+          <div className="mb-8">
+            <Link href={`/organizer/events/${event.id}`} className={buttonClasses("light")}>
               {t("manage")}
             </Link>
-            <EventStatusBadge status={event.status} />
           </div>
         ) : null}
 
         {event.status === "cancelled" ? (
-          <div className="mb-6">
+          <div className="mb-8">
             <Alert tone="error">{t("cancelledNotice")}</Alert>
           </div>
         ) : null}
 
-        <header className="mb-10">
-          <div className="mb-3 flex flex-wrap gap-2">
-            <EventAccessBadge access={event.access} />
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">{event.title}</h1>
-          {event.organizerName ? (
-            <p className="mt-3 text-ink-soft">
-              {t("organizedBy", { name: event.organizerName })}
-            </p>
-          ) : null}
-          {event.description ? (
-            <p className="mt-6 max-w-3xl text-lg whitespace-pre-line text-ink-soft">
-              {event.description}
-            </p>
-          ) : null}
-        </header>
+        {event.description ? (
+          <p className="mb-10 max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">
+            {event.description}
+          </p>
+        ) : null}
 
-        <dl className="mb-12 grid gap-x-6 gap-y-5 border-y border-line py-6 sm:grid-cols-2">
+        <dl className="mb-12 grid gap-x-8 gap-y-6 border-y border-white/10 py-8 sm:grid-cols-2">
           {facts.map(([label, value]) => (
             <div key={label}>
-              <dt className="text-sm text-subtle">{label}</dt>
-              <dd className="mt-0.5 font-semibold text-ink">{value}</dd>
+              <dt className="text-xs font-semibold tracking-[0.18em] text-night-subtle uppercase">{label}</dt>
+              <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
             </div>
           ))}
         </dl>
 
-        <Suspense fallback={<div className="mb-12 h-32 rounded-card bg-muted" aria-hidden />}>
+        <Suspense fallback={<div className="mb-12 h-32 rounded-card bg-night-soft" aria-hidden />}>
           <RegistrationBox event={event} />
         </Suspense>
 
@@ -144,8 +153,11 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
 
         {event.lat !== null && event.lng !== null ? (
           <section className="mb-12">
-            <h2 className="mb-3 text-xl font-semibold">{t("mapTitle")}</h2>
+            <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">
+              {t("mapTitle")}
+            </h2>
             <EventMap lat={event.lat} lng={event.lng} label={t("mapTitle")} />
+            {place ? <p className="mt-3 text-night-subtle">{place}</p> : null}
             {navigateUrl ? (
               <a
                 href={navigateUrl}

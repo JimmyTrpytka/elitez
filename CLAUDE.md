@@ -35,9 +35,10 @@ Vlastník projektu **není programátor**. Proto:
 - Peníze/ticketing ve v1 neřešíme. Nepřidávej platby bez zadání.
 
 ## Design
-- Světlý, minimalistický, moderní (styl Apple), luxusní nádech, obsah před formou.
-- Černá + žlutá: žlutá je **akcent** (tlačítka, odznaky). Na bílém pozadí **nikdy žlutý text** (kontrast); na žlutých plochách černý text.
-- Velké fotky aut, hodně prázdného místa, čistý bezpatkový font.
+- **Kombinace tmavé a světlé** (SPEC 11): tmavé „výkladní“ části (úvod, eventy, profily, vozidla), světlé „pracovní“ (formuláře, správa, admin).
+- Černá + žlutá: žlutá je **akcent** (tlačítka, odznaky, záře, zvýraznění). Na tmavém smí být žlutý text, na bílém **nikdy** (kontrast); na žlutých plochách černý text.
+- Nadpisy: úzké tučné písmo verzálkami (`font-display`), texty Inter. Velké fotky aut, hodně prostoru.
+- Tmavé sekce: komponenty v `src/components/brand/` (DarkSection, Eyebrow, DisplayHeading). Barvy `night-*` v `globals.css`.
 - Mobil na prvním místě (většina uživatelů bude na telefonu).
 
 ## Struktura projektu (návrh)

@@ -257,12 +257,16 @@ Proč PWA místo nativní aplikace: jedna kódová základna, rychlý vývoj, ž
 
 ## 11. Design
 
-- **Styl:** světlý, minimalistický, moderní (inspirace Apple), s luxusním nádechem (real-estate/Dubaj), obsah před formou
-- **Barvy:** černá a žlutá. Žlutá je akcent (tlačítka, odznaky, zvýraznění), ne plocha. Pozadí bílé/světle šedé.
-- **Typografie:** čistý bezpatkový font (Inter nebo podobný), velké fotky, hodně prázdného místa
-- **Fotky aut jsou hlavní obsah**: velké, bez rušivých rámečků
-- **Přístupnost:** dostatečný kontrast (žlutý text na bílé se nesmí používat, žlutá je pro plochy a tlačítka s černým textem)
-- Logo a vizuální identita: řešíme zvlášť
+> Aktualizováno 11. 11. 2026: rozhodnuto o **kombinaci tmavé a světlé** (inspirace: skysthelimit.org, gamingonavax.com, veyda.com).
+
+- **Styl:** prémiový, filmový, obsah (fotky aut) před formou. Kombinace:
+  - **tmavé „výkladní“ části** – úvodní stránka, eventy, profily členů, stránky vozidel, galerie: černý základ, jemná žlutá záře, velké fotky přes celou šířku;
+  - **světlé „pracovní“ části** – formuláře, správa garáže, administrace, přihlášky: bílé/světle šedé pozadí kvůli čitelnosti na mobilu venku.
+- **Barvy:** černá + žlutá. Žlutá je akcent (tlačítka, odznaky, zvýraznění klíčového slova, záře). Na tmavém pozadí smí být žlutý text; na bílém **nikdy** (kontrast).
+- **Typografie:** výrazné úzké tučné písmo pro nadpisy (styl motorsportu, verzálky) + čisté bezpatkové písmo (Inter) na texty. Malé nadpisky VERZÁLKAMI se žlutou tečkou.
+- **Prvky:** tmavá skleněná hlavička (rozmazané pozadí), karty s jemnou září při najetí, fotky se ztmavením a nadpisem přes ně, číslované seznamy s tenkými linkami, jemné animace.
+- **Přístupnost:** dostatečný kontrast v obou režimech; animace respektují nastavení „omezit pohyb“.
+- Logo a vizuální identita: zatím provizorní textové logo, vymění se po dodání loga.
 
 ## 12. Právní a provozní věci
 

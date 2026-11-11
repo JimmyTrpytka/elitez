@@ -8,8 +8,8 @@ import { getVehicle, isMyVehicle } from "@/lib/data/vehicles";
 import { hpToKw } from "@/lib/validation";
 import { Alert } from "@/components/ui/alert";
 import { HeroGallery } from "@/components/lightbox";
+import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
-import { textLinkClass } from "@/components/auth/auth-shell";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("PublicVehicle");
@@ -55,11 +55,34 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
   ];
 
   return (
-    <article className="pb-20">
+    <article className="flex-1 bg-night pb-20 text-night-text">
       <HeroGallery
         photos={vehicle.photos.map((p) => ({ id: p.id, thumb: p.urls.md ?? null, full: p.urls.lg ?? p.urls.md ?? null }))}
         alt={title}
         galleryTitle={t("gallery")}
+        overlay={
+          <>
+            {vehicle.status === "former" ? (
+              <p className="mb-2 text-xs font-semibold tracking-[0.2em] text-accent uppercase">
+                {t("former")}
+              </p>
+            ) : null}
+            <DisplayHeading as="h1" size="lg" className="text-white">
+              {title}
+            </DisplayHeading>
+            {vehicle.owner?.username ? (
+              <p className="mt-3 text-white/75">
+                {t("ownedBy")}{" "}
+                <Link
+                  href={`/u/${vehicle.owner.username}`}
+                  className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4"
+                >
+                  {vehicle.owner.display_name ?? `@${vehicle.owner.username}`}
+                </Link>
+              </p>
+            ) : null}
+          </>
+        }
       >
         {isOwner ? (
           <div className="mb-6 flex flex-col gap-3">
@@ -67,48 +90,32 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
               <Alert tone="info">{t("ownerPrivateNotice")}</Alert>
             ) : null}
             <div>
-              <Link href={`/garage/${vehicle.id}`} className={buttonClasses("secondary")}>
+              <Link href={`/garage/${vehicle.id}`} className={buttonClasses("light")}>
                 {t("manage")}
               </Link>
             </div>
           </div>
         ) : null}
 
-        <header className="mb-10">
-          {vehicle.status === "former" ? (
-            <p className="mb-2 text-sm font-semibold tracking-[0.15em] text-subtle uppercase">
-              {t("former")}
-            </p>
-          ) : null}
-          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{title}</h1>
-          {vehicle.owner?.username ? (
-            <p className="mt-3 text-ink-soft">
-              {t("ownedBy")}{" "}
-              <Link href={`/u/${vehicle.owner.username}`} className={textLinkClass}>
-                {vehicle.owner.display_name ?? `@${vehicle.owner.username}`}
-              </Link>
-            </p>
-          ) : null}
-          {vehicle.description ? (
-            <p className="mt-5 max-w-3xl text-lg whitespace-pre-line text-ink-soft">
-              {vehicle.description}
-            </p>
-          ) : null}
-        </header>
+        {vehicle.description ? (
+          <p className="mb-10 max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">
+            {vehicle.description}
+          </p>
+        ) : null}
 
-        <dl className="mb-12 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-line py-6 sm:grid-cols-3">
+        <dl className="mb-12 grid grid-cols-2 gap-x-8 gap-y-6 border-y border-white/10 py-8 sm:grid-cols-3">
           {specs.map(([label, value]) => (
             <div key={label}>
-              <dt className="text-sm text-subtle">{label}</dt>
-              <dd className="mt-0.5 font-semibold text-ink">{value}</dd>
+              <dt className="text-xs font-semibold tracking-[0.18em] text-night-subtle uppercase">{label}</dt>
+              <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
             </div>
           ))}
         </dl>
 
         {vehicle.story ? (
           <section className="mb-12">
-            <h2 className="mb-3 text-xl font-semibold">{t("story")}</h2>
-            <p className="max-w-3xl leading-relaxed whitespace-pre-line text-ink-soft">
+            <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">{t("story")}</h2>
+            <p className="max-w-3xl leading-relaxed whitespace-pre-line text-white/75">
               {vehicle.story}
             </p>
           </section>
@@ -116,14 +123,14 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
 
         {vehicle.mods.length ? (
           <section className="mb-12">
-            <h2 className="mb-3 text-xl font-semibold">{t("mods")}</h2>
-            <ul className="divide-y divide-line rounded-control border border-line">
+            <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">{t("mods")}</h2>
+            <ul className="divide-y divide-white/10 border-y border-white/10">
               {vehicle.mods.map((m) => (
-                <li key={m.id} className="flex gap-4 px-4 py-3">
-                  <span className="w-32 shrink-0 text-sm text-subtle">
+                <li key={m.id} className="flex gap-4 py-4">
+                  <span className="w-32 shrink-0 text-xs font-semibold tracking-[0.15em] text-accent uppercase">
                     {tMods(`categories.${m.category}`)}
                   </span>
-                  <span className="text-ink">{m.description}</span>
+                  <span className="text-white/85">{m.description}</span>
                 </li>
               ))}
             </ul>

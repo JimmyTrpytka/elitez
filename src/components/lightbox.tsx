@@ -207,11 +207,14 @@ export function HeroGallery({
   photos,
   alt,
   galleryTitle,
+  overlay,
   children,
 }: {
   photos: LightboxPhoto[];
   alt: string;
   galleryTitle: string;
+  /** Obsah přes spodek hlavní fotky (název, majitel…) */
+  overlay?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const t = useTranslations("Lightbox");
@@ -219,22 +222,39 @@ export function HeroGallery({
   const [cover, ...rest] = photos;
   return (
     <>
-      {cover?.full ? (
-        <button
-          type="button"
-          onClick={() => setOpen(0)}
-          aria-label={t("open", { n: 1 })}
-          className="block w-full cursor-zoom-in bg-ink"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={cover.full} alt={alt} className="mx-auto max-h-[78vh] w-full max-w-7xl object-cover" />
-        </button>
-      ) : null}
+      <div className="relative overflow-hidden bg-night">
+        {cover?.full ? (
+          <button
+            type="button"
+            onClick={() => setOpen(0)}
+            aria-label={t("open", { n: 1 })}
+            className="block w-full cursor-zoom-in"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={cover.full}
+              alt={alt}
+              className="mx-auto max-h-[82vh] min-h-[50svh] w-full object-cover"
+            />
+          </button>
+        ) : (
+          <div className="glow-accent min-h-[40svh]" aria-hidden />
+        )}
+        {overlay ? (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-night via-night/70 to-transparent pt-32">
+            <div className="pointer-events-auto mx-auto w-full max-w-5xl px-4 pb-8 sm:px-6 sm:pb-10">
+              {overlay}
+            </div>
+          </div>
+        ) : null}
+      </div>
       <div className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6 sm:pt-12">
         {children}
         {rest.length ? (
           <section>
-            <h2 className="mb-3 text-xl font-semibold">{galleryTitle}</h2>
+            <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">
+              {galleryTitle}
+            </h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {rest.map((p, i) =>
                 p.thumb ? (

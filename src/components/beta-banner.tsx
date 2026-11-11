@@ -9,7 +9,7 @@ export function BetaBanner() {
   const pathname = usePathname();
   const from = pathname.startsWith("/feedback") ? "" : pathname;
   return (
-    <div className="bg-ink text-white print:hidden">
+    <div className="border-b border-white/10 bg-night text-white print:hidden">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-2 text-center text-xs sm:px-6 sm:text-sm">
         <span>
           <span className="font-semibold text-accent">{t("label")}</span> · {t("text")}
@@ -27,5 +27,5 @@ export function BetaBanner() {
 
 /** Varianta bez aktuální adresy (než se načte). */
 export function BetaBannerFallback() {
-  return <div className="h-8 bg-ink print:hidden sm:h-9" aria-hidden />;
+  return <div className="h-8 bg-night print:hidden sm:h-9" aria-hidden />;
 }

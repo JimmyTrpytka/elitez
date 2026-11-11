@@ -30,8 +30,8 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
 
   const linkClass = (href: string) =>
     cn(
-      "block rounded-control px-4 py-3 text-lg font-semibold",
-      pathname.startsWith(href) ? "bg-muted text-ink" : "text-ink hover:bg-muted",
+      "block rounded-control px-4 py-3 font-bold",
+      pathname.startsWith(href) ? "bg-white/10 text-white" : "text-white/85 hover:bg-white/10",
     );
 
   return (
@@ -42,21 +42,21 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
         aria-controls="mobile-menu"
         aria-label={open ? t("closeMenu") : t("openMenu")}
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-muted"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-white hover:bg-white/10"
       >
         {open ? <CloseIcon /> : <MenuIcon />}
       </button>
       {open ? (
         <>
           <div
-            className="fixed inset-x-0 top-16 bottom-0 z-30 bg-ink/20"
+            className="fixed inset-x-0 top-16 bottom-0 z-30 bg-black/50 backdrop-blur-sm"
             aria-hidden
             onClick={() => setOpen(false)}
           />
           <nav
             id="mobile-menu"
             aria-label={t("menu")}
-            className="fixed inset-x-0 top-16 z-40 border-b border-line bg-surface px-4 pt-3 pb-5 shadow-lg"
+            className="fixed inset-x-0 top-16 z-40 border-b border-white/10 bg-night px-4 pt-3 pb-5 font-display text-2xl tracking-wide uppercase shadow-2xl"
           >
             <Link href="/events" className={linkClass("/events")}>
               {t("events")}
@@ -69,8 +69,8 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
                 {t("login")}
               </Link>
             ) : null}
-            <div className="mt-3 flex items-center justify-between border-t border-line px-4 pt-4">
-              <span className="text-sm text-subtle">{t("language")}</span>
+            <div className="mt-3 flex items-center justify-between border-t border-white/10 px-4 pt-4 font-sans normal-case tracking-normal">
+              <span className="text-sm text-night-subtle">{t("language")}</span>
               <LanguageSwitcher />
             </div>
           </nav>

@@ -28,7 +28,43 @@
     "featureEventsText": "Apply for events and get approved by the organizer.",
     "featureBadgesTitle": "Badges",
     "featureBadgesText": "For every verified attendance at a meet.",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "titleA": "Your car.",
+    "titleB": "Your garage. Your",
+    "titleC": "club.",
+    "ctaGarage": "My garage",
+    "ctaEvents": "Upcoming events",
+    "eventsEyebrow": "Upcoming",
+    "eventsTitleA": "Where we",
+    "eventsTitleB": "meet",
+    "allEvents": "All events",
+    "noEvents": "New events coming soon.",
+    "garagesEyebrow": "From members' garages",
+    "garagesTitleA": "Cars worth",
+    "garagesTitleB": "seeing",
+    "allMembers": "All members",
+    "noVehicles": "The first cars will show up here soon.",
+    "howEyebrow": "How it works",
+    "howTitleA": "One profile.",
+    "howTitleB": "The whole scene.",
+    "howText": "Build your garage, enter your car in a meet and collect badges for every event you attend.",
+    "steps": {
+      "garage": {
+        "title": "Garage",
+        "text": "All your cars and bikes with photos, mods and the project story."
+      },
+      "events": {
+        "title": "Events",
+        "text": "Apply from your garage in one click, get approved by the organizer, all info in one place."
+      },
+      "badges": {
+        "title": "Badges",
+        "text": "For every verified attendance – your history on your profile and car."
+      }
+    },
+    "ctaTitleA": "Become part of the",
+    "ctaTitleB": "club",
+    "ctaText": "Signing up is free. Keep your garage to yourself or show it to the whole community."
   },
   "Auth": {
     "emailLabel": "Email",
@@ -89,7 +125,23 @@
   "Footer": {
     "tagline": "ELITEZ – the car community club",
     "privacy": "Privacy",
-    "feedback": "Send feedback"
+    "feedback": "Send feedback",
+    "about": "An international car community club. Garage, meets and attendance badges – tuning, youngtimers, American cars, classics and bikes.",
+    "cta": "Join the club",
+    "sitemap": "Sitemap",
+    "colClub": "Club",
+    "colAccount": "My account",
+    "colInfo": "Information",
+    "home": "Home",
+    "events": "Events",
+    "members": "Members",
+    "register": "Sign up",
+    "account": "My account",
+    "garage": "My garage",
+    "registrations": "My registrations",
+    "notifications": "Notifications",
+    "contactTitle": "Contact",
+    "contactViaForm": "Write to us via the form"
   },
   "Common": {
     "save": "Save",
@@ -335,7 +387,8 @@
     "selection": "How we select cars",
     "rules": "Rules",
     "mapTitle": "Venue",
-    "navigate": "Get directions"
+    "navigate": "Get directions",
+    "eyebrow": "Meets and shows"
   },
   "Organizer": {
     "title": "Organizer",
@@ -870,7 +923,8 @@
     "vehicles": "{count, plural, =0 {no public cars yet} one {# car in the garage} other {# cars in the garage}}",
     "pagination": "Pagination",
     "previous": "← Previous",
-    "next": "Next →"
+    "next": "Next →",
+    "eyebrow": "Community"
   },
   "AdminUsers": {
     "title": "Users",

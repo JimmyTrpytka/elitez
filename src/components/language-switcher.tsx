@@ -12,7 +12,7 @@ export function LanguageSwitcher() {
   const pathname = usePathname();
 
   return (
-    <nav aria-label={t("language")} className="flex rounded-full bg-muted p-1">
+    <nav aria-label={t("language")} className="flex rounded-full bg-white/10 p-1">
       {routing.locales.map((locale) => (
         <Link
           key={locale}
@@ -22,8 +22,8 @@ export function LanguageSwitcher() {
           className={cn(
             "rounded-full px-2.5 py-1 text-xs font-semibold uppercase transition-colors",
             locale === current
-              ? "bg-surface text-ink shadow-sm"
-              : "text-subtle hover:text-ink",
+              ? "bg-white text-ink shadow-sm"
+              : "text-white/60 hover:text-white",
           )}
         >
           {locale}

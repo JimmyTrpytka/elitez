@@ -28,7 +28,43 @@
     "featureEventsText": "Přihlášky na eventy a jejich schválení pořadatelem.",
     "featureBadgesTitle": "Odznaky",
     "featureBadgesText": "Za každou ověřenou účast na srazu.",
-    "comingSoon": "Připravujeme"
+    "comingSoon": "Připravujeme",
+    "titleA": "Tvoje auto.",
+    "titleB": "Tvoje garáž. Tvůj",
+    "titleC": "klub.",
+    "ctaGarage": "Moje garáž",
+    "ctaEvents": "Nejbližší eventy",
+    "eventsEyebrow": "Nejbližší akce",
+    "eventsTitleA": "Kde se",
+    "eventsTitleB": "potkáme",
+    "allEvents": "Všechny eventy",
+    "noEvents": "Nové eventy brzy vypíšeme.",
+    "garagesEyebrow": "Z garáží členů",
+    "garagesTitleA": "Auta, která",
+    "garagesTitleB": "stojí za to",
+    "allMembers": "Všichni členové",
+    "noVehicles": "První auta se tu objeví už brzy.",
+    "howEyebrow": "Jak to funguje",
+    "howTitleA": "Jeden profil.",
+    "howTitleB": "Celá scéna.",
+    "howText": "Založ si garáž, přihlas auto na sraz a sbírej odznaky za každou akci, kde jsi byl.",
+    "steps": {
+      "garage": {
+        "title": "Garáž",
+        "text": "Všechna tvoje auta a motorky s fotkami, úpravami a příběhem projektu."
+      },
+      "events": {
+        "title": "Eventy",
+        "text": "Přihláška jedním klikem z garáže, schválení pořadatelem a všechny informace na jednom místě."
+      },
+      "badges": {
+        "title": "Odznaky",
+        "text": "Za každou ověřenou účast na srazu – tvoje historie na profilu i u auta."
+      }
+    },
+    "ctaTitleA": "Staň se součástí",
+    "ctaTitleB": "klubu",
+    "ctaText": "Registrace je zdarma. Garáž si můžeš nechat jen pro sebe, nebo ji ukázat celé komunitě."
   },
   "Auth": {
     "emailLabel": "E-mail",
@@ -89,7 +125,23 @@
   "Footer": {
     "tagline": "ELITEZ – klub automobilové komunity",
     "privacy": "Ochrana osobních údajů",
-    "feedback": "Napsat připomínku"
+    "feedback": "Napsat připomínku",
+    "about": "Mezinárodní klub automobilové komunity. Garáž, srazy a odznaky za účast – tuning, youngtimery, americká auta, veteráni i motorky.",
+    "cta": "Přidat se ke klubu",
+    "sitemap": "Mapa webu",
+    "colClub": "Klub",
+    "colAccount": "Můj účet",
+    "colInfo": "Informace",
+    "home": "Úvod",
+    "events": "Eventy",
+    "members": "Členové",
+    "register": "Registrace",
+    "account": "Můj účet",
+    "garage": "Moje garáž",
+    "registrations": "Moje registrace",
+    "notifications": "Upozornění",
+    "contactTitle": "Kontakt",
+    "contactViaForm": "Napiš nám přes formulář"
   },
   "Common": {
     "save": "Uložit",
@@ -335,7 +387,8 @@
     "selection": "Jak vybíráme auta",
     "rules": "Pravidla",
     "mapTitle": "Místo konání",
-    "navigate": "Navigovat"
+    "navigate": "Navigovat",
+    "eyebrow": "Srazy a výstavy"
   },
   "Organizer": {
     "title": "Pořadatel",
@@ -870,7 +923,8 @@
     "vehicles": "{count, plural, =0 {zatím bez veřejných aut} one {# auto v garáži} few {# auta v garáži} other {# aut v garáži}}",
     "pagination": "Stránkování",
     "previous": "← Předchozí",
-    "next": "Další →"
+    "next": "Další →",
+    "eyebrow": "Komunita"
   },
   "AdminUsers": {
     "title": "Uživatelé",
