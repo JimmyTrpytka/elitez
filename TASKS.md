@@ -104,6 +104,10 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 
 **Hotovo, když:** dva testovací účty podají žádost, ty ji schválíš a zamítneš a každý uvidí správný stav; po naplnění limitu jde další na čekací listinu.
 
+**Stav (12. 11. 2026):** ✅ splněno – úkoly 1–6 hotové; otestováno dvěma účty na localhost (schválení, zamítnutí s důvodem, plná kapacita → čekací listina, automatické doplnění) a automaticky (`npm run test:db`).
+- Rozhodnutí k registracím: SPEC.md 5.1c
+- E-mailové notifikace o změnách stavu: Milník 5
+
 ---
 
 ## Milník 5 – Notifikace a komunikace

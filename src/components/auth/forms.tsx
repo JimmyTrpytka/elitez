@@ -28,7 +28,7 @@ function lastEmail(state: AuthFormState): string | undefined {
   return state.status === "error" ? state.email : undefined;
 }
 
-export function LoginForm({ linkError }: { linkError: boolean }) {
+export function LoginForm({ linkError, next }: { linkError: boolean; next?: string }) {
   const t = useTranslations("Auth");
   const tErrors = useTranslations("Errors");
   const locale = useLocale();
@@ -37,6 +37,7 @@ export function LoginForm({ linkError }: { linkError: boolean }) {
   return (
     <form action={action} className="flex flex-col gap-4" noValidate>
       <input type="hidden" name="locale" value={locale} />
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       {linkError && state.status === "idle" ? (
         <Alert tone="error">{tErrors("linkInvalid")}</Alert>
       ) : null}

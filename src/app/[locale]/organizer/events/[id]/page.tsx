@@ -85,6 +85,12 @@ async function ManageEvent({
       }
       actions={
         <>
+          <Link
+            href={`/organizer/events/${event.id}/registrations`}
+            className={buttonClasses("primary")}
+          >
+            {t("registrations")}
+          </Link>
           <Link href={`/organizer/events/${event.id}/edit`} className={buttonClasses("secondary")}>
             {t("editEvent")}
           </Link>

@@ -93,7 +93,11 @@ export async function signIn(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { status: "error", error: mapAuthError(error), email };
 
-  redirect(`/${locale}/account`);
+  // Návrat tam, odkud uživatel přišel (jen adresy na našem webu)
+  const next = readString(formData, "next");
+  const safeNext =
+    next.startsWith(`/${locale}/`) && !next.startsWith("//") && !next.includes("..") ? next : null;
+  redirect(safeNext ?? `/${locale}/account`);
 }
 
 export async function signUp(
