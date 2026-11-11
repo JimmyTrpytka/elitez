@@ -7,6 +7,7 @@ import { BellIcon, UserIcon } from "@/components/icons";
 import { buttonClasses } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Logo } from "@/components/logo";
+import { MobileMenu } from "@/components/mobile-menu";
 
 export async function SiteHeader() {
   const t = await getTranslations("Nav");
@@ -17,16 +18,26 @@ export async function SiteHeader() {
           <Logo />
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-3">
-          <Link
-            href="/events"
-            className="rounded-full px-2.5 py-2 text-sm font-semibold text-ink hover:bg-muted sm:px-3"
-          >
-            {t("events")}
-          </Link>
+          <nav aria-label={t("menu")} className="hidden items-center gap-1 sm:flex">
+            <Link
+              href="/events"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-ink hover:bg-muted"
+            >
+              {t("events")}
+            </Link>
+            <Link
+              href="/members"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-ink hover:bg-muted"
+            >
+              {t("members")}
+            </Link>
+          </nav>
           {/* Přepínač čte aktuální adresu – na stránkách s ID se zjistí až při požadavku */}
-          <Suspense fallback={<div className="h-8 w-[76px] rounded-full bg-muted" aria-hidden />}>
-            <LanguageSwitcher />
-          </Suspense>
+          <div className="hidden sm:block">
+            <Suspense fallback={<div className="h-8 w-[76px] rounded-full bg-muted" aria-hidden />}>
+              <LanguageSwitcher />
+            </Suspense>
+          </div>
           {/* Stav přihlášení se čte při každém požadavku, proto je v Suspense */}
           <Suspense fallback={<div className="h-11 w-28" aria-hidden />}>
             <AuthLinks />
@@ -69,6 +80,7 @@ async function AuthLinks() {
           <UserIcon className="h-5 w-5 sm:hidden" />
           <span className="max-sm:hidden">{t("account")}</span>
         </Link>
+        <MobileMenu signedIn />
       </>
     );
   }
@@ -83,6 +95,7 @@ async function AuthLinks() {
       <Link href="/register" className={buttonClasses("primary", "md", "max-sm:h-10 max-sm:px-3.5")}>
         {t("register")}
       </Link>
+      <MobileMenu signedIn={false} />
     </>
   );
 }

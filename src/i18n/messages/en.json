@@ -10,7 +10,11 @@
     "language": "Language",
     "events": "Events",
     "notifications": "Notifications",
-    "notificationsUnread": "Notifications ({count} unread)"
+    "notificationsUnread": "Notifications ({count} unread)",
+    "members": "Members",
+    "menu": "Main menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "Home": {
     "eyebrow": "The car community club",
@@ -106,7 +110,9 @@
     "viewPublicProfile": "View public profile",
     "organizer": "Organizer",
     "myRegistrations": "My registrations",
-    "feedbackAdmin": "Tester feedback"
+    "feedbackAdmin": "Tester feedback",
+    "adminTitle": "Administration",
+    "adminUsers": "Users"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -224,7 +230,8 @@
     "remaining": "You can add {count} more of {max}.",
     "limitReached": "A vehicle can have at most {max} photos.",
     "uploadFailed": "{count, plural, one {# photo} other {# photos}} couldn't be uploaded.",
-    "actionFailed": "The action failed. Please try again."
+    "actionFailed": "The action failed. Please try again.",
+    "view": "View photo {n}"
   },
   "Mods": {
     "empty": "No mods yet.",
@@ -844,5 +851,53 @@
       }
     },
     "updated": "Effective from 11 Nov 2026 (test phase)."
+  },
+  "Lightbox": {
+    "label": "Photo {current} of {total}",
+    "close": "Close",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "open": "View photo {n} full size"
+  },
+  "Members": {
+    "title": "Members",
+    "subtitle": "Club members with a public profile and their garages.",
+    "searchLabel": "Search members",
+    "searchPlaceholder": "Name, username or city",
+    "search": "Search",
+    "empty": "No one with a public profile yet.",
+    "noResults": "We didn't find anyone like that.",
+    "vehicles": "{count, plural, =0 {no public cars yet} one {# car in the garage} other {# cars in the garage}}",
+    "pagination": "Pagination",
+    "previous": "← Previous",
+    "next": "Next →"
+  },
+  "AdminUsers": {
+    "title": "Users",
+    "backToAccount": "← Back to my account",
+    "searchLabel": "Search users",
+    "searchPlaceholder": "Name, username or email",
+    "search": "Search",
+    "count": "{count, plural, one {# user} other {# users}}",
+    "noName": "(no name)",
+    "private": "Private profile",
+    "unconfirmed": "Unconfirmed email",
+    "registered": "Registered",
+    "lastSignIn": "last signed in",
+    "neverSignedIn": "never signed in",
+    "vehicles": "{count, plural, one {# car} other {# cars}}",
+    "organizerSuspended": "organizer suspended",
+    "organizer": "Organizer",
+    "admin": "Administrator",
+    "cannotDemoteSelf": "You can't remove your own administrator role.",
+    "confirmGrantAdmin": "Grant the administrator role? They will see all users and emails and can change roles.",
+    "confirmRevokeAdmin": "Remove the administrator role?",
+    "confirmGrantOrganizer": "Grant the organizer role? They will be able to create events and manage applications for them.",
+    "confirmRevokeOrganizer": "Remove the organizer role? Their events and applications stay, but they won't be able to manage them.",
+    "errors": {
+      "not_allowed": "You are not allowed to do this.",
+      "cannot_demote_self": "You can't remove your own administrator role.",
+      "generic": "The change failed. Please try again."
+    }
   }
 }

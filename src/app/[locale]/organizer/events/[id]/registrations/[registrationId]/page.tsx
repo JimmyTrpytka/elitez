@@ -14,6 +14,7 @@ import { RegistrationDecision } from "@/components/organizer/registration-decisi
 import { RegistrationNote } from "@/components/organizer/registration-note";
 import { RegistrationStatusBadge } from "@/components/registrations/status-badge";
 import { Badge } from "@/components/ui/badge";
+import { PhotoGrid } from "@/components/lightbox";
 import { Card } from "@/components/ui/card";
 import { textLinkClass } from "@/components/auth/auth-shell";
 
@@ -99,16 +100,10 @@ async function RegistrationDetailContent({ params }: { params: Params }) {
         </Card>
 
         {v?.photos.length ? (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {v.photos.map((p) =>
-              p.md ? (
-                <a key={p.id} href={p.lg ?? p.md} target="_blank" rel="noreferrer">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.md} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-control object-cover" />
-                </a>
-              ) : null,
-            )}
-          </div>
+          <PhotoGrid
+            photos={v.photos.map((p) => ({ id: p.id, thumb: p.md, full: p.lg ?? p.md }))}
+            alt={`${v.make} ${v.model}`}
+          />
         ) : (
           <p className="rounded-card bg-muted p-6 text-ink-soft">{t("noPhotos")}</p>
         )}

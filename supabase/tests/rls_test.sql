@@ -661,6 +661,70 @@ do $$ begin
   end if;
 end $$;
 
+-- =====================================================================
+-- Správa uživatelů a seznam členů
+-- (Alice je teď admin, Bob běžný člen se soukromým profilem, Carol veřejná)
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.admin_list_users(null, 10);
+    raise exception 'FAIL: běžný člen vidí seznam uživatelů';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    perform public.admin_set_admin(auth.uid(), true);
+    raise exception 'FAIL: běžný člen se sám udělal adminem';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.public_members(null, 100, 0) where username = 'rls_bob') then
+    raise exception 'FAIL: soukromý profil je v seznamu členů';
+  end if;
+  if not exists (select 1 from public.public_members('rls_carol', 100, 0)) then
+    raise exception 'FAIL: veřejný profil chybí v seznamu členů';
+  end if;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.admin_list_users('rls_bob', 10) where email = 'rls-test-bob@example.invalid') then
+    raise exception 'FAIL: admin nevidí uživatele s e-mailem';
+  end if;
+  -- Carol pořadatelkou → pak odebrat (pozastavit, nesmazat)
+  perform public.admin_set_organizer('00000000-0000-4000-a000-0000000ca201', true);
+  if (select status from public.organizers where profile_id = '00000000-0000-4000-a000-0000000ca201') <> 'approved' then
+    raise exception 'FAIL: udělení role pořadatele nefunguje';
+  end if;
+  perform public.admin_set_organizer('00000000-0000-4000-a000-0000000ca201', false);
+  if (select status from public.organizers where profile_id = '00000000-0000-4000-a000-0000000ca201') <> 'suspended' then
+    raise exception 'FAIL: odebrání role pořadatele má profil pozastavit';
+  end if;
+  perform public.admin_set_admin('00000000-0000-4000-a000-0000000ca201', true);
+  if (select role from public.profiles where id = '00000000-0000-4000-a000-0000000ca201') <> 'admin' then
+    raise exception 'FAIL: udělení role admina nefunguje';
+  end if;
+  begin
+    perform public.admin_set_admin(auth.uid(), false);
+    raise exception 'FAIL: admin si sám odebral roli';
+  exception when raise_exception then
+    if sqlerrm <> 'cannot_demote_self' then raise; end if;
+  end;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

@@ -10,7 +10,11 @@
     "language": "Jazyk",
     "events": "Eventy",
     "notifications": "Upozornění",
-    "notificationsUnread": "Upozornění ({count} nepřečtených)"
+    "notificationsUnread": "Upozornění ({count} nepřečtených)",
+    "members": "Členové",
+    "menu": "Hlavní menu",
+    "openMenu": "Otevřít menu",
+    "closeMenu": "Zavřít menu"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -106,7 +110,9 @@
     "viewPublicProfile": "Zobrazit veřejný profil",
     "organizer": "Pořadatel",
     "myRegistrations": "Moje registrace",
-    "feedbackAdmin": "Připomínky testerů"
+    "feedbackAdmin": "Připomínky testerů",
+    "adminTitle": "Administrace",
+    "adminUsers": "Uživatelé"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -224,7 +230,8 @@
     "remaining": "Můžeš přidat ještě {count} z {max}.",
     "limitReached": "Vozidlo může mít nejvýš {max} fotek.",
     "uploadFailed": "{count, plural, one {# fotku} few {# fotky} other {# fotek}} se nepodařilo nahrát.",
-    "actionFailed": "Akce se nepovedla. Zkus to prosím znovu."
+    "actionFailed": "Akce se nepovedla. Zkus to prosím znovu.",
+    "view": "Zobrazit fotku {n}"
   },
   "Mods": {
     "empty": "Zatím žádné úpravy.",
@@ -844,5 +851,53 @@
       }
     },
     "updated": "Platné od 11. 11. 2026 (zkušební provoz)."
+  },
+  "Lightbox": {
+    "label": "Fotka {current} z {total}",
+    "close": "Zavřít",
+    "previous": "Předchozí fotka",
+    "next": "Další fotka",
+    "open": "Zobrazit fotku {n} ve velkém"
+  },
+  "Members": {
+    "title": "Členové",
+    "subtitle": "Členové klubu s veřejným profilem a jejich garáže.",
+    "searchLabel": "Hledat členy",
+    "searchPlaceholder": "Jméno, uživatelské jméno nebo město",
+    "search": "Hledat",
+    "empty": "Zatím tu nikdo s veřejným profilem není.",
+    "noResults": "Nikoho takového jsme nenašli.",
+    "vehicles": "{count, plural, =0 {zatím bez veřejných aut} one {# auto v garáži} few {# auta v garáži} other {# aut v garáži}}",
+    "pagination": "Stránkování",
+    "previous": "← Předchozí",
+    "next": "Další →"
+  },
+  "AdminUsers": {
+    "title": "Uživatelé",
+    "backToAccount": "← Zpět na můj účet",
+    "searchLabel": "Hledat uživatele",
+    "searchPlaceholder": "Jméno, uživatelské jméno nebo e-mail",
+    "search": "Hledat",
+    "count": "{count, plural, one {# uživatel} few {# uživatelé} other {# uživatelů}}",
+    "noName": "(bez jména)",
+    "private": "Soukromý profil",
+    "unconfirmed": "Nepotvrzený e-mail",
+    "registered": "Registrace",
+    "lastSignIn": "naposledy přihlášen(a)",
+    "neverSignedIn": "zatím nepřihlášen(a)",
+    "vehicles": "{count, plural, one {# auto} few {# auta} other {# aut}}",
+    "organizerSuspended": "pořadatel pozastaven",
+    "organizer": "Pořadatel",
+    "admin": "Administrátor",
+    "cannotDemoteSelf": "Sám sobě roli administrátora odebrat nemůžeš.",
+    "confirmGrantAdmin": "Udělit roli administrátora? Uvidí všechny uživatele a e-maily a bude moci měnit role.",
+    "confirmRevokeAdmin": "Odebrat roli administrátora?",
+    "confirmGrantOrganizer": "Udělit roli pořadatele? Bude moci zakládat eventy a spravovat přihlášky na ně.",
+    "confirmRevokeOrganizer": "Odebrat roli pořadatele? Jeho eventy a přihlášky zůstanou zachované, ale nebude je moci spravovat.",
+    "errors": {
+      "not_allowed": "K této akci nemáš oprávnění.",
+      "cannot_demote_self": "Sám sobě roli administrátora odebrat nemůžeš.",
+      "generic": "Změna se nepovedla. Zkus to prosím znovu."
+    }
   }
 }
