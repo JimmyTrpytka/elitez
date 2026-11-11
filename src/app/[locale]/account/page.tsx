@@ -132,7 +132,7 @@ async function AccountContent() {
   const publicHref = profile.username ? `/u/${profile.username}` : null;
   const icon = "h-6 w-6";
 
-  const numbers: Array<{ label: string; value: ReactNode }> = [
+  const numbers: Array<{ label: string; value: ReactNode; href?: string }> = [
     {
       label: tA("statTurbos"),
       value: (
@@ -143,7 +143,11 @@ async function AccountContent() {
       ),
     },
     { label: tA("statFollowers"), value: stats.followers },
-    { label: tA("statBadges"), value: counts.badges },
+    {
+      label: tA("statBadges"),
+      value: counts.badges,
+      href: publicHref ? `${publicHref}#sin-slavy` : undefined,
+    },
     { label: tA("statStreak"), value: stats.streak ? `🔥 ${stats.streak}` : "–" },
   ];
 
@@ -194,13 +198,23 @@ async function AccountContent() {
               <div
                 key={n.label}
                 className={cn(
-                  "px-6 py-5 sm:px-8",
+                  "relative px-6 py-5 sm:px-8",
+                  n.href && "transition-colors hover:bg-white/5",
                   i % 2 === 1 && "border-l border-white/10",
                   i >= 2 && "max-sm:border-t max-sm:border-white/10",
                   i >= 1 && "sm:border-l sm:border-white/10",
                 )}
               >
-                <dt className="text-[11px] font-semibold tracking-[0.18em] text-night-subtle uppercase">{n.label}</dt>
+                <dt className="text-[11px] font-semibold tracking-[0.18em] text-night-subtle uppercase">
+                  {n.href ? (
+                    // Celá buňka je klikací (odkaz roztažený přes ni)
+                    <Link href={n.href} className="after:absolute after:inset-0 hover:text-white">
+                      {n.label} <span aria-hidden className="text-accent">→</span>
+                    </Link>
+                  ) : (
+                    n.label
+                  )}
+                </dt>
                 <dd className="mt-1 font-display text-3xl leading-none font-extrabold">{n.value}</dd>
               </div>
             ))}

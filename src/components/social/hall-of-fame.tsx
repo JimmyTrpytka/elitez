@@ -1,6 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import type { BadgeDef, EarnedBadge, ProfileSocialStats } from "@/lib/data/social";
 import { BadgeMedal, RARITY_COLOR } from "./badge-medal";
+import { ScrollToHash } from "@/components/scroll-to-hash";
 
 /** Kategorie, u kterých umíme ukázat postup k další hranici. */
 const PROGRESS_CATEGORIES = ["turbo_received", "turbo_given", "streak"] as const;
@@ -46,6 +47,7 @@ export async function HallOfFame({
 
   return (
     <section id="sin-slavy" className="scroll-mt-24">
+      <ScrollToHash id="sin-slavy" />
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <h2 className="font-display text-4xl font-extrabold text-white uppercase">{t("title")}</h2>
         <p className="text-sm text-night-subtle">{t("count", { count: earned.length })}</p>
