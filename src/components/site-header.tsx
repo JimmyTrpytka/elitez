@@ -18,7 +18,7 @@ export async function SiteHeader() {
           <Logo dark />
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-3">
-          <nav aria-label={t("menu")} className="hidden items-center gap-1 sm:flex">
+          <nav aria-label={t("menu")} className="hidden items-center gap-1 md:flex">
             <Link
               href="/events"
               className="rounded-full px-3 py-2 text-sm font-semibold text-night-text/85 transition-colors hover:bg-white/10 hover:text-white"
@@ -31,9 +31,15 @@ export async function SiteHeader() {
             >
               {t("members")}
             </Link>
+            <Link
+              href="/leaderboard"
+              className="rounded-full px-3 py-2 text-sm font-semibold text-night-text/85 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              {t("leaderboard")}
+            </Link>
           </nav>
           {/* Přepínač čte aktuální adresu – na stránkách s ID se zjistí až při požadavku */}
-          <div className="hidden sm:block">
+          <div className="hidden md:block">
             <Suspense fallback={<div className="h-8 w-[76px] rounded-full bg-white/10" aria-hidden />}>
               <LanguageSwitcher />
             </Suspense>
@@ -75,10 +81,10 @@ async function AuthLinks() {
         <Link
           href="/account"
           aria-label={t("account")}
-          className={buttonClasses("light", "md", "max-sm:h-10 max-sm:w-10 max-sm:px-0")}
+          className={buttonClasses("light", "md", "max-md:h-10 max-md:w-10 max-md:px-0")}
         >
-          <UserIcon className="h-5 w-5 sm:hidden" />
-          <span className="max-sm:hidden">{t("account")}</span>
+          <UserIcon className="h-5 w-5 md:hidden" />
+          <span className="max-md:hidden">{t("account")}</span>
         </Link>
         <MobileMenu signedIn />
       </>
@@ -88,11 +94,11 @@ async function AuthLinks() {
     <>
       <Link
         href="/login"
-        className={buttonClasses("ghost", "md", "text-white hover:bg-white/10 max-sm:hidden")}
+        className={buttonClasses("ghost", "md", "text-white hover:bg-white/10 max-md:hidden")}
       >
         {t("login")}
       </Link>
-      <Link href="/register" className={buttonClasses("primary", "md", "max-sm:h-10 max-sm:px-3.5")}>
+      <Link href="/register" className={buttonClasses("primary", "md", "max-md:h-10 max-md:px-3.5")}>
         {t("register")}
       </Link>
       <MobileMenu signedIn={false} />

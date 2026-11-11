@@ -1,5 +1,3 @@
-import { cn } from "@/lib/cn";
-
 /**
  * Ikona turbodmychadla: „šnek“ s výstupem a lopatkové kolo uprostřed.
  * Kolo má třídu `turbo-wheel` – při udělení turba se roztočí (globals.css).
@@ -13,7 +11,7 @@ export function TurboIcon({ className, filled = false }: { className?: string; f
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn("h-5 w-5", className)}
+      className={className ?? "h-5 w-5"}
       aria-hidden
     >
       {/* Skříň a výstupní hrdlo */}

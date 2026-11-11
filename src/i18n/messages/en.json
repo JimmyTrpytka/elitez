@@ -14,7 +14,8 @@
     "members": "Members",
     "menu": "Main menu",
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "leaderboard": "Leaderboards"
   },
   "Home": {
     "eyebrow": "The car community club",
@@ -141,7 +142,8 @@
     "registrations": "My registrations",
     "notifications": "Notifications",
     "contactTitle": "Contact",
-    "contactViaForm": "Write to us via the form"
+    "contactViaForm": "Write to us via the form",
+    "leaderboard": "Leaderboards"
   },
   "Common": {
     "save": "Save",
@@ -995,6 +997,43 @@
       "ownContent": "You can't give a turbo to your own content.",
       "notFound": "This is no longer available.",
       "unknown": "Something went wrong, please try again."
+    }
+  },
+  "Leaderboard": {
+    "title": "Leaderboards",
+    "eyebrow": "Community turbos",
+    "subtitle": "Cars and garages with the most turbos, and the most active fans. Give turbos to push your favourites up.",
+    "periodLabel": "Period",
+    "periods": {
+      "week": "Week",
+      "month": "Month",
+      "year": "Year",
+      "all": "All time"
+    },
+    "vehiclesTitle": "Cars",
+    "garagesTitle": "Garages",
+    "fansTitle": "Most active fans",
+    "fansHint": "Who gave the most turbos.",
+    "empty": "No turbos in this period yet. Be the first!",
+    "emptyFans": "Nobody has given a turbo in this period yet."
+  },
+  "HallOfFame": {
+    "title": "Hall of Fame",
+    "count": "{count, plural, one {# badge} other {# badges}}",
+    "unique": "Unique",
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "empty": "No badges yet.",
+    "emptyOwner": "Nothing here yet. Give turbos, collect turbos and come to events – badges will follow.",
+    "nextTitle": "On the way to the next badges",
+    "hint": {
+      "turbo_received": "Turbos received",
+      "turbo_given": "Turbos given",
+      "streak": "Days in a row with a turbo"
     }
   }
 }

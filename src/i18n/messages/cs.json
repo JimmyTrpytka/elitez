@@ -14,7 +14,8 @@
     "members": "Členové",
     "menu": "Hlavní menu",
     "openMenu": "Otevřít menu",
-    "closeMenu": "Zavřít menu"
+    "closeMenu": "Zavřít menu",
+    "leaderboard": "Žebříčky"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -141,7 +142,8 @@
     "registrations": "Moje registrace",
     "notifications": "Upozornění",
     "contactTitle": "Kontakt",
-    "contactViaForm": "Napiš nám přes formulář"
+    "contactViaForm": "Napiš nám přes formulář",
+    "leaderboard": "Žebříčky"
   },
   "Common": {
     "save": "Uložit",
@@ -995,6 +997,43 @@
       "ownContent": "Vlastnímu obsahu turbo dát nejde.",
       "notFound": "Tohle už není k dispozici.",
       "unknown": "Něco se nepovedlo, zkus to prosím znovu."
+    }
+  },
+  "Leaderboard": {
+    "title": "Žebříčky",
+    "eyebrow": "Turba komunity",
+    "subtitle": "Auta a garáže s nejvíc turby a nejaktivnější fanoušci. Dávej turba a posuň své oblíbence nahoru.",
+    "periodLabel": "Období",
+    "periods": {
+      "week": "Týden",
+      "month": "Měsíc",
+      "year": "Rok",
+      "all": "Celkem"
+    },
+    "vehiclesTitle": "Auta",
+    "garagesTitle": "Garáže",
+    "fansTitle": "Nejaktivnější fanoušci",
+    "fansHint": "Kdo rozdal nejvíc turb.",
+    "empty": "Za toto období zatím žádná turba. Buď první!",
+    "emptyFans": "Za toto období zatím nikdo turbo nedal."
+  },
+  "HallOfFame": {
+    "title": "Síň slávy",
+    "count": "{count, plural, one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}",
+    "unique": "Unikátní",
+    "rarity": {
+      "common": "Běžný",
+      "rare": "Vzácný",
+      "epic": "Epický",
+      "legendary": "Legendární"
+    },
+    "empty": "Zatím bez odznaků.",
+    "emptyOwner": "Zatím tu nic není. Dávej turba, sbírej turba a jezdi na eventy – odznaky přijdou.",
+    "nextTitle": "Na cestě k dalším odznakům",
+    "hint": {
+      "turbo_received": "Získaná turba",
+      "turbo_given": "Rozdaná turba",
+      "streak": "Dny v řadě s turbem"
     }
   }
 }

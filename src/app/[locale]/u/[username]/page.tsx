@@ -6,7 +6,14 @@ import { getCurrentUser } from "@/lib/auth/user";
 import { countryName } from "@/lib/countries";
 import { getProfileByUsername } from "@/lib/data/profiles";
 import { listVisibleVehiclesOfOwner } from "@/lib/data/vehicles";
-import { getProfileSocialStats, getVehicleSocial, listTurboGivers } from "@/lib/data/social";
+import {
+  getProfileSocialStats,
+  getVehicleSocial,
+  listBadgeCatalog,
+  listTurboGivers,
+  listUserBadges,
+} from "@/lib/data/social";
+import { HallOfFame } from "@/components/social/hall-of-fame";
 import { TurboToggle } from "@/components/social/turbo-button";
 import { FollowButton } from "@/components/social/follow-button";
 import { TurboGivers } from "@/components/social/turbo-givers";
@@ -53,10 +60,12 @@ async function PublicProfile({
   if (!profile) notFound();
 
   const isOwner = user?.id === profile.id;
-  const [vehicles, stats, givers] = await Promise.all([
+  const [vehicles, stats, givers, badges, catalog] = await Promise.all([
     listVisibleVehiclesOfOwner(profile.id),
     getProfileSocialStats(profile.id),
     listTurboGivers({ profileId: profile.id }),
+    listUserBadges(profile.id),
+    isOwner ? listBadgeCatalog() : Promise.resolve([]),
   ]);
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
@@ -195,6 +204,10 @@ async function PublicProfile({
             </div>
           </section>
         ) : null}
+
+        <div className="mt-16">
+          <HallOfFame earned={badges} catalog={catalog} stats={stats} isOwner={isOwner} />
+        </div>
       </div>
     </div>
   );
