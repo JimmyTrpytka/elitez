@@ -38,7 +38,7 @@ async function ManageVehicle({
   const { id } = await params;
   const [t, vehicle] = await Promise.all([
     getTranslations("Garage"),
-    getVehicle(id, ["sm"]),
+    getVehicle(id, ["sm", "lg"]),
   ]);
   // Spravovat smí jen majitel (ostatní dostanou „nenalezeno“)
   if (!vehicle || !(await isMyVehicle(vehicle))) notFound();
@@ -70,7 +70,7 @@ async function ManageVehicle({
       <div className="flex flex-col gap-6">
         <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("photosTitle")}</h2>
-          <PhotoManager vehicleId={vehicle.id} photos={vehicle.photos} />
+          <PhotoManager vehicleId={vehicle.id} photos={vehicle.photos} title={`${vehicle.make} ${vehicle.model}`} />
         </Card>
         <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("modsTitle")}</h2>

@@ -98,3 +98,11 @@ Vlastník projektu **není programátor**. Proto:
 - Šablony e-mailů: `src/lib/email/render.ts`, texty v překladech (`Email`). Uživatelský text se vždy escapuje. V ICU textech piš doslovné složené závorky jako `'{jmeno}'`.
 - Export CSV: `/api/organizer/events/[id]/export` (UTF-8 BOM, středníky). Tisková stránka `/organizer/events/[id]/print`; hlavička a patička mají `print:hidden`.
 - Unit testy: `vitest.config.ts` (alias `@`).
+
+## Technické poznámky (testovací provoz, členové, admin)
+- Produkce: https://www.elitezclub.eu (Vercel), e-maily z noreply@elitezclub.eu (Resend, DNS u Forpsi). Přihlašovací e-maily Supabase jdou přes SMTP Resend; šablony jsou v `supabase/templates/` – do Supabase se vkládají ručně jako HTML (CLI je nenahrává).
+- `createClient()` volá `await connection()` – Supabase pracuje s aktuálním časem a Next.js (cacheComponents) to jinak ve vývoji hlásí jako chybu a rozbije Suspense.
+- Správa uživatelů: `admin_list_users`, `admin_set_admin` (sám sobě nelze odebrat), `admin_set_organizer` (odebrání = pozastavení). Stránka `/admin/users`.
+- Veřejní členové: `public_members()` – jen veřejné profily, bez e-mailů. Stránka `/members`.
+- Prohlížeč fotek: `src/components/lightbox.tsx` (`Lightbox`, `PhotoGrid`, `HeroGallery`).
+- Pruh „Testovací verze“ vypíná `SITE.beta` v `src/lib/site-config.ts`.

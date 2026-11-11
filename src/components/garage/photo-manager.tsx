@@ -4,6 +4,7 @@ import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
+import { Lightbox } from "@/components/lightbox";
 import { Button } from "@/components/ui/button";
 import {
   addVehiclePhoto,
@@ -26,9 +27,11 @@ const SIZES: Array<[PhotoSize, number]> = [
 export function PhotoManager({
   vehicleId,
   photos,
+  title,
 }: {
   vehicleId: string;
   photos: PhotoView[];
+  title: string;
 }) {
   const t = useTranslations("Photos");
   const router = useRouter();
@@ -37,6 +40,7 @@ export function PhotoManager({
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [viewing, setViewing] = useState<number | null>(null);
 
   const remaining = LIMITS.photosPerVehicle - photos.length;
   const busy = progress !== null || pending;
@@ -140,8 +144,15 @@ export function PhotoManager({
             <li key={photo.id} className="overflow-hidden rounded-control bg-muted">
               <div className="relative aspect-[4/3]">
                 {photo.urls.sm ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={photo.urls.sm} alt="" className="h-full w-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setViewing(index)}
+                    aria-label={t("view", { n: index + 1 })}
+                    className="block h-full w-full cursor-zoom-in"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={photo.urls.sm} alt="" className="h-full w-full object-cover" />
+                  </button>
                 ) : null}
                 {index === 0 ? (
                   <span className="absolute top-2 left-2 rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-ink">
@@ -227,6 +238,16 @@ export function PhotoManager({
       ) : (
         <p className="text-sm text-subtle">{t("limitReached", { max: LIMITS.photosPerVehicle })}</p>
       )}
+
+      {viewing !== null ? (
+        <Lightbox
+          photos={photos.map((p) => ({ id: p.id, thumb: p.urls.sm ?? null, full: p.urls.lg ?? p.urls.sm ?? null }))}
+          index={viewing}
+          onIndex={setViewing}
+          onClose={() => setViewing(null)}
+          alt={title}
+        />
+      ) : null}
     </div>
   );
 }

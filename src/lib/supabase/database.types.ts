@@ -735,6 +735,32 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_list_users: {
+        Args: { p_limit?: number; p_search?: string }
+        Returns: {
+          created_at: string
+          display_name: string
+          email: string
+          email_confirmed: boolean
+          id: string
+          last_sign_in_at: string
+          organizer_name: string
+          organizer_status: Database["public"]["Enums"]["organizer_status"]
+          role: string
+          username: string
+          vehicle_count: number
+          verified_at: string
+          visibility: Database["public"]["Enums"]["visibility"]
+        }[]
+      }
+      admin_set_admin: {
+        Args: { p_enabled: boolean; p_user_id: string }
+        Returns: undefined
+      }
+      admin_set_organizer: {
+        Args: { p_enabled: boolean; p_user_id: string }
+        Returns: undefined
+      }
       admin_set_organizer_status: {
         Args: {
           p_organizer_id: string
@@ -877,6 +903,20 @@ export type Database = {
       }
       my_organizer_ids: { Args: never; Returns: string[] }
       owns_vehicle: { Args: { p_vehicle_id: string }; Returns: boolean }
+      public_members: {
+        Args: { p_limit?: number; p_offset?: number; p_search?: string }
+        Returns: {
+          avatar_path: string
+          city: string
+          country: string
+          created_at: string
+          display_name: string
+          id: string
+          username: string
+          vehicle_count: number
+          verified_at: string
+        }[]
+      }
       register_for_event: {
         Args: {
           p_consent: boolean

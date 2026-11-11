@@ -7,6 +7,7 @@ import { countryName } from "@/lib/countries";
 import { getVehicle, isMyVehicle } from "@/lib/data/vehicles";
 import { hpToKw } from "@/lib/validation";
 import { Alert } from "@/components/ui/alert";
+import { HeroGallery } from "@/components/lightbox";
 import { buttonClasses } from "@/components/ui/button";
 import { textLinkClass } from "@/components/auth/auth-shell";
 
@@ -39,7 +40,6 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
   if (!vehicle) notFound();
   const isOwner = await isMyVehicle(vehicle);
 
-  const [cover, ...gallery] = vehicle.photos;
   const title = `${vehicle.make} ${vehicle.model}`;
   const specs: Array<[string, string]> = [
     [tVehicle("typeLabel"), tVehicle(`types.${vehicle.type}`)],
@@ -56,18 +56,11 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
 
   return (
     <article className="pb-20">
-      {cover?.urls.lg ? (
-        <div className="w-full bg-ink">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={cover.urls.lg}
-            alt={title}
-            className="mx-auto max-h-[78vh] w-full max-w-7xl object-cover"
-          />
-        </div>
-      ) : null}
-
-      <div className="mx-auto w-full max-w-5xl px-4 pt-8 sm:px-6 sm:pt-12">
+      <HeroGallery
+        photos={vehicle.photos.map((p) => ({ id: p.id, thumb: p.urls.md ?? null, full: p.urls.lg ?? p.urls.md ?? null }))}
+        alt={title}
+        galleryTitle={t("gallery")}
+      >
         {isOwner ? (
           <div className="mb-6 flex flex-col gap-3">
             {vehicle.visibility === "private" ? (
@@ -137,27 +130,7 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           </section>
         ) : null}
 
-        {gallery.length ? (
-          <section>
-            <h2 className="mb-3 text-xl font-semibold">{t("gallery")}</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {gallery.map((p) =>
-                p.urls.md ? (
-                  <a key={p.id} href={p.urls.lg ?? p.urls.md} target="_blank" rel="noreferrer">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={p.urls.md}
-                      alt=""
-                      loading="lazy"
-                      className="aspect-[4/3] w-full rounded-control object-cover"
-                    />
-                  </a>
-                ) : null,
-              )}
-            </div>
-          </section>
-        ) : null}
-      </div>
+      </HeroGallery>
     </article>
   );
 }

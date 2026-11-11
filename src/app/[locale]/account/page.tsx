@@ -105,9 +105,19 @@ async function AccountContent() {
       </div>
 
       {profile.role === "admin" ? (
-        <Link href="/admin/feedback" className={buttonClasses("ghost", "lg", "self-start")}>
-          {tAccount("feedbackAdmin")}
-        </Link>
+        <section className="rounded-card border border-line p-5">
+          <h2 className="mb-3 text-sm font-semibold tracking-wide text-subtle uppercase">
+            {tAccount("adminTitle")}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/admin/users" className={buttonClasses("secondary")}>
+              {tAccount("adminUsers")}
+            </Link>
+            <Link href="/admin/feedback" className={buttonClasses("ghost")}>
+              {tAccount("feedbackAdmin")}
+            </Link>
+          </div>
+        </section>
       ) : null}
 
       <form action={signOut} className="border-t border-line pt-6">

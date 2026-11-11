@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import type { Database } from "./database.types";
 import { getSupabaseEnv } from "./env";
 
@@ -14,6 +15,9 @@ export async function createClient(): Promise<TypedSupabaseClient | null> {
   // cookies() čteme vždy jako první: stránka se tak vyhodnotí při každém
   // požadavku a nikdy se neuloží jako statická (ani bez nastavení Supabase).
   const cookieStore = await cookies();
+  // Supabase při ověřování přihlášení pracuje s aktuálním časem – výslovně
+  // označíme, že se tato část počítá až při požadavku (vyžaduje Next.js).
+  await connection();
   const env = getSupabaseEnv();
   if (!env) return null;
 
