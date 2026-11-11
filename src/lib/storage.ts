@@ -46,3 +46,16 @@ export const EVENT_IMAGES_BUCKET = "event-images";
 export function eventImagePath(coverPath: string, size: PhotoSize, format: string): string {
   return `${coverPath}-${size}.${format}`;
 }
+
+export const DREAM_PHOTOS_BUCKET = "dream-photos";
+
+/** Fotka v Garáži snů: `{owner_id}/{dream_id}/{photo_key}-{velikost}.{format}`. */
+export function dreamPhotoPath(
+  ownerId: string,
+  dreamId: string,
+  photoKey: string,
+  size: PhotoSize,
+  format: string,
+): string {
+  return `${ownerId}/${dreamId}/${photoKey}-${size}.${format}`;
+}

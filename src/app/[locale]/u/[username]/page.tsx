@@ -14,6 +14,10 @@ import {
   listUserBadges,
 } from "@/lib/data/social";
 import { HallOfFame } from "@/components/social/hall-of-fame";
+import { listDreamsOfOwner } from "@/lib/data/dreams";
+import { DreamCard } from "@/components/dreams/dream-card";
+import { Link } from "@/i18n/navigation";
+import { buttonClasses } from "@/components/ui/button";
 import { TurboToggle } from "@/components/social/turbo-button";
 import { FollowButton } from "@/components/social/follow-button";
 import { TurboGivers } from "@/components/social/turbo-givers";
@@ -60,18 +64,22 @@ async function PublicProfile({
   if (!profile) notFound();
 
   const isOwner = user?.id === profile.id;
-  const [vehicles, stats, givers, badges, catalog] = await Promise.all([
+  const [vehicles, stats, givers, badges, catalog, dreams] = await Promise.all([
     listVisibleVehiclesOfOwner(profile.id),
     getProfileSocialStats(profile.id),
     listTurboGivers({ profileId: profile.id }),
     listUserBadges(profile.id),
     isOwner ? listBadgeCatalog() : Promise.resolve([]),
+    listDreamsOfOwner(profile.id),
   ]);
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
   const current = shown.filter((v) => v.status === "current");
   const former = shown.filter((v) => v.status === "former");
   const vehicleSocial = await getVehicleSocial(shown.map((v) => v.id));
+  // Fanoušek = zatím bez auta (počítají se auta, která návštěvník vidí; majitel i svá soukromá)
+  const isFan = vehicles.filter((v) => v.status === "current").length === 0;
+  const shownDreams = dreams.filter((d) => d.visibility === "public");
   const mode = isOwner ? "own" : user ? "active" : "guest";
   // Turba a sledování jen u veřejného profilu
   const social = profile.visibility === "public";
@@ -106,6 +114,12 @@ async function PublicProfile({
                   {name}
                 </DisplayHeading>
                 {profile.verified_at ? <Badge>Verified</Badge> : null}
+                <span
+                  className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+                  title={isFan ? t("fanHint") : undefined}
+                >
+                  {isFan ? t("fan") : t("owner")}
+                </span>
               </div>
               {profile.bio ? (
                 <p className="mt-4 max-w-2xl text-lg whitespace-pre-line text-white/75">
@@ -202,6 +216,31 @@ async function PublicProfile({
                 ))}
               </VehicleGrid>
             </div>
+          </section>
+        ) : null}
+
+        {shownDreams.length || isOwner ? (
+          <section className="mt-16">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="font-display text-4xl font-extrabold text-white uppercase">{t("dreamsTitle")}</h2>
+                <p className="mt-1 text-sm text-night-subtle">{t("dreamsSubtitle")}</p>
+              </div>
+              {isOwner ? (
+                <Link href="/garage/dreams" className={buttonClasses("outlineDark")}>
+                  {t("dreamsManage")}
+                </Link>
+              ) : null}
+            </div>
+            {shownDreams.length ? (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {shownDreams.map((d) => (
+                  <DreamCard key={d.id} dream={d} />
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("dreamsEmptyOwner")}</p>
+            )}
           </section>
         ) : null}
 

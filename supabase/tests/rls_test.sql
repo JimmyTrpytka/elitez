@@ -874,6 +874,17 @@ begin
   insert into public.dream_cars (owner_id, make, model, status) values (auth.uid(), 'Porsche', '911', 'searching');
   insert into public.dream_cars (owner_id, make, model, visibility) values (auth.uid(), 'Ferrari', 'F40', 'private');
   update public.dream_cars set note = 'cizí' where owner_id = '00000000-0000-4000-a000-000000000b0b';
+  -- Fotku snu jde nahrát jen do vlastní složky a k vlastnímu snu
+  insert into storage.objects (bucket_id, name)
+  select 'dream-photos', auth.uid()::text || '/' || id::text || '/k-sm.webp'
+  from public.dream_cars where owner_id = auth.uid() and make = 'Porsche';
+  begin
+    insert into storage.objects (bucket_id, name)
+    select 'dream-photos', '00000000-0000-4000-a000-000000000b0b/' || id::text || '/k-sm.webp'
+    from public.dream_cars where owner_id = auth.uid() and make = 'Porsche';
+    raise exception 'FAIL: fotku snu jde nahrát do cizí složky';
+  exception when insufficient_privilege then null;
+  end;
   if exists (select 1 from public.dream_cars where note = 'cizí') then
     raise exception 'FAIL: jde upravit cizí sen';
   end if;

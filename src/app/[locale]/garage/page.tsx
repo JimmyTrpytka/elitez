@@ -25,9 +25,14 @@ export default async function GaragePage() {
       width="lg"
       title={t("title")}
       subtitle={
-        <Link href="/garage/archive" className={textLinkClass}>
-          {t("archiveLink")}
-        </Link>
+        <span className="flex flex-wrap gap-x-6 gap-y-2">
+          <Link href="/garage/dreams" className={textLinkClass}>
+            {t("dreamsLink")}
+          </Link>
+          <Link href="/garage/archive" className={textLinkClass}>
+            {t("archiveLink")}
+          </Link>
+        </span>
       }
       actions={
         <Link href="/garage/new" className={buttonClasses("primary")}>
@@ -67,9 +72,15 @@ async function GarageContent() {
       <div className="flex flex-col items-start gap-4 rounded-card bg-muted p-8">
         <p className="text-lg font-semibold text-ink">{t("emptyTitle")}</p>
         <p className="text-ink-soft">{t("emptyText")}</p>
-        <Link href="/garage/new" className={buttonClasses("primary", "lg")}>
-          {t("addFirst")}
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/garage/new" className={buttonClasses("primary", "lg")}>
+            {t("addFirst")}
+          </Link>
+          <Link href="/garage/dreams" className={buttonClasses("secondary", "lg")}>
+            {t("noCarDreams")}
+          </Link>
+        </div>
+        <p className="text-sm text-subtle">{t("fanHint")}</p>
       </div>
     );
   }

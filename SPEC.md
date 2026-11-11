@@ -152,6 +152,13 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
   - „Aktivně hledám“ se později propojí s bazarem (v3).
 - **Fanoušek / Majitel:** člen bez vozidla má štítek Fanoušek a používá Garáž snů; s prvním vozidlem se stává Majitelem.
 
+### 5.1f Pořadatelé – přehled a sledování (rozhodnuto 12. 11. 2026, Milník 5c)
+- **Stránka Pořadatelé:** seznam schválených pořadatelů (logo, název, krátký popis, počet nadcházejících eventů).
+- **Profil pořadatele** (`/o/<slug>`): logo, popis, odkazy (web, Instagram, Facebook), nadcházející eventy a **proběhlé eventy** – ve výchozím stavu viditelné, pořadatel je může v nastavení skrýt. Pozvánkové eventy se nezobrazují nepozvaným.
+- **Sledovat pořadatele:** kdokoli přihlášený; počet sledujících je vidět.
+- **Upozornění sledujícím – jen v aplikaci (zvonek), bez e-mailu:** nový event zveřejněn, otevřela se registrace (Verified dostanou upozornění v čase svého předstihu), event zrušen. Jen u eventů, které daný člověk smí vidět.
+- **Nastavení pořadatele:** logo, popis, odkazy, přepínač „zobrazovat proběhlé eventy“.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

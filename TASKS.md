@@ -145,6 +145,24 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 
 Pravidla: SPEC.md 5.1e
 
+**Stav (12. 11. 2026):** hotovo na localhost, čeká na vyzkoušení se dvěma účty – turba (fotky, garáž) s animací, souhrnná upozornění, sledování, Síň slávy (odznaky + postup), Žebříčky, Garáž snů s „Tohle chci!“, štítek Fanoušek/Majitel. Databáze nahraná, `npm run test:db` prošel.
+
+---
+
+## Milník 5c – Pořadatelé (přehled a sledování)
+
+**Cíl:** lidé najdou pořadatele, sledují je a nezmeškají jejich akce.
+
+Úkoly:
+1. Profil pořadatele: adresa `/o/<slug>`, logo, odkazy, přepínač proběhlých eventů (nastavení pro pořadatele)
+2. Stránka Pořadatelé (seznam) + profil s nadcházejícími a proběhlými eventy
+3. Sledování pořadatelů (počet sledujících)
+4. Upozornění v aplikaci: nový event, otevření registrace, zrušení eventu
+
+**Hotovo, když:** člen začne sledovat pořadatele, pořadatel zveřejní event a člen dostane upozornění ve zvonku.
+
+Pravidla: SPEC.md 5.1f
+
 ---
 
 ## Milník 6 – Verified (členství v klubu)

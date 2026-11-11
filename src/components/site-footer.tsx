@@ -25,6 +25,7 @@ export async function SiteFooter() {
       links: [
         { href: "/account", label: t("account") },
         { href: "/garage", label: t("garage") },
+        { href: "/garage/dreams", label: t("dreams") },
         { href: "/account/registrations", label: t("registrations") },
         { href: "/account/notifications", label: t("notifications") },
       ],

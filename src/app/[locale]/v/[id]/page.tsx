@@ -8,6 +8,8 @@ import { getVehicle } from "@/lib/data/vehicles";
 import { getCurrentUser } from "@/lib/auth/user";
 import { getPhotoTurbos, getVehicleSocial, listTurboGivers } from "@/lib/data/social";
 import { TurboGivers } from "@/components/social/turbo-givers";
+import { isVehicleInMyDreams } from "@/lib/data/dreams";
+import { WantButton } from "@/components/dreams/want-button";
 import { hpToKw } from "@/lib/validation";
 import { Alert } from "@/components/ui/alert";
 import { HeroGallery } from "@/components/lightbox";
@@ -42,11 +44,12 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
   // RLS vrátí soukromé vozidlo jen majiteli
   if (!vehicle) notFound();
   const photoIds = vehicle.photos.map((p) => p.id);
-  const [user, photoTurbos, social, givers] = await Promise.all([
+  const [user, photoTurbos, social, givers, inMyDreams] = await Promise.all([
     getCurrentUser(),
     getPhotoTurbos(photoIds),
     getVehicleSocial([vehicle.id]),
     listTurboGivers({ vehicleId: vehicle.id }),
+    isVehicleInMyDreams(vehicle.id),
   ]);
   const isOwner = user?.id === vehicle.owner_id;
   // Turba jen u veřejného vozidla (soukromé vidí jen majitel / pořadatel)
@@ -124,6 +127,16 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           </div>
         ) : null}
 
+        {showTurbo ? (
+          <div className="mb-8">
+            <WantButton
+              vehicleId={vehicle.id}
+              mode={turboMode}
+              initialWanted={inMyDreams}
+              initialDreamers={social.get(vehicle.id)?.dreamers ?? 0}
+            />
+          </div>
+        ) : null}
         {showTurbo && vehicleTurbos > 0 && givers.length > 0 ? (
           <div className="mb-8">
             <TurboGivers givers={givers} />

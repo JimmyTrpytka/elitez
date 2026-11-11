@@ -143,7 +143,8 @@
     "notifications": "Upozornění",
     "contactTitle": "Kontakt",
     "contactViaForm": "Napiš nám přes formulář",
-    "leaderboard": "Žebříčky"
+    "leaderboard": "Žebříčky",
+    "dreams": "Garáž snů"
   },
   "Common": {
     "save": "Uložit",
@@ -219,7 +220,10 @@
     "viewPublic": "Zobrazit stránku vozidla",
     "photosTitle": "Fotky",
     "modsTitle": "Úpravy",
-    "settingsTitle": "Nastavení"
+    "settingsTitle": "Nastavení",
+    "dreamsLink": "Garáž snů →",
+    "noCarDreams": "Nemám auto – Garáž snů",
+    "fanHint": "Bez auta jsi v klubu jako Fanoušek; s prvním autem se staneš Majitelem."
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",
@@ -337,7 +341,14 @@
     "garageTurbos": "Turba garáže",
     "streak": "Série",
     "streakDays": "{count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
-    "garageTurboHint": "Turbo pro celou garáž, nebo jednotlivým fotkám u každého auta."
+    "garageTurboHint": "Turbo pro celou garáž, nebo jednotlivým fotkám u každého auta.",
+    "fan": "Fanoušek",
+    "owner": "Majitel",
+    "fanHint": "Zatím bez auta – sbírá sny v Garáži snů.",
+    "dreamsTitle": "Garáž snů",
+    "dreamsSubtitle": "Auta, o kterých sní, plánuje je nebo je hledá.",
+    "dreamsManage": "Spravovat Garáž snů",
+    "dreamsEmptyOwner": "Zatím tu nic není. Přidej auto, o kterém sníš."
   },
   "PublicVehicle": {
     "metaTitle": "Vozidlo",
@@ -947,7 +958,8 @@
     "pagination": "Stránkování",
     "previous": "← Předchozí",
     "next": "Další →",
-    "eyebrow": "Komunita"
+    "eyebrow": "Komunita",
+    "fan": "Fanoušek"
   },
   "AdminUsers": {
     "title": "Uživatelé",
@@ -1034,6 +1046,71 @@
       "turbo_received": "Získaná turba",
       "turbo_given": "Rozdaná turba",
       "streak": "Dny v řadě s turbem"
+    }
+  },
+  "Dreams": {
+    "title": "Garáž snů",
+    "newTitle": "Nový sen",
+    "editTitle": "Upravit sen",
+    "backToGarage": "← Zpět do garáže",
+    "backToDreams": "← Zpět do Garáže snů",
+    "add": "Přidat sen",
+    "addFirst": "Přidat první sen",
+    "intro": "Auta, o kterých sníš, která plánuješ koupit nebo aktivně hledáš. Veřejné sny uvidí ostatní na tvém profilu.",
+    "emptyTitle": "Garáž snů je zatím prázdná",
+    "emptyText": "Přidej auto ručně, nebo u auta jiného člena klikni na „Tohle chci!“.",
+    "placeholder": "Garáž snů",
+    "linkedFrom": "Inspirace: @{username}",
+    "status": {
+      "dreaming": "Sním o něm",
+      "planning": "Plánuji koupit",
+      "searching": "Aktivně hledám"
+    },
+    "statusText": {
+      "dreaming": "Srdcovka, jednou možná.",
+      "planning": "Šetřím a chystám se.",
+      "searching": "Hledám konkrétní kus – ozvi se mi."
+    },
+    "makeLabel": "Značka",
+    "modelLabel": "Model",
+    "yearFromLabel": "Rok (od)",
+    "yearToLabel": "Rok (do)",
+    "yearHint": "Jeden rok, nebo rozsah – obojí je nepovinné.",
+    "statusLabel": "Stav",
+    "noteLabel": "Poznámka",
+    "noteHint": "Barva, výbava, proč zrovna tohle auto…",
+    "visibilityLabel": "Kdo sen uvidí",
+    "visibilityPublicText": "Uvidí ho všichni na tvém veřejném profilu.",
+    "visibilityPrivateText": "Jen ty.",
+    "createSubmit": "Přidat do Garáže snů",
+    "createdNotice": "Sen je v garáži. Můžeš přidat i vlastní fotku.",
+    "photoTitle": "Fotka",
+    "detailsTitle": "Údaje",
+    "photoEmpty": "Bez fotky se sen zobrazí jako elegantní karta s názvem. Fotku můžeš přidat jen vlastní – obrázky z internetu nepoužíváme.",
+    "photoFromLinked": "Teď se ukazuje fotka auta, které tě inspirovalo. Vlastní fotka ji nahradí.",
+    "photoAdd": "Nahrát fotku",
+    "photoReplace": "Nahrát jinou fotku",
+    "photoRemove": "Odebrat fotku",
+    "photoUploading": "Nahrávám…",
+    "photoFailed": "Fotku se nepodařilo nahrát. Zkus to prosím znovu.",
+    "linkedNotice": "Tenhle sen je propojený s autem jiného člena.",
+    "linkedOpen": "Zobrazit auto",
+    "delete": "Smazat sen",
+    "deleteConfirm": "Opravdu smazat tento sen?",
+    "want": "Tohle chci!",
+    "wanted": "V Garáži snů ✓",
+    "inDreamsOf": "Je v garáži snů u {count, plural, one {# člověka} few {# lidí} many {# lidí} other {# lidí}}",
+    "errors": {
+      "makeRequired": "Vyplň značku.",
+      "modelRequired": "Vyplň model.",
+      "tooLong": "Některý text je moc dlouhý.",
+      "yearInvalid": "Rok musí být číslo mezi 1885 a příštím rokem.",
+      "yearOrder": "Rok „do“ musí být stejný nebo pozdější než „od“.",
+      "usernameRequired": "Nejdřív si v profilu nastav uživatelské jméno.",
+      "limit": "V Garáži snů může být nejvýš 50 aut.",
+      "ownVehicle": "Vlastní auto do Garáže snů přidat nejde.",
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
   }
 }

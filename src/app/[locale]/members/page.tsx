@@ -96,7 +96,7 @@ async function MembersList({
                       {place ? ` · ${place}` : ""}
                     </p>
                     <p className="mt-0.5 text-sm text-accent">
-                      {t("vehicles", { count: m.vehicleCount })}
+                      {m.vehicleCount ? t("vehicles", { count: m.vehicleCount }) : t("fan")}
                     </p>
                   </div>
                 </Link>
