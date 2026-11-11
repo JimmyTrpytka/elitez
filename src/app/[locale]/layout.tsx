@@ -8,6 +8,9 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { BetaBanner, BetaBannerFallback } from "@/components/beta-banner";
+import { SITE } from "@/lib/site-config";
+import { Suspense } from "react";
 import "../globals.css";
 
 const inter = Inter({
@@ -46,6 +49,11 @@ export default async function LocaleLayout({
     <html lang={locale} className={inter.variable}>
       <body className="flex min-h-dvh flex-col">
         <NextIntlClientProvider>
+          {SITE.beta ? (
+            <Suspense fallback={<BetaBannerFallback />}>
+              <BetaBanner />
+            </Suspense>
+          ) : null}
           <SiteHeader />
           <main className="flex flex-1 flex-col">{children}</main>
           <SiteFooter />

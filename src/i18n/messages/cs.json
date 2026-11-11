@@ -59,7 +59,9 @@
     "accountProfileSoon": "Profil a garáž doplníme v dalším kroku.",
     "logout": "Odhlásit se",
     "loading": "Načítám…",
-    "submitting": "Odesílám…"
+    "submitting": "Odesílám…",
+    "privacyNote": "Registrací bereš na vědomí",
+    "privacyLink": "zásady ochrany osobních údajů"
   },
   "Errors": {
     "invalidCredentials": "Nesprávný e-mail nebo heslo.",
@@ -81,7 +83,9 @@
     "back": "Zpět na úvod"
   },
   "Footer": {
-    "tagline": "ELITEZ – klub automobilové komunity"
+    "tagline": "ELITEZ – klub automobilové komunity",
+    "privacy": "Ochrana osobních údajů",
+    "feedback": "Napsat připomínku"
   },
   "Common": {
     "save": "Uložit",
@@ -101,7 +105,8 @@
     "myGarage": "Moje garáž",
     "viewPublicProfile": "Zobrazit veřejný profil",
     "organizer": "Pořadatel",
-    "myRegistrations": "Moje registrace"
+    "myRegistrations": "Moje registrace",
+    "feedbackAdmin": "Připomínky testerů"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -637,6 +642,13 @@
       "heading": "Tentokrát to nevyšlo",
       "body": "Ahoj {name},\n\npořadatel bohužel tentokrát nepřijal tvou přihlášku s vozidlem {vehicle} na {event} ({when}). Děkujeme za zájem a budeme rádi, když se přihlásíš znovu příště.",
       "reason": "Důvod"
+    },
+    "feedback": {
+      "subject": "Nová připomínka od testera",
+      "heading": "Nová připomínka",
+      "from": "Od",
+      "page": "Stránka",
+      "button": "Všechny připomínky"
     }
   },
   "Notifications": {
@@ -751,5 +763,86 @@
     "print": "Vytisknout / Uložit jako PDF",
     "approvedCount": "{count, plural, one {# schválené vozidlo} few {# schválená vozidla} other {# schválených vozidel}}",
     "printEmpty": "Zatím nejsou žádná schválená vozidla."
+  },
+  "Beta": {
+    "label": "Testovací verze",
+    "text": "Aplikaci ladíme – data se ještě můžou změnit.",
+    "cta": "Napsat připomínku"
+  },
+  "Feedback": {
+    "title": "Napsat připomínku",
+    "subtitle": "Co nefunguje, co je nejasné nebo co by se hodilo? Každá připomínka pomůže.",
+    "fromPage": "Stránka",
+    "messageLabel": "Připomínka",
+    "messagePlaceholder": "Např. Na mobilu se mi nevešlo tlačítko… / Chtěl bych u auta vyplnit i…",
+    "emailLabel": "Tvůj e-mail (nepovinné)",
+    "emailHint": "Abychom se mohli zeptat na podrobnosti.",
+    "send": "Odeslat připomínku",
+    "sending": "Odesílám…",
+    "thanks": "Díky! Připomínka dorazila, podíváme se na ni.",
+    "errors": {
+      "invalid_message": "Napiš prosím připomínku (alespoň pár slov).",
+      "invalid_email": "E-mail nevypadá správně.",
+      "rate_limited": "Odesíláš připomínky moc rychle, zkus to prosím za chvíli.",
+      "generic": "Odeslání se nepovedlo. Zkus to prosím znovu."
+    }
+  },
+  "FeedbackAdmin": {
+    "title": "Připomínky testerů",
+    "empty": "Zatím žádné připomínky.",
+    "summary": "{open} otevřených z {total}",
+    "anonymous": "Anonym",
+    "markResolved": "Vyřešeno",
+    "reopen": "Znovu otevřít"
+  },
+  "Privacy": {
+    "title": "Ochrana osobních údajů",
+    "subtitle": "Jak v ELITEZ zacházíme s tvými údaji – srozumitelně a stručně.",
+    "betaNotice": "Aplikace je ve zkušebním provozu. Tato stránka popisuje, jak s údaji zacházíme během testování. Úplné zásady zveřejníme před ostrým spuštěním.",
+    "operatorTitle": "Kdo údaje spravuje",
+    "companyId": "IČO",
+    "contact": "Kontakt",
+    "operatorPending": "Správcem osobních údajů je provozovatel klubu ELITEZ. Jeho úplné identifikační údaje doplníme před ostrým spuštěním.",
+    "contactForm": "S jakoukoli otázkou nebo žádostí se můžeš obrátit také přes formulář",
+    "contactFormLink": "Napsat připomínku",
+    "sections": {
+      "data": {
+        "title": "Jaké údaje zpracováváme",
+        "body": "• Účet: e-mail a heslo (heslo je uložené šifrovaně, nikdo ho nevidí).\n• Profil: uživatelské jméno, jméno, země, město, text „O mně“ a profilová fotka – vše vyplňuješ sám/sama.\n• Garáž: vozidla, jejich fotky, popis a úpravy.\n• Přihlášky na eventy: vybrané vozidlo, telefon, e-mail a zpráva pořadateli.\n• Připomínky, které nám pošleš."
+      },
+      "purpose": {
+        "title": "Proč je zpracováváme",
+        "body": "Abychom ti mohli poskytovat účet, garáž a přihlašování na eventy, aby pořadatel mohl přihlášky vyřídit a kontaktovat tě, abychom ti mohli posílat e-maily o stavu přihlášky a zprávy pořadatele k eventu, na který ses přihlásil(a), a abychom během testu mohli aplikaci zlepšovat. Žádné reklamní e-maily neposíláme."
+      },
+      "visibility": {
+        "title": "Kdo údaje vidí",
+        "body": "• Veřejný profil a veřejná vozidla vidí kdokoli.\n• Soukromý profil a soukromá vozidla vidíš jen ty.\n• Pořadatel eventu, na který se přihlásíš, vidí údaje z přihlášky a přihlášené vozidlo (i soukromé) – jen kvůli výběru účastníků.\n• Správce aplikace vidí údaje v nezbytném rozsahu kvůli provozu a řešení problémů.\nTvůj e-mail ani telefon nejsou nikdy veřejné."
+      },
+      "storage": {
+        "title": "Kde jsou údaje uložené",
+        "body": "Databáze a fotky: Supabase, datacentrum v EU (Frankfurt). Web: Vercel. Odesílání e-mailů: Resend, datacentrum v EU (Irsko). Údaje neprodáváme ani nepředáváme dalším firmám."
+      },
+      "photos": {
+        "title": "Fotky",
+        "body": "Při nahrání se fotky zmenší a odstraní se z nich skrytá data (např. GPS poloha místa, kde byly pořízené). Na fotkách vozidel nesmí být čitelná SPZ."
+      },
+      "beta": {
+        "title": "Zkušební provoz",
+        "body": "Během testování se může stát, že část dat budeme muset upravit nebo smazat. Po skončení testu můžeš požádat o smazání účtu a všech údajů."
+      },
+      "rights": {
+        "title": "Tvoje práva",
+        "body": "Máš právo na přístup ke svým údajům, jejich opravu, výmaz, omezení zpracování, přenositelnost a právo vznést námitku. Většinu údajů můžeš sám/sama upravit nebo smazat v aplikaci, o ostatní nás požádej. Máš také právo podat stížnost u Úřadu pro ochranu osobních údajů (uoou.gov.cz)."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "Používáme jen nezbytné cookies, které drží tvoje přihlášení. Žádné reklamní ani sledovací cookies nepoužíváme."
+      },
+      "age": {
+        "title": "Věk",
+        "body": "Účet si může založit jen osoba starší 16 let."
+      }
+    },
+    "updated": "Platné od 11. 11. 2026 (zkušební provoz)."
   }
 }

@@ -59,7 +59,9 @@
     "accountProfileSoon": "Profile and garage are coming in the next step.",
     "logout": "Sign out",
     "loading": "Loading…",
-    "submitting": "Sending…"
+    "submitting": "Sending…",
+    "privacyNote": "By signing up you acknowledge the",
+    "privacyLink": "privacy policy"
   },
   "Errors": {
     "invalidCredentials": "Incorrect email or password.",
@@ -81,7 +83,9 @@
     "back": "Back to home"
   },
   "Footer": {
-    "tagline": "ELITEZ – the car community club"
+    "tagline": "ELITEZ – the car community club",
+    "privacy": "Privacy",
+    "feedback": "Send feedback"
   },
   "Common": {
     "save": "Save",
@@ -101,7 +105,8 @@
     "myGarage": "My garage",
     "viewPublicProfile": "View public profile",
     "organizer": "Organizer",
-    "myRegistrations": "My registrations"
+    "myRegistrations": "My registrations",
+    "feedbackAdmin": "Tester feedback"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -637,6 +642,13 @@
       "heading": "Not this time",
       "body": "Hi {name},\n\nunfortunately the organizer didn't accept your application with {vehicle} for {event} ({when}) this time. Thank you for your interest – we'd love to see you apply again.",
       "reason": "Reason"
+    },
+    "feedback": {
+      "subject": "New feedback from a tester",
+      "heading": "New feedback",
+      "from": "From",
+      "page": "Page",
+      "button": "All feedback"
     }
   },
   "Notifications": {
@@ -751,5 +763,86 @@
     "print": "Print / Save as PDF",
     "approvedCount": "{count, plural, one {# approved vehicle} other {# approved vehicles}}",
     "printEmpty": "No approved vehicles yet."
+  },
+  "Beta": {
+    "label": "Test version",
+    "text": "We're fine-tuning the app – data may still change.",
+    "cta": "Send feedback"
+  },
+  "Feedback": {
+    "title": "Send feedback",
+    "subtitle": "What doesn't work, what's unclear or what would help? Every note counts.",
+    "fromPage": "Page",
+    "messageLabel": "Feedback",
+    "messagePlaceholder": "E.g. On my phone the button didn't fit… / I'd like to add … to my car",
+    "emailLabel": "Your email (optional)",
+    "emailHint": "So we can ask for details.",
+    "send": "Send feedback",
+    "sending": "Sending…",
+    "thanks": "Thanks! Your feedback has arrived, we'll look into it.",
+    "errors": {
+      "invalid_message": "Please write your feedback (at least a few words).",
+      "invalid_email": "The email doesn't look right.",
+      "rate_limited": "You're sending feedback too fast, please try again in a moment.",
+      "generic": "Sending failed. Please try again."
+    }
+  },
+  "FeedbackAdmin": {
+    "title": "Tester feedback",
+    "empty": "No feedback yet.",
+    "summary": "{open} open of {total}",
+    "anonymous": "Anonymous",
+    "markResolved": "Resolved",
+    "reopen": "Reopen"
+  },
+  "Privacy": {
+    "title": "Privacy",
+    "subtitle": "How ELITEZ handles your data – clearly and briefly.",
+    "betaNotice": "The app is in a test phase. This page describes how we handle data during testing. Full terms will be published before the official launch.",
+    "operatorTitle": "Who controls the data",
+    "companyId": "Company ID",
+    "contact": "Contact",
+    "operatorPending": "The data controller is the operator of the ELITEZ club. Full company details will be added before the official launch.",
+    "contactForm": "You can also reach us with any question or request via the",
+    "contactFormLink": "feedback form",
+    "sections": {
+      "data": {
+        "title": "What data we process",
+        "body": "• Account: email and password (stored encrypted, nobody can see it).\n• Profile: username, name, country, city, “About me” and profile photo – all filled in by you.\n• Garage: vehicles, their photos, description and mods.\n• Event applications: selected vehicle, phone, email and message to the organizer.\n• Feedback you send us."
+      },
+      "purpose": {
+        "title": "Why we process it",
+        "body": "To provide your account, garage and event applications, so the organizer can handle applications and contact you, to send you emails about your application status and organizer messages about events you applied for, and to improve the app during testing. We don't send marketing emails."
+      },
+      "visibility": {
+        "title": "Who can see the data",
+        "body": "• Anyone can see public profiles and public vehicles.\n• Only you can see a private profile and private vehicles.\n• The organizer of an event you apply for sees the application details and the entered vehicle (even a private one) – only for selecting participants.\n• The app administrator sees data to the extent necessary for operation and troubleshooting.\nYour email and phone are never public."
+      },
+      "storage": {
+        "title": "Where the data is stored",
+        "body": "Database and photos: Supabase, EU data centre (Frankfurt). Website: Vercel. Sending emails: Resend, EU data centre (Ireland). We don't sell or share data with other companies."
+      },
+      "photos": {
+        "title": "Photos",
+        "body": "When uploaded, photos are resized and hidden data (e.g. the GPS location where they were taken) is removed. Licence plates must not be readable on vehicle photos."
+      },
+      "beta": {
+        "title": "Test phase",
+        "body": "During testing we may need to change or delete some data. After the test you can ask us to delete your account and all your data."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You have the right to access, correct and erase your data, restrict processing, data portability and the right to object. You can edit or delete most data yourself in the app; ask us for the rest. You can also lodge a complaint with the Czech Data Protection Authority (uoou.gov.cz)."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We only use essential cookies that keep you signed in. No advertising or tracking cookies."
+      },
+      "age": {
+        "title": "Age",
+        "body": "Only people aged 16 or over can create an account."
+      }
+    },
+    "updated": "Effective from 11 Nov 2026 (test phase)."
   }
 }

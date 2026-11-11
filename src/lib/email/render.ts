@@ -16,7 +16,8 @@ export type EmailTemplate =
   | "registration_rejected"
   | "registration_waitlist"
   | "registration_promoted"
-  | "broadcast";
+  | "broadcast"
+  | "feedback";
 
 export type EmailPayload = {
   name?: string | null;
@@ -30,6 +31,8 @@ export type EmailPayload = {
   message?: string | null;
   subject?: string;
   body?: string;
+  page?: string;
+  from?: string;
 };
 
 export type RenderedEmail = { subject: string; html: string; text: string };
@@ -148,6 +151,12 @@ export function renderEmail(
       if (payload.message) text += `\n\n${payload.message}`;
       break;
     }
+    case "feedback":
+      subject = t("feedback.subject");
+      heading = t("feedback.heading");
+      text = `${t("feedback.from")}: ${payload.from ?? "—"}\n${t("feedback.page")}: ${payload.page || "—"}\n\n${payload.message ?? ""}`;
+      button = { label: t("feedback.button"), url: `${site}/${locale}/admin/feedback` };
+      break;
     case "broadcast":
       subject = `${payload.subject ?? ""} – ${eventTitle}`;
       heading = payload.subject ?? eventTitle;

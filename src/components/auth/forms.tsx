@@ -144,6 +144,13 @@ export function RegisterForm() {
         </label>
         <FieldMessage id="age-message" error={errorFor("age")} />
       </div>
+      <p className="text-xs text-subtle">
+        {t("privacyNote")}{" "}
+        <Link href="/privacy" className={textLinkClass}>
+          {t("privacyLink")}
+        </Link>
+        .
+      </p>
       <SubmitButton label={t("registerSubmit")} pending={pending} />
     </form>
   );

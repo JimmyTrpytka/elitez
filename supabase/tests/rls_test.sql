@@ -610,6 +610,57 @@ do $$ begin
   end if;
 end $$;
 
+-- =====================================================================
+-- Testovací provoz: připomínky
+-- =====================================================================
+update public.profiles set role = 'admin' where id = '00000000-0000-4000-a000-00000000a11c';
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  perform public.submit_feedback('Nejde mi nahrát fotka', '/cs/garage', 'host@example.invalid', 'test');
+  begin
+    perform 1 from public.feedback limit 1;
+    raise exception 'FAIL: návštěvník čte připomínky';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  perform public.submit_feedback('Chybí mi tlačítko zpět', '/cs/account', null, 'test');
+  if exists (select 1 from public.feedback) then
+    raise exception 'FAIL: běžný uživatel vidí připomínky';
+  end if;
+  begin
+    perform public.submit_feedback('x', '/', null, 'test');
+    raise exception 'FAIL: prošla prázdná připomínka';
+  exception when raise_exception then
+    if sqlerrm <> 'invalid_message' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Admin připomínky vidí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if (select count(*) from public.feedback where user_agent = 'test') <> 2 then
+    raise exception 'FAIL: admin nevidí připomínky';
+  end if;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.email_outbox
+                 where template = 'feedback' and to_email = 'rls-test-alice@example.invalid') then
+    raise exception 'FAIL: admin nedostal e-mail o připomínce';
+  end if;
+end $$;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

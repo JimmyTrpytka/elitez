@@ -6,7 +6,7 @@ import { updateSession } from "@/lib/supabase/proxy";
 const handleI18n = createIntlMiddleware(routing);
 
 /** Stránky, kam smí jen přihlášený uživatel (bez jazykové předpony). */
-const protectedPaths = ["/account", "/garage", "/organizer"];
+const protectedPaths = ["/account", "/garage", "/organizer", "/admin"];
 
 export async function proxy(request: NextRequest) {
   // 1) Jazyk: doplní /cs nebo /en do adresy
