@@ -150,7 +150,7 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Garáž snů:** druhá sekce profilu. Položka: značka, model, rok nebo rozsah, poznámka, stav (💭 Sním o něm / 🎯 Plánuji koupit / 🔍 Aktivně hledám), viditelnost veřejná/soukromá. Fotka jen vlastní, nebo žádná (elegantní karta bez fotky); obrázky z internetu ne.
   - **„Tohle chci!“** u vozidla jiného člena přidá auto do Garáže snů s odkazem a jeho fotkou; u auta je vidět „Je v garáži snů u N lidí“.
   - „Aktivně hledám“ se později propojí s bazarem (v3).
-- **Fanoušek / Majitel:** člen bez vozidla má štítek Fanoušek a používá Garáž snů; s prvním vozidlem se stává Majitelem.
+- **Petrolhead / Driver** (stejně ve všech jazycích): člen bez vozidla má štítek Petrolhead a používá Garáž snů; s prvním vozidlem se stává Driverem.
 
 ### 5.1f Pořadatelé – přehled a sledování (rozhodnuto 12. 11. 2026, Milník 5c)
 - **Stránka Pořadatelé:** seznam schválených pořadatelů (logo, název, krátký popis, počet nadcházejících eventů).

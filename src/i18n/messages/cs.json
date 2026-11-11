@@ -240,7 +240,7 @@
     "settingsTitle": "Nastavení",
     "dreamsLink": "Garáž snů →",
     "noCarDreams": "Nemám auto – Garáž snů",
-    "fanHint": "Bez auta jsi v klubu jako Fanoušek; s prvním autem se staneš Majitelem.",
+    "fanHint": "Bez auta jsi v klubu jako Petrolhead; s prvním autem se staneš Driverem.",
     "tabsLabel": "Části garáže",
     "tabCars": "Moje auta",
     "tabDreams": "Garáž snů",
@@ -364,9 +364,9 @@
     "streak": "Série",
     "streakDays": "{count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
     "garageTurboHint": "Turbo pro celou garáž, nebo jednotlivým fotkám u každého auta.",
-    "fan": "Fanoušek",
-    "owner": "Majitel",
-    "fanHint": "Zatím bez auta – sbírá sny v Garáži snů.",
+    "fan": "Petrolhead",
+    "owner": "Driver",
+    "fanHint": "Petrolhead – zatím bez auta, sbírá sny v Garáži snů.",
     "dreamsTitle": "Garáž snů",
     "dreamsSubtitle": "Auta, o kterých sní, plánuje je nebo je hledá.",
     "dreamsManage": "Spravovat Garáž snů",
@@ -981,7 +981,7 @@
     "previous": "← Předchozí",
     "next": "Další →",
     "eyebrow": "Komunita",
-    "fan": "Fanoušek"
+    "fan": "Petrolhead"
   },
   "AdminUsers": {
     "title": "Uživatelé",

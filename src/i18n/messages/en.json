@@ -240,7 +240,7 @@
     "settingsTitle": "Settings",
     "dreamsLink": "Dream garage →",
     "noCarDreams": "No car – dream garage",
-    "fanHint": "Without a car you're a Fan in the club; your first car makes you an Owner.",
+    "fanHint": "Without a car you're a Petrolhead in the club; your first car makes you a Driver.",
     "tabsLabel": "Garage sections",
     "tabCars": "My cars",
     "tabDreams": "Dream garage",
@@ -364,9 +364,9 @@
     "streak": "Streak",
     "streakDays": "{count, plural, one {# day} other {# days}}",
     "garageTurboHint": "Give a turbo to the whole garage, or to individual photos of each car.",
-    "fan": "Fan",
-    "owner": "Owner",
-    "fanHint": "No car yet – collecting dreams in the dream garage.",
+    "fan": "Petrolhead",
+    "owner": "Driver",
+    "fanHint": "Petrolhead – no car yet, collecting dreams in the dream garage.",
     "dreamsTitle": "Dream garage",
     "dreamsSubtitle": "Cars they dream about, plan to buy or are looking for.",
     "dreamsManage": "Manage dream garage",
@@ -981,7 +981,7 @@
     "previous": "← Previous",
     "next": "Next →",
     "eyebrow": "Community",
-    "fan": "Fan"
+    "fan": "Petrolhead"
   },
   "AdminUsers": {
     "title": "Users",

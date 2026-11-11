@@ -139,13 +139,13 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 2. Sledování garáží (počet sledujících, upozornění)
 3. Síň slávy: obecný systém odznaků (turbo ocenění, Fanoušek, Série, Objevitel, Zakládající člen, unikátní, ruční od admina)
 4. Žebříčky (auta, garáže, fanoušci; týden / měsíc / rok / celkem)
-5. Garáž snů s „Tohle chci!“ a režim Fanoušek
+5. Garáž snů s „Tohle chci!“ a štítek Petrolhead / Driver
 
 **Hotovo, když:** dva účty si navzájem dají turbo a sledování, přijde souhrnné upozornění, odznak se udělí po dosažení hranice a žebříček ukazuje správné pořadí.
 
 Pravidla: SPEC.md 5.1e
 
-**Stav (12. 11. 2026):** hotovo na localhost, čeká na vyzkoušení se dvěma účty – turba (fotky, garáž) s animací, souhrnná upozornění, sledování, Síň slávy (odznaky + postup), Žebříčky, Garáž snů s „Tohle chci!“, štítek Fanoušek/Majitel. Databáze nahraná, `npm run test:db` prošel.
+**Stav (12. 11. 2026):** hotovo na localhost, čeká na vyzkoušení se dvěma účty – turba (fotky, garáž) s animací, souhrnná upozornění, sledování, Síň slávy (odznaky + postup), Žebříčky, Garáž snů s „Tohle chci!“, štítek Petrolhead/Driver. Databáze nahraná, `npm run test:db` prošel.
 
 ---
 
