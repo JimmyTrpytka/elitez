@@ -14,11 +14,24 @@ import { renderEmail, type EmailPayload, type EmailTemplate } from "./render";
 const BATCH_SIZE = 50;
 const MAX_BATCHES_PER_RUN = 4;
 
+/**
+ * Odesílatel ve tvaru „Jméno <email@domena.cz>“ nebo „email@domena.cz“.
+ * Odstraní uvozovky a mezery kolem (častá chyba při zadávání ve Vercelu).
+ */
+export function normalizeFrom(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const v = value.trim().replace(/^["']+|["']+$/g, "").trim();
+  const named = /^(.+?)\s*<\s*([^\s<>@]+@[^\s<>@]+\.[^\s<>@]+)\s*>$/.exec(v);
+  if (named) return `${named[1].trim().replace(/^["']+|["']+$/g, "")} <${named[2]}>`;
+  if (/^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/.test(v)) return v;
+  return undefined;
+}
+
 export type OutboxResult = { sent: number; failed: number; skipped?: string };
 
 export async function processEmailOutbox(): Promise<OutboxResult> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM;
+  const from = normalizeFrom(process.env.EMAIL_FROM);
   const admin = createAdminClient();
   if (!apiKey || !from) return { sent: 0, failed: 0, skipped: "resend_not_configured" };
   if (!admin) return { sent: 0, failed: 0, skipped: "secret_key_missing" };
