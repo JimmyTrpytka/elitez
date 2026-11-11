@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/user";
+import { getUnreadNotificationCount } from "@/lib/data/notifications";
+import { BellIcon, UserIcon } from "@/components/icons";
 import { buttonClasses } from "@/components/ui/button";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Logo } from "@/components/logo";
@@ -9,7 +11,7 @@ import { Logo } from "@/components/logo";
 export async function SiteHeader() {
   const t = await getTranslations("Nav");
   return (
-    <header className="sticky top-0 z-20 border-b border-line/70 bg-surface/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 print:hidden border-b border-line/70 bg-surface/85 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-2 px-4 sm:gap-4 sm:px-6">
         <Link href="/" aria-label={t("home")} className="flex items-center">
           <Logo />
@@ -42,10 +44,32 @@ async function AuthLinks() {
   ]);
 
   if (user) {
+    const unread = await getUnreadNotificationCount();
     return (
-      <Link href="/account" className={buttonClasses("secondary", "md", "max-sm:h-10 max-sm:px-3.5")}>
-        {t("account")}
-      </Link>
+      <>
+        <Link
+          href="/account/notifications"
+          aria-label={
+            unread ? t("notificationsUnread", { count: unread }) : t("notifications")
+          }
+          className="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-ink hover:bg-muted"
+        >
+          <BellIcon />
+          {unread ? (
+            <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-ink">
+              {unread > 9 ? "9+" : unread}
+            </span>
+          ) : null}
+        </Link>
+        <Link
+          href="/account"
+          aria-label={t("account")}
+          className={buttonClasses("secondary", "md", "max-sm:h-10 max-sm:w-10 max-sm:px-0")}
+        >
+          <UserIcon className="h-5 w-5 sm:hidden" />
+          <span className="max-sm:hidden">{t("account")}</span>
+        </Link>
+      </>
     );
   }
   return (

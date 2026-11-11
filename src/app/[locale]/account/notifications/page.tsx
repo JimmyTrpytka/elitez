@@ -1,0 +1,114 @@
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { formatDateTime } from "@/lib/dates";
+import { listMyNotifications, type Notification } from "@/lib/data/notifications";
+import { fillPlaceholders } from "@/lib/email/placeholders";
+import { PageShell } from "@/components/page-shell";
+import { MarkNotificationsRead } from "@/components/notifications/mark-read";
+import { textLinkClass } from "@/components/auth/auth-shell";
+import { cn } from "@/lib/cn";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Notifications");
+  return { title: t("title"), robots: { index: false } };
+}
+
+export default async function NotificationsPage() {
+  const [t, tAuth] = await Promise.all([getTranslations("Notifications"), getTranslations("Auth")]);
+  return (
+    <PageShell
+      title={t("title")}
+      subtitle={
+        <Link href="/account" className={textLinkClass}>
+          {t("backToAccount")}
+        </Link>
+      }
+    >
+      <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
+        <NotificationsList />
+      </Suspense>
+    </PageShell>
+  );
+}
+
+type Payload = {
+  event_title?: string;
+  event_slug?: string;
+  vehicle?: string;
+  subject?: string;
+  body?: string;
+  name?: string;
+};
+
+async function NotificationsList() {
+  const [t, locale, items] = await Promise.all([
+    getTranslations("Notifications"),
+    getLocale(),
+    listMyNotifications(),
+  ]);
+  const hasUnread = items.some((n) => !n.read_at);
+
+  if (items.length === 0) {
+    return <p className="rounded-card bg-muted p-8 text-ink-soft">{t("empty")}</p>;
+  }
+
+  const describe = (n: Notification) => {
+    const p = (n.payload ?? {}) as Payload;
+    const vars = { event: p.event_title ?? "", vehicle: p.vehicle ?? "" };
+    if (n.type === "broadcast") {
+      return {
+        title: p.subject ?? t("broadcastTitle"),
+        text: fillPlaceholders(p.body ?? "", p.name ?? "", p.event_title ?? ""),
+        href: p.event_slug ? `/e/${p.event_slug}` : null,
+        eventTitle: p.event_title,
+      };
+    }
+    return {
+      title: t(`types.${n.type}.title`, vars),
+      text: t(`types.${n.type}.text`, vars),
+      href: "/account/registrations",
+      eventTitle: p.event_title,
+    };
+  };
+
+  return (
+    <>
+      <MarkNotificationsRead hasUnread={hasUnread} />
+      <ul className="flex flex-col gap-3">
+        {items.map((n) => {
+          const d = describe(n);
+          return (
+            <li
+              key={n.id}
+              className={cn(
+                "rounded-card border p-5",
+                n.read_at ? "border-line" : "border-ink bg-muted",
+              )}
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <p className="font-semibold text-ink">
+                  {!n.read_at ? (
+                    <span aria-hidden className="mr-2 inline-block h-2 w-2 rounded-full bg-accent" />
+                  ) : null}
+                  {d.title}
+                </p>
+                <span className="text-xs text-subtle">{formatDateTime(n.created_at, locale)}</span>
+              </div>
+              {n.type === "broadcast" && d.eventTitle ? (
+                <p className="mt-0.5 text-sm text-subtle">{d.eventTitle}</p>
+              ) : null}
+              <p className="mt-2 whitespace-pre-line text-ink-soft">{d.text}</p>
+              {d.href ? (
+                <Link href={d.href} className={cn(textLinkClass, "mt-3 inline-block text-sm")}>
+                  {n.type === "broadcast" ? t("openEvent") : t("openRegistrations")}
+                </Link>
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}

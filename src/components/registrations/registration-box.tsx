@@ -61,6 +61,15 @@ export async function RegistrationBox({ event }: { event: EventView }) {
     case "cancelled":
       headline = t("eventCancelled");
       break;
+    case "closed":
+      headline = t("closed");
+      detail =
+        win.reason === "started" && win.startsAt
+          ? t("closedStarted", { date: fmt(win.startsAt) })
+          : win.reason === "deadline" && event.registration_closes_at
+            ? t("closedDeadline", { date: fmt(event.registration_closes_at) })
+            : null;
+      break;
     default:
       headline = t("closed");
   }

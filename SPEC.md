@@ -125,6 +125,14 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Soukromé vozidlo a profil uchazeče** vidí pořadatel eventu, na který se uchazeč hlásí. Veřejný seznam účastníků zatím není.
 - Vozidlo, které bylo kdykoli přihlášené na event, nejde smazat (jen „Prodáno“).
 
+### 5.1d Notifikace a komunikace – upřesnění (rozhodnuto 12. 11. 2026, Milník 5)
+- **E-maily přes Resend** z vlastní domény (bez domény jen testování na vlastní adresu). Bezplatný tarif 100 e-mailů/den – fronta hlídá denní limit a zbytek odešle později; pro ostrý provoz počítat s placeným tarifem.
+- **Automatické e-maily + upozornění v aplikaci** při každé změně stavu přihlášky: přijata, schváleno, zamítnuto (s důvodem), čekací listina, posun z čekací listiny. Zrušení vlastní přihlášky jen upozornění v aplikaci.
+- **Jazyk e-mailů** podle jazyka při registraci, lze změnit v profilu.
+- **Hromadné zprávy** jen účastníkům daného eventu, skupiny: schválení / čekající / čekací listina / schválení Verified / všichni aktivní. E-mail + upozornění, náhled, počet příjemců, historie; nejvýš 5 zpráv na event za den. V textu lze použít {jmeno} a {event}.
+- **Export:** CSV pro Excel (UTF-8, středníky) a tisková stránka (Uložit jako PDF) se seznamem a políčkem na odškrtnutí jako papírová záloha.
+- **Push notifikace** odloženy (Milník 7/8).
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

@@ -14,7 +14,7 @@ export type RegistrationEventFields = {
 export type RegistrationWindow =
   | { kind: "not_published" }
   | { kind: "cancelled" }
-  | { kind: "closed" }
+  | { kind: "closed"; reason: "organizer" | "deadline" | "started"; startsAt?: string }
   | { kind: "invite_only" }
   | { kind: "verified_only" }
   | { kind: "not_set" }
@@ -28,7 +28,7 @@ export function registrationWindow(
 ): RegistrationWindow {
   if (event.status === "cancelled") return { kind: "cancelled" };
   if (event.status === "draft") return { kind: "not_published" };
-  if (event.status === "closed") return { kind: "closed" };
+  if (event.status === "closed") return { kind: "closed", reason: "organizer" };
   if (event.access === "invite_only") return { kind: "invite_only" };
   if (event.access === "verified_only" && !isVerified) return { kind: "verified_only" };
   if (!event.registration_opens_at) return { kind: "not_set" };
@@ -47,11 +47,12 @@ export function registrationWindow(
         : null;
     return { kind: "not_open_yet", opensAt: opens, verifiedOpensAt: verifiedEarlier };
   }
-  if (
-    (event.registration_closes_at && t > new Date(event.registration_closes_at).getTime()) ||
-    t >= new Date(event.starts_at).getTime()
-  ) {
-    return { kind: "closed" };
+  // Přihlašovat se dá jen do začátku eventu (i když je uzávěrka nastavená později)
+  if (t >= new Date(event.starts_at).getTime()) {
+    return { kind: "closed", reason: "started", startsAt: event.starts_at };
+  }
+  if (event.registration_closes_at && t > new Date(event.registration_closes_at).getTime()) {
+    return { kind: "closed", reason: "deadline" };
   }
   return { kind: "open", closesAt: event.registration_closes_at };
 }

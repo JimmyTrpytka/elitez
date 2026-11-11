@@ -1,8 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
+import { useActionState, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
+import { useScrollToError } from "@/components/ui/use-scroll-to-error";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { Field } from "@/components/ui/field";
@@ -36,14 +38,22 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
   const tCommon = useTranslations("Common");
   const locale = useLocale();
   const [state, action, pending] = useActionState(saveVehicle, initial);
+  const submit = useKeepValuesSubmit(action);
+  const formRef = useRef<HTMLFormElement>(null);
+  // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
+  const fieldOf: Record<string, string> = { makeRequired: "make", modelRequired: "model", yearInvalid: "year", powerInvalid: "power_hp", countryInvalid: "country", dateInvalid: "acquired_on", categoryInvalid: "category" };
+  const errField = state.status === "error" ? fieldOf[state.error] : undefined;
+  const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
+  const errorFor = (name: string) => (errField === name ? errMessage : undefined);
+  useScrollToError(state, errField, formRef);
   const countries = countryOptions(locale);
   const maxYear = new Date().getFullYear() + 1;
 
   return (
-    <form action={action} className="flex flex-col gap-5">
+    <form ref={formRef} onSubmit={submit} className="flex flex-col gap-5">
       <input type="hidden" name="locale" value={locale} />
       {values.id ? <input type="hidden" name="id" value={values.id} /> : null}
-      {state.status === "error" ? (
+      {state.status === "error" && !errField ? (
         <Alert tone="error">{t(`errors.${state.error}`)}</Alert>
       ) : null}
 
@@ -58,6 +68,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <SelectField
           label={t("categoryLabel")}
           name="category"
+          error={errorFor("category")}
           defaultValue={values.category}
         >
           {Constants.public.Enums.vehicle_category.map((v) => (
@@ -72,6 +83,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <Field
           label={t("makeLabel")}
           name="make"
+          error={errorFor("make")}
           required
           maxLength={LIMITS.make}
           placeholder="BMW"
@@ -80,6 +92,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <Field
           label={t("modelLabel")}
           name="model"
+          error={errorFor("model")}
           required
           maxLength={LIMITS.model}
           placeholder="M3 E30"
@@ -91,6 +104,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <Field
           label={t("yearLabel")}
           name="year"
+          error={errorFor("year")}
           inputMode="numeric"
           type="number"
           min={1885}
@@ -100,6 +114,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <Field
           label={t("powerLabel")}
           name="power_hp"
+          error={errorFor("power_hp")}
           inputMode="numeric"
           type="number"
           min={1}
@@ -110,6 +125,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         <Field
           label={t("acquiredLabel")}
           name="acquired_on"
+          error={errorFor("acquired_on")}
           type="date"
           defaultValue={values.acquired_on}
         />
@@ -123,7 +139,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         defaultValue={values.engine}
       />
 
-      <SelectField label={t("countryLabel")} name="country" defaultValue={values.country}>
+      <SelectField label={t("countryLabel")} name="country" error={errorFor("country")} defaultValue={values.country}>
         <option value="">{tCommon("notSelected")}</option>
         {countries.priority.map((c) => (
           <option key={c.code} value={c.code}>

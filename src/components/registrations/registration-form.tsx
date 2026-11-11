@@ -1,8 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
+import { useActionState, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
+import { FieldMessage } from "@/components/ui/field-message";
+import { useScrollToError } from "@/components/ui/use-scroll-to-error";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { TextareaField } from "@/components/ui/textarea";
@@ -37,18 +40,34 @@ export function RegistrationForm({
   const tErrors = useTranslations("RegistrationErrors");
   const locale = useLocale();
   const [state, action, pending] = useActionState(submitRegistration, initial);
+  const submit = useKeepValuesSubmit(action);
+  const formRef = useRef<HTMLFormElement>(null);
+  // Chyby u konkrétních míst formuláře (ostatní v rámečku nahoře)
+  const fieldOf: Record<string, string> = {
+    contact_invalid: "phone",
+    consent_required: "consent",
+    private_ack_required: "private_ack",
+    vehicle_invalid: "vehicle_id",
+    already_registered: "vehicle_id",
+  };
+  const errField = state.status === "error" ? fieldOf[state.error] : undefined;
+  const errMessage = state.status === "error" ? tErrors(state.error) : undefined;
+  const errorFor = (name: string) => (errField === name ? errMessage : undefined);
+  useScrollToError(state, errField, formRef);
   const firstAvailable = vehicles.find((v) => !v.alreadyRegistered)?.id ?? "";
   const [vehicleId, setVehicleId] = useState(firstAvailable);
   const selected = vehicles.find((v) => v.id === vehicleId);
   const needsPrivateAck = profilePrivate || selected?.visibility === "private";
 
   return (
-    <form action={action} className="flex flex-col gap-6">
+    <form ref={formRef} onSubmit={submit} className="flex flex-col gap-6">
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="event_id" value={eventId} />
-      {state.status === "error" ? <Alert tone="error">{tErrors(state.error)}</Alert> : null}
+      {state.status === "error" && !errField ? (
+        <Alert tone="error">{tErrors(state.error)}</Alert>
+      ) : null}
 
-      <fieldset className="flex flex-col gap-2">
+      <fieldset className="flex flex-col gap-2" data-field="vehicle_id">
         <legend className="mb-2 text-sm font-medium text-ink">{t("vehicleLabel")}</legend>
         {vehicles.map((v) => (
           <label
@@ -84,6 +103,7 @@ export function RegistrationForm({
             </span>
           </label>
         ))}
+        <FieldMessage id="vehicle-message" error={errorFor("vehicle_id")} />
       </fieldset>
 
       {needsPrivateAck ? (
@@ -94,6 +114,7 @@ export function RegistrationForm({
         <Field
           label={t("phoneLabel")}
           name="phone"
+          error={errorFor("phone")}
           type="tel"
           autoComplete="tel"
           required
@@ -127,20 +148,33 @@ export function RegistrationForm({
       ) : null}
 
       <div className="flex flex-col gap-3">
+        <div data-field="consent" className="flex flex-col gap-1.5">
         <label className="flex items-start gap-3 text-sm text-ink">
-          <input type="checkbox" name="consent" required className="mt-0.5 h-5 w-5 shrink-0 accent-ink" />
+          <input
+            type="checkbox"
+            name="consent"
+            required
+            aria-invalid={errorFor("consent") ? true : undefined}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
+          />
           <span>{t("consentLabel")}</span>
         </label>
+          <FieldMessage id="consent-message" error={errorFor("consent")} />
+        </div>
         {needsPrivateAck ? (
+          <div data-field="private_ack" className="flex flex-col gap-1.5">
           <label className="flex items-start gap-3 text-sm text-ink">
             <input
               type="checkbox"
               name="private_ack"
+              aria-invalid={errorFor("private_ack") ? true : undefined}
               required
               className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
             />
             <span>{t("privateAckLabel")}</span>
           </label>
+            <FieldMessage id="private-ack-message" error={errorFor("private_ack")} />
+          </div>
         ) : null}
       </div>
 

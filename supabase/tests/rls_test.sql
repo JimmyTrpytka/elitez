@@ -515,6 +515,101 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 5: upozornění, fronta e-mailů, hromadné zprávy
+-- =====================================================================
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-0000000ca201' and type = 'registration_promoted') then
+    raise exception 'FAIL: chybí upozornění o posunu z čekací listiny';
+  end if;
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-0000000ca201' and type = 'registration_rejected'
+                   and payload ->> 'reason' = 'criteria') then
+    raise exception 'FAIL: chybí upozornění o zamítnutí s důvodem';
+  end if;
+  if not exists (select 1 from public.email_outbox
+                 where to_email = 'rls-test-carol@example.invalid' and template = 'registration_rejected') then
+    raise exception 'FAIL: e-mail o zamítnutí není ve frontě';
+  end if;
+  if exists (select 1 from public.email_outbox
+             where to_email = 'rls-test-bob@example.invalid' and template = 'registration_cancelled') then
+    raise exception 'FAIL: zrušení vlastní přihlášky nemá posílat e-mail';
+  end if;
+end $$;
+
+-- Bob vidí jen svá upozornění, frontu e-mailů nevidí, nic nevkládá
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if exists (select 1 from public.notifications where user_id <> auth.uid()) then
+    raise exception 'FAIL: uživatel vidí cizí upozornění';
+  end if;
+  if not exists (select 1 from public.notifications where user_id = auth.uid()) then
+    raise exception 'FAIL: uživatel nevidí svá upozornění';
+  end if;
+  update public.notifications set read_at = now() where user_id = auth.uid();
+  begin
+    perform 1 from public.email_outbox limit 1;
+    raise exception 'FAIL: uživatel čte frontu e-mailů';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into public.notifications (user_id, type) values (auth.uid(), 'broadcast');
+    raise exception 'FAIL: uživatel vložil upozornění';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.claim_email_batch(10, 100);
+    raise exception 'FAIL: uživatel spustil odesílání fronty';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.send_broadcast('00000000-0000-4000-e000-000000000010', 'approved', 'X', 'Y');
+    raise exception 'FAIL: uchazeč poslal hromadnou zprávu';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Alice pošle hromadnou zprávu schváleným (Bob je schválený)
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare b public.message_broadcasts; i int;
+begin
+  if public.broadcast_recipient_count('00000000-0000-4000-e000-000000000010', 'approved') <> 1 then
+    raise exception 'FAIL: špatný počet příjemců hromadné zprávy';
+  end if;
+  b := public.send_broadcast('00000000-0000-4000-e000-000000000010', 'approved',
+                             'Info před akcí', 'Ahoj {jmeno}, vjezd od 8:00.');
+  if b.recipient_count <> 1 then raise exception 'FAIL: hromadná zpráva nemá 1 příjemce'; end if;
+  for i in 2..5 loop
+    perform public.send_broadcast('00000000-0000-4000-e000-000000000010', 'approved', 'Info', 'Text');
+  end loop;
+  begin
+    perform public.send_broadcast('00000000-0000-4000-e000-000000000010', 'approved', 'Info', 'Text');
+    raise exception 'FAIL: překročen denní limit hromadných zpráv';
+  exception when raise_exception then
+    if sqlerrm <> 'daily_limit' then raise; end if;
+  end;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and type = 'broadcast') then
+    raise exception 'FAIL: hromadná zpráva nedorazila do upozornění';
+  end if;
+  if exists (select 1 from public.notifications
+             where user_id = '00000000-0000-4000-a000-0000000ca201' and type = 'broadcast') then
+    raise exception 'FAIL: hromadná zpráva dorazila i mimo vybranou skupinu';
+  end if;
+end $$;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

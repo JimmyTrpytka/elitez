@@ -17,6 +17,8 @@ export function Alert({ tone, children }: AlertProps) {
   return (
     <div
       role={tone === "error" ? "alert" : "status"}
+      data-alert-tone={tone}
+      tabIndex={-1}
       className={cn("rounded-control px-4 py-3 text-sm", tones[tone])}
     >
       {children}

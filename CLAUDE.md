@@ -90,3 +90,11 @@ Vlastník projektu **není programátor**. Proto:
 - Pořadatel vidí soukromé vozidlo a profil uchazeče přes politiky „organizer reads applicants“.
 - Zobrazení stavu registrace: `src/lib/registration-window.ts` (stejná pravidla jako v DB, jen pro UI).
 - E-mailové notifikace o změně stavu přijdou v Milníku 5.
+
+## Technické poznámky (Milník 5)
+- Změna stavu přihlášky → trigger `registration_status_notify` → `enqueue_user_message` zapíše upozornění (`notifications`) a e-mail do fronty (`email_outbox`). Hromadné zprávy přes `send_broadcast` (limit 5/event/24 h).
+- Frontu odesílá `processEmailOutbox()` (`src/lib/email/outbox.ts`) přes Resend batch API – volá se přes `after()` po akcích a denně cronem `/api/cron/emails` (vercel.json, chráněno `CRON_SECRET`). Hlídá `EMAIL_DAILY_LIMIT`.
+- Fronta potřebuje `SUPABASE_SECRET_KEY` (jen server, `src/lib/supabase/admin.ts`) – funkce `claim_email_batch`/`complete_email`/`fail_email` smí volat jen service_role.
+- Šablony e-mailů: `src/lib/email/render.ts`, texty v překladech (`Email`). Uživatelský text se vždy escapuje. V ICU textech piš doslovné složené závorky jako `'{jmeno}'`.
+- Export CSV: `/api/organizer/events/[id]/export` (UTF-8 BOM, středníky). Tisková stránka `/organizer/events/[id]/print`; hlavička a patička mají `print:hidden`.
+- Unit testy: `vitest.config.ts` (alias `@`).

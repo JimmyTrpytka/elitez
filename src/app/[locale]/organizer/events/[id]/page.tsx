@@ -110,6 +110,32 @@ async function ManageEvent({
           <EventCoverUploader eventId={event.id} coverUrl={event.cover.md ?? null} />
         </Card>
         <Card>
+          <h2 className="mb-4 text-lg font-semibold">{t("participantsTitle")}</h2>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/organizer/events/${event.id}/messages`}
+              className={buttonClasses("secondary")}
+            >
+              {t("writeToParticipants")}
+            </Link>
+            <a
+              href={`/api/organizer/events/${event.id}/export?status=approved&lang=${locale}`}
+              className={buttonClasses("ghost")}
+            >
+              {t("exportApproved")}
+            </a>
+            <a
+              href={`/api/organizer/events/${event.id}/export?status=all&lang=${locale}`}
+              className={buttonClasses("ghost")}
+            >
+              {t("exportAll")}
+            </a>
+            <Link href={`/organizer/events/${event.id}/print`} className={buttonClasses("ghost")}>
+              {t("printList")}
+            </Link>
+          </div>
+        </Card>
+        <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("summaryTitle")}</h2>
           <dl className="grid gap-4 sm:grid-cols-2">
             {facts.map(([label, value]) => (

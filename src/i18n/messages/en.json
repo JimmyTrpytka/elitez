@@ -8,7 +8,9 @@
     "register": "Sign up",
     "account": "My account",
     "language": "Language",
-    "events": "Events"
+    "events": "Events",
+    "notifications": "Notifications",
+    "notificationsUnread": "Notifications ({count} unread)"
   },
   "Home": {
     "eyebrow": "The car community club",
@@ -395,7 +397,12 @@
     "factVerified": "Registration for Verified opens",
     "unlimited": "Unlimited",
     "notSet": "Not set",
-    "registrations": "Applications"
+    "registrations": "Applications",
+    "participantsTitle": "Participants",
+    "writeToParticipants": "Message participants",
+    "exportApproved": "Export approved (Excel)",
+    "exportAll": "Export all applications",
+    "printList": "Print list"
   },
   "EventForm": {
     "createSubmit": "Save draft",
@@ -459,7 +466,8 @@
       "countryInvalid": "Choose a country from the list.",
       "tooLong": "Some text is too long (max. 5000 characters).",
       "notAllowed": "You are not allowed to edit this event.",
-      "generic": "Saving failed. Please try again."
+      "generic": "Saving failed. Please try again.",
+      "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start)."
     }
   },
   "RegistrationStatus": {
@@ -514,7 +522,9 @@
     "submitting": "Sending…",
     "cancel": "Cancel application",
     "cancelConfirmText": "Really cancel?",
-    "cancelConfirm": "Yes, cancel"
+    "cancelConfirm": "Yes, cancel",
+    "closedStarted": "The event started {date} – applications were only possible until it started.",
+    "closedDeadline": "The deadline was {date}."
   },
   "RegistrationErrors": {
     "not_signed_in": "You are not signed in.",
@@ -596,5 +606,150 @@
     "notePlaceholder": "E.g. Seen at Underground, great condition.",
     "noteSaved": "Note saved.",
     "noteFailed": "The note couldn't be saved."
+  },
+  "Email": {
+    "defaultName": "there",
+    "buttonMyRegistrations": "My registrations",
+    "buttonEvent": "View event",
+    "footer": "You received this email from the ELITEZ club because you applied for an event. Please don't reply to this email; contact the organizer with any questions.",
+    "received": {
+      "subject": "Application received – {event}",
+      "heading": "Application sent",
+      "body": "Hi {name},\n\nyour application with {vehicle} for {event} ({when}) has reached the organizer. We'll email you as soon as they review it."
+    },
+    "approved": {
+      "subject": "You're in – {event}",
+      "heading": "Congratulations, you're in!",
+      "body": "Hi {name},\n\nthe organizer approved your application with {vehicle} for {event} ({when}). Details and programme are on the event page. See you there!"
+    },
+    "promoted": {
+      "subject": "A spot opened up – {event}",
+      "heading": "Moved up from the waitlist",
+      "body": "Hi {name},\n\na spot opened up and your application with {vehicle} for {event} ({when}) is now approved. See you there!"
+    },
+    "waitlist": {
+      "subject": "Waitlist – {event}",
+      "heading": "You're on the waitlist",
+      "body": "Hi {name},\n\nyour application with {vehicle} for {event} ({when}) is on the waitlist. If a spot opens up, you may be accepted – we'll let you know."
+    },
+    "rejected": {
+      "subject": "Application result – {event}",
+      "heading": "Not this time",
+      "body": "Hi {name},\n\nunfortunately the organizer didn't accept your application with {vehicle} for {event} ({when}) this time. Thank you for your interest – we'd love to see you apply again.",
+      "reason": "Reason"
+    }
+  },
+  "Notifications": {
+    "title": "Notifications",
+    "backToAccount": "← Back to my account",
+    "empty": "No notifications yet.",
+    "broadcastTitle": "Message from the organizer",
+    "openEvent": "Open event",
+    "openRegistrations": "My registrations",
+    "types": {
+      "registration_received": {
+        "title": "Application sent",
+        "text": "Your application with {vehicle} for {event} is awaiting approval."
+      },
+      "registration_approved": {
+        "title": "You're in!",
+        "text": "The organizer approved your application with {vehicle} for {event}."
+      },
+      "registration_rejected": {
+        "title": "Application not accepted",
+        "text": "Your application with {vehicle} for {event} wasn't accepted this time."
+      },
+      "registration_waitlist": {
+        "title": "Waitlist",
+        "text": "Your application with {vehicle} for {event} is on the waitlist."
+      },
+      "registration_promoted": {
+        "title": "A spot opened up!",
+        "text": "Your application with {vehicle} for {event} is now approved."
+      },
+      "registration_cancelled": {
+        "title": "Application cancelled",
+        "text": "You cancelled your application with {vehicle} for {event}."
+      },
+      "broadcast": {
+        "title": "Message from the organizer",
+        "text": ""
+      }
+    }
+  },
+  "Broadcast": {
+    "title": "Messages to participants",
+    "segmentLabel": "To",
+    "segments": {
+      "approved": "Approved",
+      "approved_verified": "Approved Verified",
+      "pending": "Awaiting approval",
+      "waitlist": "Waitlist",
+      "all_active": "Everyone applied"
+    },
+    "people": "{count, plural, one {# person} other {# people}}",
+    "templatesLabel": "Templates:",
+    "templates": {
+      "info": {
+        "label": "Pre-event info",
+        "subject": "Important information before the event",
+        "body": "Hi {jmeno},\n\n{event} is coming up and here are a few practical details:\n\n– exhibitor entry from …\n– parking …\n– bring …\n\nSee you there!"
+      },
+      "change": {
+        "label": "Programme change",
+        "subject": "Programme change",
+        "body": "Hi {jmeno},\n\nthere's a change at {event}: …\n\nThanks for understanding."
+      },
+      "reminder": {
+        "label": "Reminder",
+        "subject": "Reminder: coming up soon!",
+        "body": "Hi {jmeno},\n\njust a reminder that {event} is only a few days away. We look forward to seeing you and your car!"
+      }
+    },
+    "subjectLabel": "Subject",
+    "bodyLabel": "Message",
+    "placeholdersHint": "'{jmeno}' is replaced with the recipient's name, '{event}' with the event name.",
+    "preview": "Preview",
+    "exampleName": "John",
+    "send": "Send ({count, plural, one {# recipient} other {# recipients}})",
+    "confirmText": "Really send to {count, plural, one {# recipient} other {# recipients}}? The message can't be taken back.",
+    "confirmSend": "Yes, send",
+    "sending": "Sending…",
+    "back": "Back",
+    "sent": "Message sent to {count, plural, one {# recipient} other {# recipients}} (email and in-app notification).",
+    "writeAnother": "Write another message",
+    "queued": "{count, plural, one {# email is} other {# emails are}} waiting in the queue – they are sent gradually (provider daily limit).",
+    "historyTitle": "Sent messages",
+    "historyEmpty": "No messages sent yet.",
+    "showText": "Show text",
+    "errors": {
+      "not_allowed": "You are not allowed to message participants of this event.",
+      "invalid_message": "Enter a subject (max. 150 characters) and a message.",
+      "daily_limit": "5 messages have already been sent for this event today. You can send another tomorrow.",
+      "no_recipients": "Nobody is in the selected group.",
+      "generic": "Sending failed. Please try again."
+    }
+  },
+  "Export": {
+    "colStatus": "Status",
+    "colName": "Name",
+    "colUsername": "Username",
+    "colVerified": "Verified",
+    "colVehicle": "Vehicle",
+    "colYear": "Year",
+    "colCategory": "Category",
+    "colPhone": "Phone",
+    "colEmail": "Email",
+    "colMessage": "Message",
+    "colSubmitted": "Applied",
+    "colReason": "Rejection reason",
+    "colNote": "Internal note",
+    "colArrived": "Arrived",
+    "yes": "yes",
+    "no": "no",
+    "printTitle": "Participant list",
+    "print": "Print / Save as PDF",
+    "approvedCount": "{count, plural, one {# approved vehicle} other {# approved vehicles}}",
+    "printEmpty": "No approved vehicles yet."
   }
 }

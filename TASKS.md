@@ -123,6 +123,11 @@ Obrazovky: formulář registrace, moje registrace, pořadatel: seznam žádostí
 
 **Hotovo, když:** po schválení přijde e-mail, hromadná zpráva dorazí správné skupině, export se otevře v Excelu.
 
+**Stav (11. 11. 2026):** ✅ splněno na localhost – e-maily (přijata, schváleno, hromadná zpráva) dorazily, export do Excelu a tisk fungují; automatické testy (`npm run test:db`, `npm test`).
+- Push notifikace odloženy (SPEC 5.1d).
+- Zbývá pro ostrý provoz: vlastní doména v Resendu + e-maily přihlašování (Supabase SMTP) přes Resend.
+- Navíc: chyby ve formulářích se zobrazují přímo u pole (posun + zaměření) a po chybě se nemažou vyplněné údaje.
+
 ---
 
 ## Milník 6 – Verified (členství v klubu)
