@@ -165,10 +165,27 @@
     "myGarage": "Moje garáž",
     "viewPublicProfile": "Zobrazit veřejný profil",
     "organizer": "Pořadatel",
-    "myRegistrations": "Moje registrace",
+    "myRegistrations": "Registrace na eventy",
     "feedbackAdmin": "Připomínky testerů",
     "adminTitle": "Administrace",
-    "adminUsers": "Uživatelé"
+    "adminUsers": "Uživatelé",
+    "statTurbos": "Turba garáže",
+    "statFollowers": "Sledující",
+    "statBadges": "Odznaky",
+    "statStreak": "Série",
+    "sectionMine": "Moje",
+    "sectionRoles": "Správa",
+    "dreams": "Garáž snů",
+    "notifications": "Upozornění",
+    "hallOfFame": "Síň slávy",
+    "settings": "Profil a nastavení",
+    "settingsMeta": "Jméno, fotka, jazyk, viditelnost",
+    "vehiclesCount": "{count, plural, =0 {Zatím žádné auto} one {# auto} few {# auta} many {# auta} other {# aut}}",
+    "dreamsCount": "{count, plural, =0 {Zatím žádný sen} one {# sen} few {# sny} many {# snu} other {# snů}}",
+    "registrationsCount": "{count, plural, =0 {Žádná aktivní přihláška} one {# aktivní přihláška} few {# aktivní přihlášky} many {# aktivní přihlášky} other {# aktivních přihlášek}}",
+    "unreadCount": "{count, plural, one {# nepřečtené} few {# nepřečtená} many {# nepřečteného} other {# nepřečtených}}",
+    "allRead": "Vše přečteno",
+    "badgesCount": "{count, plural, =0 {Zatím bez odznaků} one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -203,7 +220,7 @@
   },
   "Garage": {
     "title": "Moje garáž",
-    "add": "Přidat vozidlo",
+    "add": "Přidat auto",
     "addFirst": "Přidat první vozidlo",
     "archiveLink": "Bývalá auta →",
     "archiveTitle": "Bývalá auta",
@@ -223,7 +240,12 @@
     "settingsTitle": "Nastavení",
     "dreamsLink": "Garáž snů →",
     "noCarDreams": "Nemám auto – Garáž snů",
-    "fanHint": "Bez auta jsi v klubu jako Fanoušek; s prvním autem se staneš Majitelem."
+    "fanHint": "Bez auta jsi v klubu jako Fanoušek; s prvním autem se staneš Majitelem.",
+    "tabsLabel": "Části garáže",
+    "tabCars": "Moje auta",
+    "tabDreams": "Garáž snů",
+    "tabFormer": "Předchozí auta",
+    "addDream": "Přidat sen"
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",

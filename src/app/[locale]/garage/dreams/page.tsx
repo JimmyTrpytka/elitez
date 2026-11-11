@@ -2,13 +2,14 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
+import { getMyCounts } from "@/lib/data/account";
+import { GarageTabs } from "@/components/garage/garage-tabs";
 import { getMyProfile } from "@/lib/data/profiles";
 import { listDreamsOfOwner } from "@/lib/data/dreams";
 import { PageShell } from "@/components/page-shell";
 import { DreamCard } from "@/components/dreams/dream-card";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
-import { textLinkClass } from "@/components/auth/auth-shell";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dreams");
@@ -16,22 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function DreamsPage() {
-  const [t, tAuth] = await Promise.all([getTranslations("Dreams"), getTranslations("Auth")]);
+  const [tGarage, tAuth] = await Promise.all([getTranslations("Garage"), getTranslations("Auth")]);
   return (
-    <PageShell
-      width="lg"
-      title={t("title")}
-      subtitle={
-        <Link href="/garage" className={textLinkClass}>
-          {t("backToGarage")}
-        </Link>
-      }
-      actions={
-        <Link href="/garage/dreams/new" className={buttonClasses("primary")}>
-          {t("add")}
-        </Link>
-      }
-    >
+    <PageShell width="lg" title={tGarage("title")}>
       <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
         <DreamsContent />
       </Suspense>
@@ -58,9 +46,12 @@ async function DreamsContent() {
     );
   }
 
-  const dreams = await listDreamsOfOwner(profile.id);
+  const [dreams, counts] = await Promise.all([listDreamsOfOwner(profile.id), getMyCounts()]);
   return (
     <div className="flex flex-col gap-6">
+      <div className="-mb-6">
+        <GarageTabs active="dreams" counts={counts} />
+      </div>
       <p className="max-w-2xl text-ink-soft">{t("intro")}</p>
       {dreams.length === 0 ? (
         <div className="flex flex-col items-start gap-4 rounded-card bg-muted p-8">

@@ -165,10 +165,27 @@
     "myGarage": "My garage",
     "viewPublicProfile": "View public profile",
     "organizer": "Organizer",
-    "myRegistrations": "My registrations",
+    "myRegistrations": "Event registrations",
     "feedbackAdmin": "Tester feedback",
     "adminTitle": "Administration",
-    "adminUsers": "Users"
+    "adminUsers": "Users",
+    "statTurbos": "Garage turbos",
+    "statFollowers": "Followers",
+    "statBadges": "Badges",
+    "statStreak": "Streak",
+    "sectionMine": "Mine",
+    "sectionRoles": "Management",
+    "dreams": "Dream garage",
+    "notifications": "Notifications",
+    "hallOfFame": "Hall of Fame",
+    "settings": "Profile & settings",
+    "settingsMeta": "Name, photo, language, visibility",
+    "vehiclesCount": "{count, plural, =0 {No car yet} one {# car} other {# cars}}",
+    "dreamsCount": "{count, plural, =0 {No dreams yet} one {# dream} other {# dreams}}",
+    "registrationsCount": "{count, plural, =0 {No active registration} one {# active registration} other {# active registrations}}",
+    "unreadCount": "{count, plural, one {# unread} other {# unread}}",
+    "allRead": "All caught up",
+    "badgesCount": "{count, plural, =0 {No badges yet} one {# badge} other {# badges}}"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -203,7 +220,7 @@
   },
   "Garage": {
     "title": "My garage",
-    "add": "Add vehicle",
+    "add": "Add car",
     "addFirst": "Add your first vehicle",
     "archiveLink": "Former vehicles →",
     "archiveTitle": "Former vehicles",
@@ -223,7 +240,12 @@
     "settingsTitle": "Settings",
     "dreamsLink": "Dream garage →",
     "noCarDreams": "No car – dream garage",
-    "fanHint": "Without a car you're a Fan in the club; your first car makes you an Owner."
+    "fanHint": "Without a car you're a Fan in the club; your first car makes you an Owner.",
+    "tabsLabel": "Garage sections",
+    "tabCars": "My cars",
+    "tabDreams": "Dream garage",
+    "tabFormer": "Previous cars",
+    "addDream": "Add dream"
   },
   "Vehicle": {
     "newTitle": "New vehicle",
