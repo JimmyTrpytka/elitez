@@ -75,12 +75,12 @@ export async function RegistrationBox({ event }: { event: EventView }) {
   }
 
   return (
-    <div className="mb-12 flex flex-col gap-4 rounded-card bg-muted p-6">
+    <div className="mb-12 flex flex-col gap-4 rounded-card bg-night-soft p-6 ring-1 ring-accent/30 sm:p-8">
       <div>
-        <p className="text-lg font-semibold text-ink">{headline}</p>
-        {detail ? <p className="mt-1 text-sm text-ink-soft">{detail}</p> : null}
+        <p className="font-display text-3xl font-extrabold text-white uppercase">{headline}</p>
+        {detail ? <p className="mt-1 text-sm text-night-subtle">{detail}</p> : null}
         {win.kind === "open" && event.capacity ? (
-          <p className="mt-1 text-sm text-ink-soft">{t("capacityNote", { count: event.capacity })}</p>
+          <p className="mt-1 text-sm text-night-subtle">{t("capacityNote", { count: event.capacity })}</p>
         ) : null}
       </div>
       {mine.length ? (
@@ -88,9 +88,9 @@ export async function RegistrationBox({ event }: { event: EventView }) {
           {mine.map((r) => (
             <li
               key={r.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-control bg-surface px-4 py-3"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-control bg-white/5 px-4 py-3"
             >
-              <span className="font-semibold text-ink">
+              <span className="font-semibold text-white">
                 {r.vehicle ? `${r.vehicle.make} ${r.vehicle.model}` : "—"}
               </span>
               <RegistrationStatusBadge status={r.status} />
@@ -101,7 +101,7 @@ export async function RegistrationBox({ event }: { event: EventView }) {
       <div className="flex flex-wrap gap-3">
         {action}
         {mine.length ? (
-          <Link href="/account/registrations" className={buttonClasses("ghost", "lg")}>
+          <Link href="/account/registrations" className={buttonClasses("outlineDark", "lg")}>
             {t("myRegistrations")}
           </Link>
         ) : null}

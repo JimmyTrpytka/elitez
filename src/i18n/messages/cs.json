@@ -125,7 +125,23 @@
   "Footer": {
     "tagline": "ELITEZ – klub automobilové komunity",
     "privacy": "Ochrana osobních údajů",
-    "feedback": "Napsat připomínku"
+    "feedback": "Napsat připomínku",
+    "about": "Mezinárodní klub automobilové komunity. Garáž, srazy a odznaky za účast – tuning, youngtimery, americká auta, veteráni i motorky.",
+    "cta": "Přidat se ke klubu",
+    "sitemap": "Mapa webu",
+    "colClub": "Klub",
+    "colAccount": "Můj účet",
+    "colInfo": "Informace",
+    "home": "Úvod",
+    "events": "Eventy",
+    "members": "Členové",
+    "register": "Registrace",
+    "account": "Můj účet",
+    "garage": "Moje garáž",
+    "registrations": "Moje registrace",
+    "notifications": "Upozornění",
+    "contactTitle": "Kontakt",
+    "contactViaForm": "Napiš nám přes formulář"
   },
   "Common": {
     "save": "Uložit",
@@ -907,7 +923,8 @@
     "vehicles": "{count, plural, =0 {zatím bez veřejných aut} one {# auto v garáži} few {# auta v garáži} other {# aut v garáži}}",
     "pagination": "Stránkování",
     "previous": "← Předchozí",
-    "next": "Další →"
+    "next": "Další →",
+    "eyebrow": "Komunita"
   },
   "AdminUsers": {
     "title": "Uživatelé",

@@ -125,7 +125,23 @@
   "Footer": {
     "tagline": "ELITEZ – the car community club",
     "privacy": "Privacy",
-    "feedback": "Send feedback"
+    "feedback": "Send feedback",
+    "about": "An international car community club. Garage, meets and attendance badges – tuning, youngtimers, American cars, classics and bikes.",
+    "cta": "Join the club",
+    "sitemap": "Sitemap",
+    "colClub": "Club",
+    "colAccount": "My account",
+    "colInfo": "Information",
+    "home": "Home",
+    "events": "Events",
+    "members": "Members",
+    "register": "Sign up",
+    "account": "My account",
+    "garage": "My garage",
+    "registrations": "My registrations",
+    "notifications": "Notifications",
+    "contactTitle": "Contact",
+    "contactViaForm": "Write to us via the form"
   },
   "Common": {
     "save": "Save",
@@ -907,7 +923,8 @@
     "vehicles": "{count, plural, =0 {no public cars yet} one {# car in the garage} other {# cars in the garage}}",
     "pagination": "Pagination",
     "previous": "← Previous",
-    "next": "Next →"
+    "next": "Next →",
+    "eyebrow": "Community"
   },
   "AdminUsers": {
     "title": "Users",

@@ -10,6 +10,7 @@ import { Avatar } from "@/components/avatar";
 import { VehicleCard, VehicleGrid } from "@/components/garage/vehicle-card";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { DisplayHeading, Eyebrow } from "@/components/brand";
 
 export async function generateMetadata({
   params,
@@ -58,53 +59,73 @@ async function PublicProfile({
     .join(", ");
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-      {isOwner && profile.visibility === "private" ? (
-        <div className="mb-6">
-          <Alert tone="info">{t("ownerPrivateNotice")}</Alert>
-        </div>
-      ) : null}
-
-      <header className="mb-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-        <Avatar url={profile.avatarUrl} name={name} size={112} />
-        <div>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{name}</h1>
-            {profile.verified_at ? <Badge>Verified</Badge> : null}
-          </div>
-          <p className="mt-1 text-subtle">
-            @{profile.username}
-            {place ? ` · ${place}` : ""}
-          </p>
-          {profile.bio ? (
-            <p className="mt-3 max-w-2xl whitespace-pre-line text-ink-soft">{profile.bio}</p>
+    <div className="flex-1 bg-night text-night-text">
+      <header className="glow-accent border-b border-white/10">
+        <div className="mx-auto w-full max-w-6xl px-4 pt-14 pb-12 sm:px-6 sm:pt-20">
+          {isOwner && profile.visibility === "private" ? (
+            <div className="mb-6">
+              <Alert tone="info">{t("ownerPrivateNotice")}</Alert>
+            </div>
           ) : null}
+          <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-end">
+            <Avatar
+              url={profile.avatarUrl}
+              name={name}
+              size={128}
+              className="reveal ring-2 ring-accent ring-offset-4 ring-offset-night"
+            />
+            <div className="reveal reveal-delay-1">
+              <Eyebrow dark className="mb-2">
+                @{profile.username}
+                {place ? ` · ${place}` : ""}
+              </Eyebrow>
+              <div className="flex flex-wrap items-center gap-3">
+                <DisplayHeading as="h1" size="lg" className="text-white">
+                  {name}
+                </DisplayHeading>
+                {profile.verified_at ? <Badge>Verified</Badge> : null}
+              </div>
+              {profile.bio ? (
+                <p className="mt-4 max-w-2xl text-lg whitespace-pre-line text-white/75">
+                  {profile.bio}
+                </p>
+              ) : null}
+            </div>
+          </div>
         </div>
       </header>
 
-      <section>
-        <h2 className="mb-4 text-xl font-semibold">{t("garageTitle")}</h2>
-        {current.length ? (
-          <VehicleGrid>
-            {current.map((v) => (
-              <VehicleCard key={v.id} vehicle={v} href={`/v/${v.id}`} />
-            ))}
-          </VehicleGrid>
-        ) : (
-          <p className="text-ink-soft">{t("garageEmpty")}</p>
-        )}
-      </section>
-
-      {former.length ? (
-        <section className="mt-14">
-          <h2 className="mb-4 text-xl font-semibold">{t("formerTitle")}</h2>
-          <VehicleGrid>
-            {former.map((v) => (
-              <VehicleCard key={v.id} vehicle={v} href={`/v/${v.id}`} />
-            ))}
-          </VehicleGrid>
+      <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <section>
+          <h2 className="mb-6 font-display text-4xl font-extrabold text-white uppercase">
+            {t("garageTitle")}
+          </h2>
+          {current.length ? (
+            <VehicleGrid>
+              {current.map((v) => (
+                <VehicleCard key={v.id} vehicle={v} href={`/v/${v.id}`} tone="dark" />
+              ))}
+            </VehicleGrid>
+          ) : (
+            <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("garageEmpty")}</p>
+          )}
         </section>
-      ) : null}
+
+        {former.length ? (
+          <section className="mt-16">
+            <h2 className="mb-6 font-display text-3xl font-extrabold text-white/70 uppercase">
+              {t("formerTitle")}
+            </h2>
+            <div className="opacity-80">
+              <VehicleGrid>
+                {former.map((v) => (
+                  <VehicleCard key={v.id} vehicle={v} href={`/v/${v.id}`} tone="dark" />
+                ))}
+              </VehicleGrid>
+            </div>
+          </section>
+        ) : null}
+      </div>
     </div>
   );
 }
