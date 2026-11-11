@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /*
- * ELITEZ – designové základy
- * Světlý, minimalistický vzhled. Černá je hlavní barva textu a tlačítek,
- * žlutá je jen AKCENT (tlačítka, odznaky). Na bílém pozadí nikdy žlutý text.
+ * ELITEZ – designové základy (SPEC 11)
+ * Kombinace: tmavé „výkladní“ sekce (night-*) a světlé „pracovní“ (surface/muted).
+ * Žlutá je AKCENT. Na tmavém smí být žlutý text, na bílém nikdy.
  */
 @theme {
   /* Barvy */
@@ -20,9 +20,18 @@
   --color-success: #067647; /* úspěch */
   --color-success-soft: #ecfdf3;
 
+  /* Tmavé sekce */
+  --color-night: #070707; /* hlavní tmavé pozadí */
+  --color-night-soft: #121212; /* karty na tmavém */
+  --color-night-line: #262626; /* linky na tmavém */
+  --color-night-text: #f5f5f7; /* text na tmavém */
+  --color-night-subtle: #a1a1a6; /* popisky na tmavém */
+
   /* Písmo */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  /* Nadpisy: úzké tučné písmo (styl motorsportu) */
+  --font-display: var(--font-display-family), "Arial Narrow", var(--font-inter), sans-serif;
 
   /* Zaoblení */
   --radius-card: 1.25rem;
@@ -54,4 +63,34 @@ body {
 /* Pole s chybou: červené zvýraznění i při zaměření */
 [aria-invalid="true"]:focus-visible {
   outline-color: var(--color-danger);
+}
+
+/* Žlutá záře pro tmavé sekce */
+.glow-accent {
+  background-image:
+    radial-gradient(60% 50% at 50% 0%, rgb(255 214 10 / 0.18), transparent 70%),
+    radial-gradient(40% 40% at 85% 100%, rgb(255 214 10 / 0.08), transparent 70%);
+}
+
+/* Zvýraznění slova „fixkou“ (jako na skysthelimit.org) – černý text na žluté */
+.marker {
+  background: linear-gradient(transparent 12%, var(--color-accent) 12%, var(--color-accent) 92%, transparent 92%);
+  color: var(--color-ink);
+  padding: 0 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Jemné objevení při načtení (respektuje „omezit pohyb“) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .reveal-delay-1 { animation-delay: 0.08s; }
+  .reveal-delay-2 { animation-delay: 0.16s; }
+  .reveal-delay-3 { animation-delay: 0.24s; }
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }

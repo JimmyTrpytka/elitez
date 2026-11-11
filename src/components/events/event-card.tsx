@@ -2,49 +2,103 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { formatEventDates } from "@/lib/dates";
 import type { EventView } from "@/lib/data/events";
-import { EventAccessBadge } from "./status-badge";
+import { cn } from "@/lib/cn";
 
-export async function EventCard({ event }: { event: EventView }) {
-  const [t, tCat, locale] = await Promise.all([
+/** Den a měsíc pro „štítek“ s datem, např. 19 / ČVN. */
+function dateParts(iso: string, locale: string, tz: string) {
+  const d = new Date(iso);
+  return {
+    day: new Intl.DateTimeFormat(locale, { timeZone: tz, day: "numeric" }).format(d),
+    month: new Intl.DateTimeFormat(locale, { timeZone: tz, month: "short" })
+      .format(d)
+      .replace(".", "")
+      .toUpperCase(),
+  };
+}
+
+/**
+ * Karta eventu ve „výkladním“ stylu: velká fotka přes celou kartu,
+ * žlutý štítek s datem, název velkým písmem přes ztmavený spodek.
+ */
+export async function EventCard({
+  event,
+  size = "md",
+  className,
+}: {
+  event: EventView;
+  size?: "md" | "lg";
+  /** Přepsání poměru stran / výšky (např. v rozvržení úvodní stránky) */
+  className?: string;
+}) {
+  const [t, tCat, tAccess, locale] = await Promise.all([
     getTranslations("Events"),
     getTranslations("EventCategory"),
+    getTranslations("EventAccess"),
     getLocale(),
   ]);
+  const { day, month } = dateParts(event.starts_at, locale, event.timezone);
+  const cover = size === "lg" ? (event.cover.lg ?? event.cover.md) : event.cover.md;
+
   return (
     <Link
       href={`/e/${event.slug}`}
-      className="group flex flex-col overflow-hidden rounded-card bg-muted transition-transform hover:-translate-y-0.5"
+      className={cn(
+        "group relative flex overflow-hidden rounded-card bg-night-soft ring-1 ring-white/10 transition-all duration-500",
+        "hover:-translate-y-1 hover:shadow-[0_20px_60px_-20px_rgb(255_214_10/0.35)] hover:ring-accent/40",
+        size === "lg" ? "aspect-[4/5] sm:aspect-[16/10]" : "aspect-[4/5]",
+        className,
+      )}
     >
-      <div className="relative aspect-[16/9] overflow-hidden bg-ink">
-        {event.cover.md ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={event.cover.md}
-            alt={event.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center text-2xl font-bold tracking-[0.2em] text-white/80">
+      {cover ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={cover}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      ) : (
+        <div className="glow-accent absolute inset-0 flex items-center justify-center">
+          <span className="font-display text-5xl font-extrabold tracking-[0.2em] text-white/15">
             ELITEZ
-          </div>
-        )}
-        <div className="absolute top-3 left-3 flex gap-1.5">
-          {event.status === "cancelled" ? (
-            <span className="rounded-full bg-danger px-2.5 py-0.5 text-xs font-semibold text-white">
-              {t("cancelled")}
-            </span>
-          ) : null}
-          <EventAccessBadge access={event.access} />
+          </span>
         </div>
+      )}
+      {/* Ztmavení spodku kvůli čitelnosti textu */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+
+      <div className="absolute top-4 left-4 flex flex-col items-center rounded-control bg-accent px-3 py-2 leading-none text-ink">
+        <span className="font-display text-3xl font-extrabold">{day}</span>
+        <span className="mt-0.5 text-[11px] font-bold tracking-[0.15em]">{month}</span>
       </div>
-      <div className="p-5">
-        <p className="text-sm font-semibold text-ink-soft">
-          {formatEventDates(event.starts_at, event.ends_at, locale, event.timezone)}
+      <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5">
+        {event.status === "cancelled" ? (
+          <span className="rounded-full bg-danger px-3 py-1 text-xs font-semibold text-white">
+            {t("cancelled")}
+          </span>
+        ) : null}
+        {event.access !== "public" ? (
+          <span className="rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+            {tAccess(event.access)}
+          </span>
+        ) : null}
+      </div>
+
+      <div className="relative mt-auto w-full p-5 sm:p-6">
+        <p className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+          {tCat(event.category)}
         </p>
-        <p className="mt-1 text-xl font-semibold text-ink">{event.title}</p>
-        <p className="mt-1 text-sm text-subtle">
-          {[event.venue_name, tCat(event.category)].filter(Boolean).join(" · ")}
+        <h3
+          className={cn(
+            "mt-1 font-display leading-[0.95] font-extrabold text-white uppercase",
+            size === "lg" ? "text-4xl sm:text-6xl" : "text-3xl sm:text-4xl",
+          )}
+        >
+          {event.title}
+        </h3>
+        <p className="mt-2 text-sm text-white/75">
+          {formatEventDates(event.starts_at, event.ends_at, locale, event.timezone)}
+          {event.venue_name ? ` · ${event.venue_name}` : ""}
         </p>
       </div>
     </Link>

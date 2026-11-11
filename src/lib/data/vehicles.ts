@@ -145,3 +145,29 @@ export async function isMyVehicle(vehicle: Vehicle): Promise<boolean> {
   const { data } = await supabase.auth.getUser();
   return data.user?.id === vehicle.owner_id;
 }
+
+export type ShowcaseVehicle = VehicleCardView & { ownerUsername: string | null };
+
+/** Nejnovější veřejná vozidla veřejných členů (pro úvodní stránku). */
+export async function listLatestPublicVehicles(limit = 6): Promise<ShowcaseVehicle[]> {
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const { data } = await supabase
+    .from("vehicles")
+    .select(`*, vehicle_photos(${PHOTO_COLUMNS}), owner:profiles!inner(username, visibility)`)
+    .eq("visibility", "public")
+    .eq("status", "current")
+    .eq("owner.visibility", "public")
+    .order("created_at", { ascending: false })
+    .limit(limit * 2);
+  // Jen vozidla s fotkou – úvodní stránka stojí na obrázcích
+  const withPhotos = (data ?? []).filter((v) => v.vehicle_photos.length > 0).slice(0, limit);
+  const cards = await toCards(
+    supabase,
+    withPhotos.map(({ owner: _owner, ...v }) => {
+      void _owner;
+      return v;
+    }),
+  );
+  return cards.map((c, i) => ({ ...c, ownerUsername: withPhotos[i]?.owner?.username ?? null }));
+}
