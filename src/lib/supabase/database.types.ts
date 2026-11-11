@@ -14,6 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      email_outbox: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locale: string
+          payload: Json
+          provider_id: string | null
+          send_after: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["email_status"]
+          template: string
+          to_email: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locale?: string
+          payload?: Json
+          provider_id?: string | null
+          send_after?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_status"]
+          template: string
+          to_email: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          locale?: string
+          payload?: Json
+          provider_id?: string | null
+          send_after?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["email_status"]
+          template?: string
+          to_email?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_outbox_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -262,6 +321,109 @@ export type Database = {
           },
         ]
       }
+      message_broadcasts: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          event_id: string
+          id: string
+          recipient_count: number
+          segment: Database["public"]["Enums"]["broadcast_segment"]
+          subject: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          event_id: string
+          id?: string
+          recipient_count?: number
+          segment: Database["public"]["Enums"]["broadcast_segment"]
+          subject: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          event_id?: string
+          id?: string
+          recipient_count?: number
+          segment?: Database["public"]["Enums"]["broadcast_segment"]
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_broadcasts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_broadcasts_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          event_id: string | null
+          id: string
+          payload: Json
+          read_at: string | null
+          registration_id: string | null
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          registration_id?: string | null
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          payload?: Json
+          read_at?: string | null
+          registration_id?: string | null
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "event_registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizers: {
         Row: {
           created_at: string
@@ -309,6 +471,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          locale: string
           role: string
           updated_at: string
           username: string | null
@@ -323,6 +486,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          locale?: string
           role?: string
           updated_at?: string
           username?: string | null
@@ -337,6 +501,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          locale?: string
           role?: string
           updated_at?: string
           username?: string | null
@@ -536,6 +701,22 @@ export type Database = {
         }
         Returns: undefined
       }
+      broadcast_recipient_count: {
+        Args: {
+          p_event_id: string
+          p_segment: Database["public"]["Enums"]["broadcast_segment"]
+        }
+        Returns: number
+      }
+      broadcast_recipients: {
+        Args: {
+          p_event_id: string
+          p_segment: Database["public"]["Enums"]["broadcast_segment"]
+        }
+        Returns: {
+          user_id: string
+        }[]
+      }
       cancel_registration: {
         Args: { p_registration_id: string }
         Returns: {
@@ -565,6 +746,35 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      claim_email_batch: {
+        Args: { p_daily_limit: number; p_limit: number }
+        Returns: {
+          attempts: number
+          created_at: string
+          id: string
+          last_error: string | null
+          locale: string
+          payload: Json
+          provider_id: string | null
+          send_after: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["email_status"]
+          template: string
+          to_email: string
+          updated_at: string
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "email_outbox"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      complete_email: {
+        Args: { p_id: string; p_provider_id: string }
+        Returns: undefined
       }
       decide_registration: {
         Args: {
@@ -600,6 +810,22 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      enqueue_user_message: {
+        Args: {
+          p_event_id: string
+          p_payload: Json
+          p_registration_id: string
+          p_send_email: boolean
+          p_type: Database["public"]["Enums"]["notification_type"]
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      event_email_queue_count: { Args: { p_event_id: string }; Returns: number }
+      fail_email: {
+        Args: { p_error: string; p_id: string }
+        Returns: undefined
       }
       fill_from_waitlist: { Args: { p_event_id: string }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
@@ -652,12 +878,43 @@ export type Database = {
         Args: { p_organizer_id: string; p_season_id: string }
         Returns: boolean
       }
+      send_broadcast: {
+        Args: {
+          p_body: string
+          p_event_id: string
+          p_segment: Database["public"]["Enums"]["broadcast_segment"]
+          p_subject: string
+        }
+        Returns: {
+          body: string
+          created_at: string
+          created_by: string | null
+          event_id: string
+          id: string
+          recipient_count: number
+          segment: Database["public"]["Enums"]["broadcast_segment"]
+          subject: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "message_broadcasts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       vehicle_has_event_history: {
         Args: { p_vehicle_id: string }
         Returns: boolean
       }
     }
     Enums: {
+      broadcast_segment:
+        | "approved"
+        | "pending"
+        | "waitlist"
+        | "approved_verified"
+        | "all_active"
+      email_status: "queued" | "sending" | "sent" | "failed"
       event_access: "public" | "verified_only" | "invite_only"
       event_category:
         | "tuning"
@@ -678,6 +935,14 @@ export type Database = {
         | "interior"
         | "audio"
         | "other"
+      notification_type:
+        | "registration_received"
+        | "registration_approved"
+        | "registration_rejected"
+        | "registration_waitlist"
+        | "registration_promoted"
+        | "registration_cancelled"
+        | "broadcast"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -824,6 +1089,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      broadcast_segment: [
+        "approved",
+        "pending",
+        "waitlist",
+        "approved_verified",
+        "all_active",
+      ],
+      email_status: ["queued", "sending", "sent", "failed"],
       event_access: ["public", "verified_only", "invite_only"],
       event_category: [
         "tuning",
@@ -845,6 +1118,15 @@ export const Constants = {
         "interior",
         "audio",
         "other",
+      ],
+      notification_type: [
+        "registration_received",
+        "registration_approved",
+        "registration_rejected",
+        "registration_waitlist",
+        "registration_promoted",
+        "registration_cancelled",
+        "broadcast",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

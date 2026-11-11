@@ -8,7 +8,9 @@
     "register": "Registrace",
     "account": "Můj účet",
     "language": "Jazyk",
-    "events": "Eventy"
+    "events": "Eventy",
+    "notifications": "Upozornění",
+    "notificationsUnread": "Upozornění ({count} nepřečtených)"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -395,7 +397,12 @@
     "factVerified": "Registrace pro Verified od",
     "unlimited": "Bez limitu",
     "notSet": "Nenastaveno",
-    "registrations": "Přihlášky"
+    "registrations": "Přihlášky",
+    "participantsTitle": "Účastníci",
+    "writeToParticipants": "Napsat účastníkům",
+    "exportApproved": "Export schválených (Excel)",
+    "exportAll": "Export všech přihlášek",
+    "printList": "Tisk seznamu"
   },
   "EventForm": {
     "createSubmit": "Uložit koncept",
@@ -596,5 +603,150 @@
     "notePlaceholder": "Např. Viděno na Undergroundu, skvělý stav.",
     "noteSaved": "Poznámka uložena.",
     "noteFailed": "Poznámku se nepodařilo uložit."
+  },
+  "Email": {
+    "defaultName": "ahoj",
+    "buttonMyRegistrations": "Moje registrace",
+    "buttonEvent": "Zobrazit event",
+    "footer": "Tento e-mail ti poslal klub ELITEZ, protože ses přihlásil(a) na event. Na e-mail prosím neodpovídej, s dotazy se obrať na pořadatele.",
+    "received": {
+      "subject": "Přihláška přijata – {event}",
+      "heading": "Přihláška je odeslaná",
+      "body": "Ahoj {name},\n\ntvoje přihláška s vozidlem {vehicle} na {event} ({when}) dorazila pořadateli. Jakmile ji posoudí, dáme ti vědět e-mailem."
+    },
+    "approved": {
+      "subject": "Jsi přijat(a) – {event}",
+      "heading": "Gratulujeme, jsi přijat(a)!",
+      "body": "Ahoj {name},\n\npořadatel schválil tvou přihlášku s vozidlem {vehicle} na {event} ({when}). Podrobnosti a program najdeš na stránce eventu. Těšíme se!"
+    },
+    "promoted": {
+      "subject": "Uvolnilo se místo – {event}",
+      "heading": "Posun z čekací listiny",
+      "body": "Ahoj {name},\n\nuvolnilo se místo a tvoje přihláška s vozidlem {vehicle} na {event} ({when}) je teď schválená. Těšíme se!"
+    },
+    "waitlist": {
+      "subject": "Čekací listina – {event}",
+      "heading": "Jsi na čekací listině",
+      "body": "Ahoj {name},\n\ntvoje přihláška s vozidlem {vehicle} na {event} ({when}) je na čekací listině. Když se uvolní místo, můžeš být přijat(a) – dáme ti vědět."
+    },
+    "rejected": {
+      "subject": "Výsledek přihlášky – {event}",
+      "heading": "Tentokrát to nevyšlo",
+      "body": "Ahoj {name},\n\npořadatel bohužel tentokrát nepřijal tvou přihlášku s vozidlem {vehicle} na {event} ({when}). Děkujeme za zájem a budeme rádi, když se přihlásíš znovu příště.",
+      "reason": "Důvod"
+    }
+  },
+  "Notifications": {
+    "title": "Upozornění",
+    "backToAccount": "← Zpět na můj účet",
+    "empty": "Zatím žádná upozornění.",
+    "broadcastTitle": "Zpráva od pořadatele",
+    "openEvent": "Otevřít event",
+    "openRegistrations": "Moje registrace",
+    "types": {
+      "registration_received": {
+        "title": "Přihláška odeslána",
+        "text": "Přihláška s vozidlem {vehicle} na {event} čeká na schválení."
+      },
+      "registration_approved": {
+        "title": "Jsi přijat(a)!",
+        "text": "Pořadatel schválil tvou přihlášku s vozidlem {vehicle} na {event}."
+      },
+      "registration_rejected": {
+        "title": "Přihláška nepřijata",
+        "text": "Přihláška s vozidlem {vehicle} na {event} tentokrát nebyla přijata."
+      },
+      "registration_waitlist": {
+        "title": "Čekací listina",
+        "text": "Přihláška s vozidlem {vehicle} na {event} je na čekací listině."
+      },
+      "registration_promoted": {
+        "title": "Uvolnilo se místo!",
+        "text": "Přihláška s vozidlem {vehicle} na {event} je teď schválená."
+      },
+      "registration_cancelled": {
+        "title": "Přihláška zrušena",
+        "text": "Zrušil(a) jsi přihlášku s vozidlem {vehicle} na {event}."
+      },
+      "broadcast": {
+        "title": "Zpráva od pořadatele",
+        "text": ""
+      }
+    }
+  },
+  "Broadcast": {
+    "title": "Zprávy účastníkům",
+    "segmentLabel": "Komu",
+    "segments": {
+      "approved": "Schválení",
+      "approved_verified": "Schválení Verified",
+      "pending": "Čekající na schválení",
+      "waitlist": "Čekací listina",
+      "all_active": "Všichni přihlášení"
+    },
+    "people": "{count, plural, one {# člověk} few {# lidé} other {# lidí}}",
+    "templatesLabel": "Šablony:",
+    "templates": {
+      "info": {
+        "label": "Informace před akcí",
+        "subject": "Důležité informace před akcí",
+        "body": "Ahoj {jmeno},\n\nblíží se {event} a posíláme pár praktických informací:\n\n– vjezd pro vystavovatele od …\n– parkování …\n– s sebou …\n\nTěšíme se na tebe!"
+      },
+      "change": {
+        "label": "Změna programu",
+        "subject": "Změna programu",
+        "body": "Ahoj {jmeno},\n\nu akce {event} došlo ke změně: …\n\nDíky za pochopení."
+      },
+      "reminder": {
+        "label": "Připomínka",
+        "subject": "Připomínka: už brzy!",
+        "body": "Ahoj {jmeno},\n\njen připomínáme, že {event} je už za pár dní. Těšíme se na tebe i tvé auto!"
+      }
+    },
+    "subjectLabel": "Předmět",
+    "bodyLabel": "Text zprávy",
+    "placeholdersHint": "'{jmeno}' se nahradí jménem příjemce, '{event}' názvem eventu.",
+    "preview": "Náhled",
+    "exampleName": "Honzo",
+    "send": "Odeslat ({count, plural, one {# příjemce} few {# příjemci} other {# příjemců}})",
+    "confirmText": "Opravdu odeslat {count, plural, one {# příjemci} other {# příjemcům}}? Zprávu už nepůjde vzít zpět.",
+    "confirmSend": "Ano, odeslat",
+    "sending": "Odesílám…",
+    "back": "Zpět",
+    "sent": "Zpráva je odeslaná {count, plural, one {# příjemci} other {# příjemcům}} (e-mail a upozornění v aplikaci).",
+    "writeAnother": "Napsat další zprávu",
+    "queued": "Ve frontě čeká {count, plural, one {# e-mail} few {# e-maily} other {# e-mailů}} – odešlou se postupně (denní limit poskytovatele).",
+    "historyTitle": "Odeslané zprávy",
+    "historyEmpty": "Zatím žádné odeslané zprávy.",
+    "showText": "Zobrazit text",
+    "errors": {
+      "not_allowed": "Nemáš oprávnění psát účastníkům tohoto eventu.",
+      "invalid_message": "Vyplň předmět (nejvýš 150 znaků) a text zprávy.",
+      "daily_limit": "Dnes už bylo k tomuto eventu odesláno 5 zpráv. Další půjde poslat zítra.",
+      "no_recipients": "Ve vybrané skupině nikdo není.",
+      "generic": "Odeslání se nepovedlo. Zkus to prosím znovu."
+    }
+  },
+  "Export": {
+    "colStatus": "Stav",
+    "colName": "Jméno",
+    "colUsername": "Uživatel",
+    "colVerified": "Verified",
+    "colVehicle": "Vozidlo",
+    "colYear": "Rok",
+    "colCategory": "Kategorie",
+    "colPhone": "Telefon",
+    "colEmail": "E-mail",
+    "colMessage": "Zpráva",
+    "colSubmitted": "Přihlášeno",
+    "colReason": "Důvod zamítnutí",
+    "colNote": "Interní poznámka",
+    "colArrived": "Přijel",
+    "yes": "ano",
+    "no": "ne",
+    "printTitle": "Seznam účastníků",
+    "print": "Vytisknout / Uložit jako PDF",
+    "approvedCount": "{count, plural, one {# schválené vozidlo} few {# schválená vozidla} other {# schválených vozidel}}",
+    "printEmpty": "Zatím nejsou žádná schválená vozidla."
   }
 }

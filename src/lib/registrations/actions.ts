@@ -2,11 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { Constants } from "@/lib/supabase/database.types";
 import type { Enums } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
+import { processEmailOutbox } from "@/lib/email/outbox";
 
 const UUID = /^[0-9a-f-]{36}$/i;
 
@@ -45,8 +47,12 @@ function text(formData: FormData, name: string): string {
   return typeof v === "string" ? v : "";
 }
 
+/** Po změně: obnovit stránky a po odeslání odpovědi odeslat frontu e-mailů. */
 function refresh() {
   revalidatePath("/", "layout");
+  after(async () => {
+    await processEmailOutbox();
+  });
 }
 
 export type RegistrationFormState =
