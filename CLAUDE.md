@@ -82,3 +82,11 @@ Vlastník projektu **není programátor**. Proto:
 - Časy: v DB UTC, ve formulářích a zobrazení `src/lib/dates.ts` (Europe/Prague). `registration_verified_opens_at` počítá trigger z předstihu.
 - Účet `gastoys` je admin a pořadatel „ELITEZ“ (nastaveno ručně SQL, ne migrací).
 - Po `npm run build` při běžícím `npm run dev` může dev server držet staré překlady – restartuj ho.
+
+## Technické poznámky (Milník 4)
+- Do `event_registrations` aplikace NEZAPISUJE přímo (práva odebraná). Vše přes funkce `register_for_event`, `cancel_registration`, `decide_registration` (security definer, zamykají event kvůli kapacitě). Chyby vrací jako text výjimky → `RegistrationErrors` v překladech.
+- Čekací listinu doplňuje `fill_from_waitlist` (jen při nastavené kapacitě; Verified první při `verified_priority`).
+- Interní poznámky pořadatele jsou v samostatné tabulce `event_registration_notes` (uchazeč nemá přístup).
+- Pořadatel vidí soukromé vozidlo a profil uchazeče přes politiky „organizer reads applicants“.
+- Zobrazení stavu registrace: `src/lib/registration-window.ts` (stejná pravidla jako v DB, jen pro UI).
+- E-mailové notifikace o změně stavu přijdou v Milníku 5.

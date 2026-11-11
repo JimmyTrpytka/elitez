@@ -39,6 +39,8 @@ async function LoginFormWithParams({
 }: {
   searchParams: PageProps<"/[locale]/login">["searchParams"];
 }) {
-  const { error } = await searchParams;
-  return <LoginForm linkError={error === "link"} />;
+  const { error, next } = await searchParams;
+  return (
+    <LoginForm linkError={error === "link"} next={typeof next === "string" ? next : undefined} />
+  );
 }

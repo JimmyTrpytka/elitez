@@ -292,6 +292,229 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 4: přihlášky
+-- Alice = pořadatelka, Bob a Carol = uchazeči
+-- =====================================================================
+insert into auth.users (id, email, aud, role, instance_id)
+values ('00000000-0000-4000-a000-0000000ca201', 'rls-test-carol@example.invalid',
+        'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000');
+update public.profiles set username = 'rls_bob', visibility = 'private'
+where id = '00000000-0000-4000-a000-000000000b0b';
+update public.profiles set username = 'rls_carol'
+where id = '00000000-0000-4000-a000-0000000ca201';
+
+-- Event s kapacitou 1 a otevřenou registrací; druhý jen pro Verified; třetí ještě neotevřený
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity,
+   registration_opens_at, verified_head_start_hours)
+values
+  ('00000000-0000-4000-e000-000000000010', '00000000-0000-4000-c000-00000000000a',
+   'rls-registrace', 'Registrace', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', 1, now() - interval '1 day', 0),
+  ('00000000-0000-4000-e000-000000000011', '00000000-0000-4000-c000-00000000000a',
+   'rls-jen-verified-reg', 'Jen Verified', now() + interval '60 days', now() + interval '61 days',
+   'published', 'verified_only', null, now() - interval '1 day', 0),
+  ('00000000-0000-4000-e000-000000000012', '00000000-0000-4000-c000-00000000000a',
+   'rls-neotevreno', 'Neotevřeno', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', null, now() + interval '3 days', 168);
+
+insert into public.vehicles (id, owner_id, category, make, model, visibility)
+values
+  ('00000000-0000-4000-b000-0000000000b1', '00000000-0000-4000-a000-000000000b0b', 'tuning', 'Škoda', 'Bobova soukromá', 'private'),
+  ('00000000-0000-4000-b000-0000000000c1', '00000000-0000-4000-a000-0000000ca201', 'american', 'Ford', 'Mustang', 'public');
+
+-- ---------- Bob se hlásí se soukromým autem ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r public.event_registrations;
+begin
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000010',
+      '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', null, true, false);
+    raise exception 'FAIL: soukromé auto přihlášené bez potvrzení';
+  exception when raise_exception then
+    if sqlerrm <> 'private_ack_required' then raise; end if;
+  end;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000010',
+      '00000000-0000-4000-b000-0000000000c1', '+420777111222', 'bob@example.invalid', null, true, true);
+    raise exception 'FAIL: uživatel přihlásil cizí auto';
+  exception when raise_exception then
+    if sqlerrm <> 'vehicle_invalid' then raise; end if;
+  end;
+  r := public.register_for_event('00000000-0000-4000-e000-000000000010',
+    '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', 'Ahoj', true, true);
+  if r.status <> 'pending' then raise exception 'FAIL: nová přihláška není „čeká“'; end if;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000010',
+      '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', null, true, true);
+    raise exception 'FAIL: stejné auto přihlášené dvakrát';
+  exception when raise_exception then
+    if sqlerrm <> 'already_registered' then raise; end if;
+  end;
+  begin
+    insert into public.event_registrations (event_id, vehicle_id, user_id, status, contact_phone, contact_email)
+    values ('00000000-0000-4000-e000-000000000010', '00000000-0000-4000-b000-0000000000b1',
+            auth.uid(), 'approved', '+420777111222', 'bob@example.invalid');
+    raise exception 'FAIL: uživatel zapsal přihlášku přímo do tabulky';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.decide_registration(r.id, 'approved');
+    raise exception 'FAIL: uchazeč si sám schválil přihlášku';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000011',
+      '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', null, true, true);
+    raise exception 'FAIL: neověřený člen se přihlásil na event jen pro Verified';
+  exception when raise_exception then
+    if sqlerrm <> 'verified_only' then raise; end if;
+  end;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000012',
+      '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', null, true, true);
+    raise exception 'FAIL: přihláška před otevřením registrace';
+  exception when raise_exception then
+    if sqlerrm <> 'not_open_yet' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- ---------- Alice (pořadatelka) vidí přihlášku, soukromé auto i soukromý profil ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare v_reg uuid; r public.event_registrations;
+begin
+  select id into v_reg from public.event_registrations
+  where event_id = '00000000-0000-4000-e000-000000000010';
+  if v_reg is null then raise exception 'FAIL: pořadatel nevidí přihlášku na svůj event'; end if;
+  if not exists (select 1 from public.vehicles where id = '00000000-0000-4000-b000-0000000000b1') then
+    raise exception 'FAIL: pořadatel nevidí soukromé auto uchazeče';
+  end if;
+  if not exists (select 1 from public.profiles where username = 'rls_bob') then
+    raise exception 'FAIL: pořadatel nevidí soukromý profil uchazeče';
+  end if;
+  insert into public.event_registration_notes (registration_id, note) values (v_reg, 'Pěkné auto');
+  r := public.decide_registration(v_reg, 'approved');
+  if r.status <> 'approved' then raise exception 'FAIL: schválení nefunguje'; end if;
+end $$;
+reset role;
+
+-- ---------- Bob nevidí interní poznámku; Carol nevidí Bobovu přihlášku ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if exists (select 1 from public.event_registration_notes) then
+    raise exception 'FAIL: uchazeč vidí interní poznámku pořadatele';
+  end if;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r public.event_registrations;
+begin
+  if exists (select 1 from public.event_registrations where user_id <> auth.uid()) then
+    raise exception 'FAIL: uchazeč vidí cizí přihlášky';
+  end if;
+  if exists (select 1 from public.vehicles where id = '00000000-0000-4000-b000-0000000000b1') then
+    raise exception 'FAIL: jiný uchazeč vidí soukromé auto';
+  end if;
+  -- Kapacita 1 je plná → Carol jde na čekací listinu
+  r := public.register_for_event('00000000-0000-4000-e000-000000000010',
+    '00000000-0000-4000-b000-0000000000c1', '+420777333444', 'carol@example.invalid', null, true, false);
+  if r.status <> 'waitlist' then raise exception 'FAIL: při plné kapacitě nejde přihláška na čekací listinu'; end if;
+end $$;
+reset role;
+
+-- ---------- Bob zruší schválenou přihlášku → Carol se automaticky schválí ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare v_reg uuid;
+begin
+  select id into v_reg from public.event_registrations
+  where event_id = '00000000-0000-4000-e000-000000000010' and user_id = auth.uid();
+  perform public.cancel_registration(v_reg);
+end $$;
+reset role;
+
+do $$ begin
+  if (select status from public.event_registrations
+      where vehicle_id = '00000000-0000-4000-b000-0000000000c1') <> 'approved' then
+    raise exception 'FAIL: po uvolnění místa se nedoplnilo z čekací listiny';
+  end if;
+end $$;
+
+-- ---------- Schválení při plné kapacitě → čekací listina ----------
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r public.event_registrations;
+begin
+  r := public.register_for_event('00000000-0000-4000-e000-000000000010',
+    '00000000-0000-4000-b000-0000000000b1', '+420777111222', 'bob@example.invalid', null, true, true);
+  if r.status <> 'waitlist' then raise exception 'FAIL: druhá přihláška při plné kapacitě není na listině'; end if;
+  -- Auto s historií na eventu nejde smazat
+  delete from public.vehicles where id = '00000000-0000-4000-b000-0000000000b1';
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.vehicles where id = '00000000-0000-4000-b000-0000000000b1') then
+    raise exception 'FAIL: smazáno vozidlo, které bylo přihlášené na event';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare v_reg uuid; r public.event_registrations;
+begin
+  select id into v_reg from public.event_registrations
+  where vehicle_id = '00000000-0000-4000-b000-0000000000b1' and status = 'waitlist';
+  r := public.decide_registration(v_reg, 'approved');
+  if r.status <> 'waitlist' then raise exception 'FAIL: schválení přeplnilo kapacitu'; end if;
+  -- Zamítnutí schválené Carol → Bob se doplní z listiny
+  select id into v_reg from public.event_registrations
+  where vehicle_id = '00000000-0000-4000-b000-0000000000c1';
+  r := public.decide_registration(v_reg, 'rejected', 'criteria', 'Díky, letos ne.');
+  if r.status <> 'rejected' or r.rejection_reason <> 'criteria' then
+    raise exception 'FAIL: zamítnutí s důvodem nefunguje';
+  end if;
+  if (select status from public.event_registrations
+      where vehicle_id = '00000000-0000-4000-b000-0000000000b1' and status <> 'cancelled') <> 'approved' then
+    raise exception 'FAIL: po zamítnutí schváleného se nedoplnilo z listiny';
+  end if;
+end $$;
+reset role;
+
+-- Nepřihlášený návštěvník nevidí žádné přihlášky
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  begin
+    if exists (select 1 from public.event_registrations) then
+      raise exception 'FAIL: návštěvník vidí přihlášky';
+    end if;
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

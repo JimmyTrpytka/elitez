@@ -114,6 +114,17 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Čas:** ukládá se v UTC, zadává a zobrazuje v pražském čase (Europe/Prague); jiné zóny později.
 - **Duplikace:** kopie eventu včetně obrázku jako koncept. **Hromadné založení:** v sezóně více řádků (název + datum) → koncepty.
 
+### 5.1c Registrace a schvalování – upřesnění (rozhodnuto 12. 11. 2026, Milník 4)
+- **Přihláška = jedno vozidlo.** Člen může přihlásit více vozidel (každé zvlášť, každé schválené zabírá místo). Jedno vozidlo má na eventu nejvýš jednu přihlášku (kromě zrušených); po zamítnutí se stejné vozidlo znovu hlásit nemůže.
+- **Údaje:** telefon (povinný), e-mail (předvyplněný z účtu), zpráva pořadateli (nepovinná). Vidí je jen uchazeč a pořadatel eventu.
+- **Souhlasy:** zpracování údajů pořadatelem pro účely eventu; u soukromého vozidla navíc potvrzení, že údaje uvidí pořadatel.
+- **Podmínky:** uživatelské jméno, vozidlo v garáži (ne v archivu), event zveřejněný, registrace otevřená (Verified od `registration_verified_opens_at`, ostatní od `registration_opens_at`), před uzávěrkou a před začátkem eventu; „jen Verified“ jen pro Verified. Eventy na pozvánky: přihlašování až s pozvánkami (Milník 6).
+- **Stavy:** čeká → schváleno / zamítnuto (důvod ze šablony: kapacita, kritéria selekce, neúplné údaje, jiný + volitelný text) / čekací listina; uchazeč může zrušit před začátkem eventu. Úprava po odeslání není možná.
+- **Kapacita:** počítají se schválené. Při plné kapacitě jde schválení i nová přihláška na čekací listinu. Když se uvolní místo (zrušení, zamítnutí schváleného), **automaticky** se schválí první z listiny – Verified první, pokud má event „upřednostnit Verified“, jinak podle času přihlášení.
+- **Interní poznámka** pořadatele je oddělená a uchazeč ji nikdy nevidí.
+- **Soukromé vozidlo a profil uchazeče** vidí pořadatel eventu, na který se uchazeč hlásí. Veřejný seznam účastníků zatím není.
+- Vozidlo, které bylo kdykoli přihlášené na event, nejde smazat (jen „Prodáno“).
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

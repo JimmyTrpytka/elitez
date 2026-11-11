@@ -88,13 +88,16 @@ async function AccountContent() {
         <Link href="/garage" className={buttonClasses("primary", "lg")}>
           {tAccount("myGarage")}
         </Link>
+        <Link href="/account/registrations" className={buttonClasses("secondary", "lg")}>
+          {tAccount("myRegistrations")}
+        </Link>
         <Link href="/account/profile" className={buttonClasses("secondary", "lg")}>
           {profile.username ? tAccount("editProfile") : tAccount("finishProfile")}
         </Link>
         {profile.username ? (
           <Link
             href={`/u/${profile.username}`}
-            className={buttonClasses("ghost", "lg", "sm:col-span-2")}
+            className={buttonClasses("ghost", "lg")}
           >
             {tAccount("viewPublicProfile")}
           </Link>

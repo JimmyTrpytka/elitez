@@ -14,6 +14,137 @@ export type Database = {
   }
   public: {
     Tables: {
+      event_registration_notes: {
+        Row: {
+          note: string
+          registration_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          note: string
+          registration_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          note?: string
+          registration_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registration_notes_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: true
+            referencedRelation: "event_registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registration_notes_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          cancelled_at?: string | null
+          consent_at?: string
+          contact_email: string
+          contact_phone: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_message?: string | null
+          event_id: string
+          id?: string
+          message?: string | null
+          private_vehicle_ack?: boolean
+          rejection_reason?:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          updated_at?: string
+          user_id: string
+          vehicle_id: string
+        }
+        Update: {
+          cancelled_at?: string | null
+          consent_at?: string
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_message?: string | null
+          event_id?: string
+          id?: string
+          message?: string | null
+          private_vehicle_ack?: boolean
+          rejection_reason?:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          updated_at?: string
+          user_id?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_decided_by_fkey"
+            columns: ["decided_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           access: Database["public"]["Enums"]["event_access"]
@@ -405,9 +536,118 @@ export type Database = {
         }
         Returns: undefined
       }
+      cancel_registration: {
+        Args: { p_registration_id: string }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      decide_registration: {
+        Args: {
+          p_decision: Database["public"]["Enums"]["registration_status"]
+          p_message?: string
+          p_reason?: Database["public"]["Enums"]["rejection_reason"]
+          p_registration_id: string
+        }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      fill_from_waitlist: { Args: { p_event_id: string }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
+      is_event_organizer: { Args: { p_event_id: string }; Returns: boolean }
+      is_registration_organizer: {
+        Args: { p_registration_id: string }
+        Returns: boolean
+      }
       my_organizer_ids: { Args: never; Returns: string[] }
       owns_vehicle: { Args: { p_vehicle_id: string }; Returns: boolean }
+      register_for_event: {
+        Args: {
+          p_consent: boolean
+          p_email: string
+          p_event_id: string
+          p_message: string
+          p_phone: string
+          p_private_ack: boolean
+          p_vehicle_id: string
+        }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       season_belongs_to: {
         Args: { p_organizer_id: string; p_season_id: string }
         Returns: boolean
@@ -439,6 +679,13 @@ export type Database = {
         | "audio"
         | "other"
       organizer_status: "pending" | "approved" | "suspended"
+      registration_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "waitlist"
+        | "cancelled"
+      rejection_reason: "capacity" | "criteria" | "incomplete" | "other"
       vehicle_category:
         | "tuning"
         | "youngtimer"
@@ -600,6 +847,14 @@ export const Constants = {
         "other",
       ],
       organizer_status: ["pending", "approved", "suspended"],
+      registration_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "waitlist",
+        "cancelled",
+      ],
+      rejection_reason: ["capacity", "criteria", "incomplete", "other"],
       vehicle_category: [
         "tuning",
         "youngtimer",

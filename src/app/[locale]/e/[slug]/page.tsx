@@ -7,6 +7,7 @@ import { countryName } from "@/lib/countries";
 import { formatDateTime, formatEventDates, formatTime } from "@/lib/dates";
 import { getEventBySlug, getMyOrganizer } from "@/lib/data/events";
 import { EventMap } from "@/components/events/event-map";
+import { RegistrationBox } from "@/components/registrations/registration-box";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
@@ -133,10 +134,9 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
           ))}
         </dl>
 
-        <div className="mb-12 rounded-card bg-muted p-6">
-          <p className="font-semibold text-ink">{t("registrationSoonTitle")}</p>
-          <p className="mt-1 text-sm text-ink-soft">{t("registrationSoonText")}</p>
-        </div>
+        <Suspense fallback={<div className="mb-12 h-32 rounded-card bg-muted" aria-hidden />}>
+          <RegistrationBox event={event} />
+        </Suspense>
 
         <TextBlock title={t("program")} text={event.program} />
         <TextBlock title={t("selection")} text={event.selection_criteria} />
