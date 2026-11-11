@@ -34,8 +34,18 @@ export function generateStaticParams() {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata");
   return {
+    metadataBase: new URL(
+      (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.elitezclub.eu").replace(/\/+$/, ""),
+    ),
     title: { default: "ELITEZ", template: "%s · ELITEZ" },
     description: t("description"),
+    // Výchozí náhled při sdílení odkazu (stránky aut, profilů a eventů mají vlastní)
+    openGraph: {
+      siteName: "ELITEZ",
+      type: "website",
+      images: [{ url: "/brand/hero.jpg", width: 2200, height: 1222, alt: "ELITEZ" }],
+    },
+    twitter: { card: "summary_large_image" },
     applicationName: "ELITEZ",
     appleWebApp: { capable: true, title: "ELITEZ", statusBarStyle: "black-translucent" },
   };

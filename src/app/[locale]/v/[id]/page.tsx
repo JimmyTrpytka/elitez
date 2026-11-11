@@ -5,6 +5,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
 import { getVehicle } from "@/lib/data/vehicles";
+import { getVehicleShare, shareMetadata } from "@/lib/data/share";
+import { ShareButton } from "@/components/share-button";
 import { getCurrentUser } from "@/lib/auth/user";
 import { getPhotoTurbos, getVehicleSocial, listTurboGivers } from "@/lib/data/social";
 import { TurboGivers } from "@/components/social/turbo-givers";
@@ -16,9 +18,9 @@ import { HeroGallery } from "@/components/lightbox";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("PublicVehicle");
-  return { title: t("metaTitle") };
+export async function generateMetadata({ params }: PageProps<"/[locale]/v/[id]">): Promise<Metadata> {
+  const [{ id }, t] = await Promise.all([params, getTranslations("PublicVehicle")]);
+  return shareMetadata(await getVehicleShare(id), t("metaTitle"));
 }
 
 export default async function PublicVehiclePage({ params }: PageProps<"/[locale]/v/[id]">) {
@@ -129,12 +131,15 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
 
         {showTurbo ? (
           <div className="mb-8">
-            <WantButton
-              vehicleId={vehicle.id}
-              mode={turboMode}
-              initialWanted={inMyDreams}
-              initialDreamers={social.get(vehicle.id)?.dreamers ?? 0}
-            />
+            <div className="flex flex-wrap items-center gap-3">
+              <WantButton
+                vehicleId={vehicle.id}
+                mode={turboMode}
+                initialWanted={inMyDreams}
+                initialDreamers={social.get(vehicle.id)?.dreamers ?? 0}
+              />
+              <ShareButton title={title} />
+            </div>
           </div>
         ) : null}
         {showTurbo && vehicleTurbos > 0 && givers.length > 0 ? (

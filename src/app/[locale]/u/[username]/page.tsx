@@ -14,6 +14,8 @@ import {
   listUserBadges,
 } from "@/lib/data/social";
 import { HallOfFame } from "@/components/social/hall-of-fame";
+import { getProfileShare, shareMetadata } from "@/lib/data/share";
+import { ShareButton } from "@/components/share-button";
 import { listDreamsOfOwner } from "@/lib/data/dreams";
 import { DreamCard } from "@/components/dreams/dream-card";
 import { Link } from "@/i18n/navigation";
@@ -32,7 +34,8 @@ export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/u/[username]">): Promise<Metadata> {
   const { username } = await params;
-  return { title: `@${decodeURIComponent(username)}` };
+  const name = decodeURIComponent(username);
+  return shareMetadata(await getProfileShare(name), `@${name}`);
 }
 
 export default async function PublicProfilePage({
@@ -166,6 +169,7 @@ async function PublicProfile({
                   initialFollowing={stats.iFollow}
                   initialFollowers={stats.followers}
                 />
+                <ShareButton title={name} />
               </div>
               {mode !== "own" ? (
                 <p className="-mt-2 text-sm text-night-subtle">{t("garageTurboHint")}</p>

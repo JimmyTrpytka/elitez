@@ -215,3 +215,28 @@ export async function getLeaderboards(period: LeaderboardPeriod, limit = 10) {
     fans: (f.data ?? []).map(toMember),
   };
 }
+
+export type CarOfTheWeek = LeaderboardVehicle & { coverLargeUrl: string | null };
+
+/** Auto týdne = první místo týdenního žebříčku aut (nebo null). */
+export async function getCarOfTheWeek(): Promise<CarOfTheWeek | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const { data } = await supabase.rpc("leaderboard_vehicles", { p_period: "week", p_limit: 1 });
+  const r = data?.[0];
+  if (!r) return null;
+  const path = r.cover_photo_id
+    ? vehiclePhotoPath(r.vehicle_id, r.cover_photo_id, "lg", r.cover_format ?? "webp")
+    : null;
+  const urls = path ? await signFiles(supabase, VEHICLE_PHOTOS_BUCKET, [path]) : new Map<string, string>();
+  return {
+    vehicleId: r.vehicle_id,
+    title: `${r.make} ${r.model}`,
+    year: r.year,
+    ownerUsername: r.owner_username,
+    ownerName: r.owner_display_name ?? `@${r.owner_username}`,
+    coverUrl: null,
+    coverLargeUrl: path ? (urls.get(path) ?? null) : null,
+    turbos: r.turbos,
+  };
+}

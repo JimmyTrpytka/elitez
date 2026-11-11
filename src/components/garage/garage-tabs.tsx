@@ -57,11 +57,18 @@ export async function GarageTabs({ active, counts }: { active: GarageTab; counts
           })}
         </div>
       </nav>
-      {action ? (
-        <Link href={action.href} className={buttonClasses("primary", "md", "shrink-0 self-start sm:self-auto")}>
-          + {action.label}
-        </Link>
-      ) : null}
+      <div className="flex shrink-0 flex-wrap gap-2">
+        {active === "cars" ? (
+          <Link href="/garage/qr" className={buttonClasses("secondary")}>
+            {t("qrSticker")}
+          </Link>
+        ) : null}
+        {action ? (
+          <Link href={action.href} className={buttonClasses("primary")}>
+            + {action.label}
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { getEventShare, shareMetadata } from "@/lib/data/share";
+import { ShareButton } from "@/components/share-button";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -13,9 +15,9 @@ import { Alert } from "@/components/ui/alert";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Events");
-  return { title: t("detailMetaTitle") };
+export async function generateMetadata({ params }: PageProps<"/[locale]/e/[slug]">): Promise<Metadata> {
+  const [{ slug }, t] = await Promise.all([params, getTranslations("Events")]);
+  return shareMetadata(await getEventShare(slug), t("detailMetaTitle"));
 }
 
 export default async function EventDetailPage({ params }: PageProps<"/[locale]/e/[slug]">) {
@@ -110,6 +112,9 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
               {t("organizedBy", { name: event.organizerName })}
             </p>
           ) : null}
+          <div className="reveal reveal-delay-2 mt-6 flex flex-wrap gap-3">
+            <ShareButton title={event.title} />
+          </div>
         </div>
       </header>
 

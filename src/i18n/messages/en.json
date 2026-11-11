@@ -65,7 +65,12 @@
     },
     "ctaTitleA": "Become part of the",
     "ctaTitleB": "club",
-    "ctaText": "Signing up is free. Keep your garage to yourself or show it to the whole community."
+    "ctaText": "Signing up is free. Keep your garage to yourself or show it to the whole community.",
+    "carOfWeekBadge": "Car of the week",
+    "carOfWeekOwner": "{name}'s garage",
+    "carOfWeekTurbos": "{count, plural, one {# turbo} other {# turbos}} in 7 days",
+    "carOfWeekCta": "View and give a turbo",
+    "carOfWeekLeaderboard": "Full leaderboard"
   },
   "Auth": {
     "emailLabel": "Email",
@@ -245,7 +250,8 @@
     "tabCars": "My cars",
     "tabDreams": "Dream garage",
     "tabFormer": "Previous cars",
-    "addDream": "Add dream"
+    "addDream": "Add dream",
+    "qrSticker": "QR sticker"
   },
   "Vehicle": {
     "newTitle": "New vehicle",
@@ -1031,7 +1037,8 @@
       "ownContent": "You can't give a turbo to your own content.",
       "notFound": "This is no longer available.",
       "unknown": "Something went wrong, please try again."
-    }
+    },
+    "doubleTapHint": "double-tap a photo = turbo"
   },
   "Leaderboard": {
     "title": "Leaderboards",
@@ -1134,5 +1141,25 @@
       "notAllowed": "You are not allowed to do that.",
       "generic": "Something went wrong, please try again."
     }
+  },
+  "Qr": {
+    "title": "QR sticker",
+    "intro": "Print a sticker for your car window. At a meet people scan it with their phone and land right on your garage or car – they can give a turbo and follow you.",
+    "stickerHeadline": "Give me a turbo",
+    "garageTitle": "My garage",
+    "targetLabel": "Where should the QR lead",
+    "targetGarage": "Whole garage (profile)",
+    "qrAlt": "QR code: {title}",
+    "download": "Download image",
+    "print": "Print",
+    "tip1": "8–10 cm wide is enough; the QR scans fine through glass.",
+    "tip2": "Print on matte paper or sticker foil – gloss reflects behind glass.",
+    "tip3": "The car must be public, otherwise others won't see it.",
+    "privateWarning": "Your profile is private – others won't see it after scanning. Switch it to public in your profile settings."
+  },
+  "Share": {
+    "share": "Share",
+    "copied": "Link copied ✓",
+    "copyPrompt": "Copy the link:"
   }
 }

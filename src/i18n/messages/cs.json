@@ -65,7 +65,12 @@
     },
     "ctaTitleA": "Staň se součástí",
     "ctaTitleB": "klubu",
-    "ctaText": "Registrace je zdarma. Garáž si můžeš nechat jen pro sebe, nebo ji ukázat celé komunitě."
+    "ctaText": "Registrace je zdarma. Garáž si můžeš nechat jen pro sebe, nebo ji ukázat celé komunitě.",
+    "carOfWeekBadge": "Auto týdne",
+    "carOfWeekOwner": "garáž {name}",
+    "carOfWeekTurbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}} za 7 dní",
+    "carOfWeekCta": "Prohlédnout a dát turbo",
+    "carOfWeekLeaderboard": "Celý žebříček"
   },
   "Auth": {
     "emailLabel": "E-mail",
@@ -245,7 +250,8 @@
     "tabCars": "Moje auta",
     "tabDreams": "Garáž snů",
     "tabFormer": "Předchozí auta",
-    "addDream": "Přidat sen"
+    "addDream": "Přidat sen",
+    "qrSticker": "QR samolepka"
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",
@@ -1031,7 +1037,8 @@
       "ownContent": "Vlastnímu obsahu turbo dát nejde.",
       "notFound": "Tohle už není k dispozici.",
       "unknown": "Něco se nepovedlo, zkus to prosím znovu."
-    }
+    },
+    "doubleTapHint": "dvojklik na fotku = turbo"
   },
   "Leaderboard": {
     "title": "Žebříčky",
@@ -1134,5 +1141,25 @@
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
+  },
+  "Qr": {
+    "title": "QR samolepka",
+    "intro": "Vytiskni si samolepku za okno auta. Na srazu si ji lidé vyfotí telefonem a hned jsou na tvé garáži nebo u auta – můžou dát turbo a začít tě sledovat.",
+    "stickerHeadline": "Dej mi turbo",
+    "garageTitle": "Moje garáž",
+    "targetLabel": "Kam má QR vést",
+    "targetGarage": "Celá garáž (profil)",
+    "qrAlt": "QR kód: {title}",
+    "download": "Stáhnout obrázek",
+    "print": "Vytisknout",
+    "tip1": "Na samolepku stačí šířka 8–10 cm, QR se dobře načte i přes sklo.",
+    "tip2": "Tiskni na matný papír nebo samolepicí fólii – lesk za sklem odráží.",
+    "tip3": "Auto musí být veřejné, jinak ho ostatní neuvidí.",
+    "privateWarning": "Tvůj profil je soukromý – ostatní ho po načtení QR neuvidí. Přepni ho v nastavení profilu na veřejný."
+  },
+  "Share": {
+    "share": "Sdílet",
+    "copied": "Odkaz zkopírován ✓",
+    "copyPrompt": "Zkopíruj si odkaz:"
   }
 }

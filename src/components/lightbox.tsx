@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toggleTurbo } from "@/lib/social/actions";
 import { useTranslations } from "next-intl";
 import { ChevronIcon, CloseIcon } from "@/components/icons";
 import {
@@ -30,6 +31,8 @@ export function Lightbox({
   onIndex,
   alt,
   extra,
+  onDoubleTap,
+  overlayFor,
 }: {
   photos: LightboxPhoto[];
   index: number;
@@ -38,10 +41,15 @@ export function Lightbox({
   alt: string;
   /** Doplněk do horní lišty pro aktuální fotku (např. turbo) */
   extra?: (photo: LightboxPhoto) => React.ReactNode;
+  /** Dvojklik na fotku (např. dát turbo) */
+  onDoubleTap?: (photo: LightboxPhoto) => void;
+  /** Překryv přes fotku (animace turba) */
+  overlayFor?: (photo: LightboxPhoto) => React.ReactNode;
 }) {
   const t = useTranslations("Lightbox");
   const closeRef = useRef<HTMLButtonElement>(null);
   const touchX = useRef<number | null>(null);
+  const lastTap = useRef(0);
   const count = photos.length;
   const prev = useCallback(() => onIndex((index - 1 + count) % count), [index, count, onIndex]);
   const next = useCallback(() => onIndex((index + 1) % count), [index, count, onIndex]);
@@ -109,14 +117,25 @@ export function Lightbox({
         }}
       >
         {photo?.full ?? photo?.thumb ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={photo.id}
-            src={photo.full ?? photo.thumb ?? ""}
-            alt={`${alt} – ${index + 1}`}
-            className="max-h-full max-w-full rounded-control object-contain select-none"
-            draggable={false}
-          />
+          <div className="relative flex max-h-full max-w-full items-center justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={photo.id}
+              src={photo.full ?? photo.thumb ?? ""}
+              alt={`${alt} – ${index + 1}`}
+              className="max-h-[calc(100svh-7rem)] max-w-full touch-manipulation rounded-control object-contain select-none"
+              draggable={false}
+              onClick={() => {
+                if (!onDoubleTap) return;
+                const now = Date.now();
+                if (now - lastTap.current < 300) {
+                  lastTap.current = 0;
+                  onDoubleTap(photo);
+                } else lastTap.current = now;
+              }}
+            />
+            {overlayFor ? overlayFor(photo) : null}
+          </div>
         ) : null}
 
         {count > 1 ? (
@@ -239,6 +258,54 @@ export function HeroGallery({
   const [cover, ...rest] = photos;
   const total = Object.values(turbos).reduce((sum, s) => sum + s.count, 0);
 
+  // Dvojklik = turbo (jako „srdíčko“ na Instagramu – dvojklik turbo nikdy neodebere)
+  const canTap = turbo?.mode === "active";
+  const [burst, setBurst] = useState<{ id: string; n: number } | null>(null);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTap = useRef<{ key: string; time: number } | null>(null);
+
+  const giveTurbo = (photoId: string) => {
+    setBurst((b) => ({ id: photoId, n: (b?.n ?? 0) + 1 }));
+    const current = turbos[photoId] ?? { given: false, count: 0 };
+    if (current.given) return;
+    setTurbos((prev) => ({ ...prev, [photoId]: { given: true, count: current.count + 1 } }));
+    void toggleTurbo({ photoId }).then((res) => {
+      setTurbos((prev) => ({
+        ...prev,
+        [photoId]: res.ok ? { given: res.given, count: res.total } : current,
+      }));
+    });
+  };
+
+  /** Jedno klepnutí = otevřít fotku (s malým zpožděním), dvě rychle po sobě = turbo. */
+  const onTap = (photoId: string, single: () => void) => {
+    if (!canTap) return single();
+    const now = Date.now();
+    if (lastTap.current?.key === photoId && now - lastTap.current.time < 300) {
+      if (tapTimer.current) clearTimeout(tapTimer.current);
+      lastTap.current = null;
+      giveTurbo(photoId);
+      return;
+    }
+    lastTap.current = { key: photoId, time: now };
+    if (tapTimer.current) clearTimeout(tapTimer.current);
+    tapTimer.current = setTimeout(() => {
+      lastTap.current = null;
+      single();
+    }, 280);
+  };
+
+  const burstFor = (photo: LightboxPhoto) =>
+    burst?.id === photo.id ? (
+      <span
+        key={burst.n}
+        aria-hidden
+        className="turbo-burst pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-accent"
+      >
+        <TurboIcon className="h-28 w-28 drop-shadow-[0_0_30px_rgb(255_214_10/0.8)] sm:h-36 sm:w-36" filled />
+      </span>
+    ) : null;
+
   const turboFor = (photo: LightboxPhoto, variant: "overlay" | "dark" = "overlay", size: "sm" | "md" = "md") =>
     turbo ? (
       <TurboButton
@@ -256,9 +323,9 @@ export function HeroGallery({
         {cover?.full ? (
           <button
             type="button"
-            onClick={() => setOpen(0)}
+            onClick={() => onTap(cover.id, () => setOpen(0))}
             aria-label={t("open", { n: 1 })}
-            className="block w-full cursor-zoom-in"
+            className="block w-full cursor-zoom-in touch-manipulation"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -270,6 +337,7 @@ export function HeroGallery({
         ) : (
           <div className="glow-accent min-h-[40svh]" aria-hidden />
         )}
+        {cover?.full ? burstFor(cover) : null}
         {cover && turbo ? (
           <div className="absolute top-20 right-4 z-10 sm:top-24 sm:right-6">{turboFor(cover)}</div>
         ) : null}
@@ -281,6 +349,9 @@ export function HeroGallery({
                 <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-black/40 px-4 py-2 text-sm text-white/85 backdrop-blur">
                   <TurboIcon className={cn("h-5 w-5", total > 0 && "text-accent")} />
                   {tSocial("vehicleTotal", { count: total })}
+                  {canTap && photos.length ? (
+                    <span className="text-white/50 max-sm:hidden"> · {tSocial("doubleTapHint")}</span>
+                  ) : null}
                 </p>
               ) : null}
             </div>
@@ -300,9 +371,9 @@ export function HeroGallery({
                   <div key={p.id} className="relative">
                     <button
                       type="button"
-                      onClick={() => setOpen(i + 1)}
+                      onClick={() => onTap(p.id, () => setOpen(i + 1))}
                       aria-label={t("open", { n: i + 2 })}
-                      className="group block w-full cursor-zoom-in overflow-hidden rounded-control"
+                      className="group block w-full cursor-zoom-in touch-manipulation overflow-hidden rounded-control"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -312,6 +383,7 @@ export function HeroGallery({
                         className="aspect-[4/3] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                       />
                     </button>
+                    {burstFor(p)}
                     {turbo ? <div className="absolute right-3 bottom-3">{turboFor(p, "overlay", "sm")}</div> : null}
                   </div>
                 ) : null,
@@ -328,6 +400,8 @@ export function HeroGallery({
           onClose={() => setOpen(null)}
           alt={alt}
           extra={turbo ? (p) => turboFor(p, "dark") : undefined}
+          onDoubleTap={canTap ? (p) => giveTurbo(p.id) : undefined}
+          overlayFor={canTap ? burstFor : undefined}
         />
       ) : null}
     </>

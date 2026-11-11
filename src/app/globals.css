@@ -123,3 +123,32 @@ body {
   25% { filter: drop-shadow(0 0 10px rgb(255 214 10 / 0.95)); transform: scale(1.3); }
   100% { filter: drop-shadow(0 0 2px rgb(255 214 10 / 0.3)); transform: scale(1); }
 }
+
+/* Dvojklik na fotku: velké turbo vyskočí, roztočí se a zmizí */
+.turbo-burst {
+  animation: turbo-burst 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.turbo-burst .turbo-wheel {
+  animation: turbo-spin 1s cubic-bezier(0.12, 0.75, 0.2, 1);
+}
+@keyframes turbo-burst {
+  0% { opacity: 0; transform: scale(0.3); }
+  20% { opacity: 1; transform: scale(1.15); }
+  35% { transform: scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.05); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .turbo-burst { animation: turbo-burst-fade 1s forwards; }
+  .turbo-burst .turbo-wheel { animation: none; }
+}
+@keyframes turbo-burst-fade {
+  0%, 70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* QR samolepka: při tisku zachovat žlutou barvu */
+.qr-print {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
