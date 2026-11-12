@@ -3,21 +3,24 @@
 import { useEffect, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { toggleFollow, type SocialError } from "@/lib/social/actions";
+import { toggleFollow, toggleOrganizerFollow, type SocialError } from "@/lib/social/actions";
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
-/** Tlačítko Sledovat / Sleduješ + počet sledujících. */
+/** Tlačítko Sledovat / Sleduješ + počet sledujících (garáž nebo pořadatel). */
 export function FollowButton({
   profileId,
   initialFollowing,
   initialFollowers,
   mode,
+  kind = "profile",
 }: {
+  /** id profilu (garáž) nebo pořadatele */
   profileId: string;
   initialFollowing: boolean;
   initialFollowers: number;
   mode: "active" | "guest" | "own";
+  kind?: "profile" | "organizer";
 }) {
   const t = useTranslations("Social");
   const [following, setFollowing] = useState(initialFollowing);
@@ -56,7 +59,8 @@ export function FollowButton({
           setFollowers(Math.max(0, followers + (following ? -1 : 1)));
           setError(null);
           startTransition(async () => {
-            const res = await toggleFollow(profileId);
+            const res =
+              kind === "organizer" ? await toggleOrganizerFollow(profileId) : await toggleFollow(profileId);
             if (res.ok) {
               setFollowing(res.following);
               setFollowers(res.followers);

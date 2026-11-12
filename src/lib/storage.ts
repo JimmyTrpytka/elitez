@@ -59,3 +59,15 @@ export function dreamPhotoPath(
 ): string {
   return `${ownerId}/${dreamId}/${photoKey}-${size}.${format}`;
 }
+
+export const ORGANIZER_LOGOS_BUCKET = "organizer-logos";
+
+/** Logo pořadatele: `{organizer_id}/{logo_key}-{velikost}.{format}`. */
+export function organizerLogoPath(
+  organizerId: string,
+  logoKey: string,
+  size: PhotoSize,
+  format: string,
+): string {
+  return `${organizerId}/${logoKey}-${size}.${format}`;
+}

@@ -570,6 +570,7 @@ export type Database = {
           registration_id: string | null
           type: Database["public"]["Enums"]["notification_type"]
           user_id: string
+          visible_from: string | null
         }
         Insert: {
           created_at?: string
@@ -580,6 +581,7 @@ export type Database = {
           registration_id?: string | null
           type: Database["public"]["Enums"]["notification_type"]
           user_id: string
+          visible_from?: string | null
         }
         Update: {
           created_at?: string
@@ -590,6 +592,7 @@ export type Database = {
           registration_id?: string | null
           type?: Database["public"]["Enums"]["notification_type"]
           user_id?: string
+          visible_from?: string | null
         }
         Relationships: [
           {
@@ -615,33 +618,87 @@ export type Database = {
           },
         ]
       }
+      organizer_follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          organizer_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          organizer_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          organizer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizer_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organizer_follows_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizers: {
         Row: {
           created_at: string
           description: string | null
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
+          logo_format: string | null
+          logo_key: string | null
           name: string
           profile_id: string
+          show_past_events: boolean
+          slug: string
           status: Database["public"]["Enums"]["organizer_status"]
           updated_at: string
+          website_url: string | null
         }
         Insert: {
           created_at?: string
           description?: string | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
+          logo_format?: string | null
+          logo_key?: string | null
           name: string
           profile_id: string
+          show_past_events?: boolean
+          slug: string
           status?: Database["public"]["Enums"]["organizer_status"]
           updated_at?: string
+          website_url?: string | null
         }
         Update: {
           created_at?: string
           description?: string | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
+          logo_format?: string | null
+          logo_key?: string | null
           name?: string
           profile_id?: string
+          show_past_events?: boolean
+          slug?: string
           status?: Database["public"]["Enums"]["organizer_status"]
           updated_at?: string
+          website_url?: string | null
         }
         Relationships: [
           {
@@ -1261,6 +1318,17 @@ export type Database = {
         }[]
       }
       my_organizer_ids: { Args: never; Returns: string[] }
+      organizer_event_payload: {
+        Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
+        Returns: Json
+      }
+      organizer_social_stats: {
+        Args: { p_organizer_id: string }
+        Returns: {
+          followers: number
+          i_follow: boolean
+        }[]
+      }
       owns_vehicle: { Args: { p_vehicle_id: string }; Returns: boolean }
       period_start: { Args: { p_period: string }; Returns: string }
       photo_turbo_stats: {
@@ -1298,6 +1366,19 @@ export type Database = {
           username: string
           vehicle_count: number
           verified_at: string
+        }[]
+      }
+      public_organizers: {
+        Args: never
+        Returns: {
+          description: string
+          followers: number
+          id: string
+          logo_format: string
+          logo_key: string
+          name: string
+          slug: string
+          upcoming_events: number
         }[]
       }
       register_for_event: {
@@ -1342,6 +1423,13 @@ export type Database = {
         Args: { p_id: string; p_resolved: boolean }
         Returns: undefined
       }
+      schedule_registration_open: {
+        Args: {
+          p_event: Database["public"]["Tables"]["events"]["Row"]
+          p_user?: string
+        }
+        Returns: undefined
+      }
       season_belongs_to: {
         Args: { p_organizer_id: string; p_season_id: string }
         Returns: boolean
@@ -1370,6 +1458,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      slugify: { Args: { p_text: string }; Returns: string }
       submit_feedback: {
         Args: {
           p_contact_email: string
@@ -1381,6 +1470,13 @@ export type Database = {
       }
       toggle_follow: {
         Args: { p_profile_id: string }
+        Returns: {
+          followers: number
+          following: boolean
+        }[]
+      }
+      toggle_organizer_follow: {
+        Args: { p_organizer_id: string }
         Returns: {
           followers: number
           following: boolean
@@ -1406,6 +1502,10 @@ export type Database = {
           given_at: string
           username: string
         }[]
+      }
+      unschedule_registration_open: {
+        Args: { p_event_id: string; p_user?: string }
+        Returns: undefined
       }
       user_streak: { Args: { p_user: string }; Returns: number }
       vehicle_has_event_history: {
@@ -1463,6 +1563,9 @@ export type Database = {
         | "turbo_received"
         | "new_follower"
         | "badge_awarded"
+        | "organizer_event_published"
+        | "organizer_registration_open"
+        | "organizer_event_cancelled"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -1652,6 +1755,9 @@ export const Constants = {
         "turbo_received",
         "new_follower",
         "badge_awarded",
+        "organizer_event_published",
+        "organizer_registration_open",
+        "organizer_event_cancelled",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

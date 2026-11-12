@@ -167,6 +167,8 @@ Pravidla: SPEC.md 5.1e
 
 Pravidla: SPEC.md 5.1f
 
+**Stav (12. 11. 2026):** hotovo na localhost – seznam a profily pořadatelů, sledování, upozornění ve zvonku (nový event, otevření registrace přesně na čas, zrušení), nastavení profilu s logem a odkazy. Databáze nahraná, `npm run test:db` prošel.
+
 ---
 
 ## Milník 5d – Crew (skupiny členů)

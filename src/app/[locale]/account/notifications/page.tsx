@@ -49,6 +49,9 @@ type Payload = {
   // sledování
   username?: string | null;
   display_name?: string | null;
+  // pořadatelé
+  organizer_name?: string;
+  organizer_slug?: string;
   // odznaky
   name_cs?: string;
   name_en?: string;
@@ -128,6 +131,17 @@ async function NotificationsList() {
           href: `${myGarage}#sin-slavy`,
           linkLabel: t("openHallOfFame"),
         };
+      case "organizer_event_published":
+      case "organizer_registration_open":
+      case "organizer_event_cancelled": {
+        const v = { event: p.event_title ?? "", organizer: p.organizer_name ?? "" };
+        return {
+          title: t(`types.${n.type}.title`, v),
+          text: t(`types.${n.type}.text`, v),
+          href: p.event_slug ? `/e/${p.event_slug}` : null,
+          linkLabel: t("openEvent"),
+        };
+      }
       default:
         return {
           title: t(`types.${n.type}.title`, vars),

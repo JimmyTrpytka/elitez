@@ -9,12 +9,13 @@ export type EventRow = Tables<"events">;
 export type EventView = EventRow & {
   cover: Partial<Record<PhotoSize, string>>;
   organizerName: string | null;
+  organizerSlug: string | null;
   seasonName: string | null;
 };
 
 async function withCovers(
   supabase: TypedSupabaseClient,
-  rows: Array<EventRow & { organizer?: { name: string } | null; season?: { name: string } | null }>,
+  rows: Array<EventRow & { organizer?: { name: string; slug: string } | null; season?: { name: string } | null }>,
   sizes: PhotoSize[],
 ): Promise<EventView[]> {
   const paths = rows.flatMap((r) =>
@@ -26,6 +27,7 @@ async function withCovers(
   return rows.map(({ organizer, season, ...r }) => ({
     ...r,
     organizerName: organizer?.name ?? null,
+    organizerSlug: organizer?.slug ?? null,
     seasonName: season?.name ?? null,
     cover: Object.fromEntries(
       r.cover_path && r.cover_format
@@ -37,26 +39,27 @@ async function withCovers(
   }));
 }
 
-const PUBLIC_SELECT = "*, organizer:organizers(name), season:seasons(name)";
+const PUBLIC_SELECT = "*, organizer:organizers(name, slug), season:seasons(name)";
 
 // ---------------------------------------------------------------------
 // Veřejnost
 // ---------------------------------------------------------------------
 
 /** Zveřejněné eventy pro veřejný seznam (bez konceptů a eventů na pozvánky). */
-export async function listPublicEvents(): Promise<{
+export async function listPublicEvents(organizerId?: string): Promise<{
   upcoming: EventView[];
   past: EventView[];
 }> {
   const supabase = await createClient();
   if (!supabase) return { upcoming: [], past: [] };
-  const { data } = await supabase
+  let query = supabase
     .from("events")
     .select(PUBLIC_SELECT)
     .in("status", ["published", "closed", "cancelled"])
-    .in("access", ["public", "verified_only"])
-    .order("starts_at", { ascending: true })
-    .limit(200);
+    .in("access", ["public", "verified_only"]);
+  // Volitelně jen eventy jednoho pořadatele (profil pořadatele)
+  if (organizerId) query = query.eq("organizer_id", organizerId);
+  const { data } = await query.order("starts_at", { ascending: true }).limit(200);
   const all = await withCovers(supabase, data ?? [], ["md"]);
   const now = Date.now();
   return {

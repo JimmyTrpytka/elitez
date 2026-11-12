@@ -15,7 +15,8 @@
     "menu": "Main menu",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "leaderboard": "Leaderboards"
+    "leaderboard": "Leaderboards",
+    "organizers": "Organizers"
   },
   "Home": {
     "eyebrow": "The car community club",
@@ -149,7 +150,8 @@
     "contactTitle": "Contact",
     "contactViaForm": "Write to us via the form",
     "leaderboard": "Leaderboards",
-    "dreams": "Dream garage"
+    "dreams": "Dream garage",
+    "organizers": "Organizers"
   },
   "Common": {
     "save": "Save",
@@ -438,7 +440,8 @@
     "rules": "Rules",
     "mapTitle": "Venue",
     "navigate": "Get directions",
-    "eyebrow": "Meets and shows"
+    "eyebrow": "Meets and shows",
+    "allOrganizers": "All organizers"
   },
   "Organizer": {
     "title": "Organizer",
@@ -517,7 +520,8 @@
     "writeToParticipants": "Message participants",
     "exportApproved": "Export approved (Excel)",
     "exportAll": "Export all applications",
-    "printList": "Print list"
+    "printList": "Print list",
+    "profileLink": "Organizer profile"
   },
   "EventForm": {
     "createSubmit": "Save draft",
@@ -796,6 +800,18 @@
       "broadcast": {
         "title": "Message from the organizer",
         "text": ""
+      },
+      "organizer_event_published": {
+        "title": "New event: {event}",
+        "text": "{organizer} published a new event. Check the details and save it to your calendar."
+      },
+      "organizer_registration_open": {
+        "title": "Registration open: {event}",
+        "text": "You can now register for {event}. Spots go fast!"
+      },
+      "organizer_event_cancelled": {
+        "title": "Event cancelled: {event}",
+        "text": "{organizer} cancelled {event}."
       }
     },
     "openVehicle": "View car",
@@ -1191,5 +1207,52 @@
     "iosText": "In Safari tap Share (square with an arrow) and choose “Add to Home Screen”.",
     "install": "Add to home screen",
     "dismiss": "Not now"
+  },
+  "Organizers": {
+    "title": "Organizers",
+    "titleSingle": "Organizer",
+    "eyebrow": "Who runs the meets",
+    "subtitle": "Organizers of meets and shows in the ELITEZ club. Follow them and never miss an event.",
+    "empty": "No organizers yet.",
+    "upcoming": "{count, plural, =0 {No upcoming events} one {# upcoming event} other {# upcoming events}}",
+    "followers": "{count, plural, one {# follower} other {# followers}}",
+    "website": "Website",
+    "editProfile": "Edit organizer profile",
+    "followHint": "Follow the organizer to get notified about new events, registration opening and cancellations.",
+    "upcomingTitle": "Upcoming events",
+    "pastTitle": "Past events",
+    "noUpcoming": "Nothing planned right now. Follow the organizer to be the first to know."
+  },
+  "OrganizerProfile": {
+    "title": "Organizer profile",
+    "back": "← Back to event management",
+    "viewPublic": "View public profile",
+    "logoTitle": "Logo",
+    "detailsTitle": "Details",
+    "logoHint": "Ideally a square logo on a light or transparent background.",
+    "logoAdd": "Upload logo",
+    "logoReplace": "Upload another logo",
+    "logoRemove": "Remove logo",
+    "logoUploading": "Uploading…",
+    "logoFailed": "The logo could not be uploaded. Please try again.",
+    "nameLabel": "Organizer name",
+    "slugLabel": "Profile address",
+    "slugHint": "Lowercase letters, numbers and dashes. Profile will be at {url}",
+    "descriptionLabel": "Description",
+    "descriptionHint": "Who you are, what events you run, where to find you.",
+    "linksLabel": "Links",
+    "websiteLabel": "Website",
+    "showPastLabel": "Show past events",
+    "showPastHint": "Event history builds trust. If you turn it off, people only see upcoming events.",
+    "saved": "Saved.",
+    "errors": {
+      "nameRequired": "Enter a name.",
+      "tooLong": "Some text is too long.",
+      "slugInvalid": "The address may only contain lowercase letters, numbers and dashes.",
+      "slugTaken": "Another organizer already uses this address.",
+      "urlInvalid": "This doesn't look like a link (e.g. instagram.com/your-profile).",
+      "notAllowed": "You are not allowed to do that.",
+      "generic": "Something went wrong, please try again."
+    }
   }
 }

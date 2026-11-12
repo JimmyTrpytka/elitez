@@ -110,7 +110,16 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
           </DisplayHeading>
           {event.organizerName ? (
             <p className="reveal reveal-delay-2 mt-3 text-white/70">
-              {t("organizedBy", { name: event.organizerName })}
+              {event.organizerSlug ? (
+                <Link
+                  href={`/o/${event.organizerSlug}`}
+                  className="underline decoration-accent decoration-2 underline-offset-4 hover:text-white"
+                >
+                  {t("organizedBy", { name: event.organizerName })}
+                </Link>
+              ) : (
+                t("organizedBy", { name: event.organizerName })
+              )}
             </p>
           ) : null}
         </div>
