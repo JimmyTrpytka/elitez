@@ -411,7 +411,8 @@
   "EventAccess": {
     "public": "Veřejný",
     "verified_only": "Jen Verified",
-    "invite_only": "Na pozvánky"
+    "invite_only": "Na pozvánky",
+    "crew_only": "Jen pro členy crew"
   },
   "EventCategory": {
     "tuning": "Tuning",
@@ -528,7 +529,8 @@
     "exportApproved": "Export schválených (Excel)",
     "exportAll": "Export všech přihlášek",
     "printList": "Tisk seznamu",
-    "profileLink": "Profil pořadatele"
+    "profileLink": "Profil pořadatele",
+    "managingAs": "Spravuješ eventy za:"
   },
   "EventForm": {
     "createSubmit": "Uložit koncept",
@@ -563,7 +565,8 @@
     "accessText": {
       "public": "Kdokoli. Verified můžeš upřednostnit.",
       "verified_only": "Jen ověření členové klubu (Verified).",
-      "invite_only": "Event vidí a hlásí se na něj jen pozvaní."
+      "invite_only": "Event vidí a hlásí se na něj jen pozvaní.",
+      "crew_only": "Uvidí a přihlásí se jen aktivní členové vaší crew."
     },
     "capacityLabel": "Limit míst (vozidel)",
     "capacityHint": "Prázdné = bez limitu.",
@@ -671,7 +674,8 @@
     "event_started": "Event už začal, přihlášku nejde zrušit.",
     "cancelled": "Přihlášku uchazeč zrušil.",
     "message_too_long": "Zpráva je příliš dlouhá.",
-    "generic": "Něco se pokazilo. Zkus to prosím znovu."
+    "generic": "Něco se pokazilo. Zkus to prosím znovu.",
+    "crew_only": "Tento sraz je jen pro členy crew."
   },
   "MyRegistrations": {
     "title": "Moje registrace",
@@ -839,6 +843,14 @@
       "crew_member_approved": {
         "title": "Jsi v crew!",
         "text": "Byl(a) jsi přijat(a) do crew „{crew}“."
+      },
+      "crew_organizer_request": {
+        "title": "Crew chce pořádat srazy",
+        "text": "Crew „{crew}“ žádá o možnost pořádat vlastní srazy."
+      },
+      "crew_organizer_approved": {
+        "title": "Tvoje crew může pořádat srazy!",
+        "text": "Crew „{crew}“ teď může zakládat vlastní srazy – i jen pro členy. Najdeš je v sekci Pořadatel."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -858,7 +870,8 @@
     "badgeText": "Získal(a) jsi odznak „{badge}“.",
     "openCrew": "Zobrazit crew",
     "openCrewReview": "Schválit crew",
-    "crewReason": "Důvod: {reason}"
+    "crewReason": "Důvod: {reason}",
+    "openOrganizer": "Do sekce Pořadatel"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -1258,7 +1271,8 @@
     "followHint": "Sleduj pořadatele a dostaneš upozornění na nové eventy, otevření registrace i případné zrušení.",
     "upcomingTitle": "Nadcházející eventy",
     "pastTitle": "Proběhlé eventy",
-    "noUpcoming": "Teď nic naplánovaného. Sleduj pořadatele a dozvíš se o novém eventu jako první."
+    "noUpcoming": "Teď nic naplánovaného. Sleduj pořadatele a dozvíš se o novém eventu jako první.",
+    "crewPage": "Stránka crew"
   },
   "OrganizerProfile": {
     "title": "Profil pořadatele",
@@ -1397,8 +1411,19 @@
       "founderCannotLeave": "Zakladatel nemůže odejít ze své crew.",
       "notAllowed": "Na tohle nemáš oprávnění.",
       "tooLong": "Některý text je moc dlouhý.",
-      "generic": "Něco se nepovedlo, zkus to prosím znovu."
-    }
+      "generic": "Něco se nepovedlo, zkus to prosím znovu.",
+      "alreadyOrganizer": "Crew už srazy pořádat může."
+    },
+    "meetsAdminTitle": "Srazy crew",
+    "meetsAdminOn": "Crew může pořádat vlastní srazy – i jen pro členy.",
+    "meetsAdminOff": "Chcete pořádat vlastní srazy? Požádej klub o povolení.",
+    "requestOrganizer": "Chci pořádat srazy",
+    "requestOrganizerHint": "Po schválení klubem budeš zakládat srazy za crew – veřejné i jen pro členy.",
+    "organizerRequested": "Žádost o pořádání srazů čeká na schválení klubem.",
+    "manageMeets": "Spravovat srazy crew",
+    "meetsTitle": "Srazy",
+    "meetsNone": "Teď nic naplánovaného.",
+    "meetsPast": "Proběhlé srazy"
   },
   "AdminCrews": {
     "title": "Crew ke schválení",
@@ -1420,6 +1445,11 @@
     "reasonPlaceholder": "Důvod (uvidí ho zakladatel)",
     "suspend": "Pozastavit",
     "suspendConfirm": "Pozastavit crew? Přestane být veřejně vidět.",
-    "restore": "Obnovit"
+    "restore": "Obnovit",
+    "organizerOn": "Pořádá srazy ✓",
+    "organizerOff": "Nepořádá srazy",
+    "organizerRequested": "Žádá o pořádání srazů",
+    "organizerEnable": "Povolit pořádání",
+    "organizerDisable": "Odebrat pořádání"
   }
 }

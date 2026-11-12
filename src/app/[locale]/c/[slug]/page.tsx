@@ -17,6 +17,10 @@ import { BadgeMedal, RARITY_COLOR } from "@/components/social/badge-medal";
 import { ScrollToHash } from "@/components/scroll-to-hash";
 import { CrewMembership } from "@/components/crews/crew-membership";
 import { CrewMemberAdmin } from "@/components/crews/crew-member-admin";
+import { CrewOrganizerRequest } from "@/components/crews/crew-organizer-request";
+import { EventCard } from "@/components/events/event-card";
+import { listPublicEvents } from "@/lib/data/events";
+import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/c/[slug]">): Promise<Metadata> {
   const [{ slug }, t] = await Promise.all([params, getTranslations("Crews")]);
@@ -44,9 +48,14 @@ async function CrewDetail({ params, searchParams }: PageProps<"/[locale]/c/[slug
   const crew = await getCrewBySlug(decodeURIComponent(slug));
   if (!crew) notFound();
   const isManager = crew.stats.myRole === "founder" || crew.stats.myRole === "admin";
-  const [members, badges] = await Promise.all([
+  const supabase = await createClient();
+  const { data: organizer } = supabase
+    ? await supabase.from("organizers").select("id, status").eq("crew_id", crew.id).eq("status", "approved").maybeSingle()
+    : { data: null };
+  const [members, badges, meets] = await Promise.all([
     listCrewMembers(crew.id, isManager),
     listCrewBadges(crew.id),
+    organizer ? listPublicEvents(organizer.id, true) : Promise.resolve({ upcoming: [], past: [] }),
   ]);
   const active = members.filter((m) => m.status === "active");
   const requests = members.filter((m) => m.status === "pending");
@@ -135,6 +144,45 @@ async function CrewDetail({ params, searchParams }: PageProps<"/[locale]/c/[slug
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-12 sm:px-6 sm:py-16">
         {crew.description ? (
           <p className="max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">{crew.description}</p>
+        ) : null}
+
+        {isManager && crew.status === "approved" ? (
+          <section className="flex flex-col gap-3 rounded-card bg-night-soft p-6 ring-1 ring-white/10 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="font-display text-2xl font-extrabold text-white uppercase">{t("meetsAdminTitle")}</h2>
+              <p className="text-sm text-night-subtle">{organizer ? t("meetsAdminOn") : t("meetsAdminOff")}</p>
+            </div>
+            <CrewOrganizerRequest
+              crewId={crew.id}
+              organizerId={organizer?.id ?? null}
+              requested={Boolean(crew.organizer_requested_at)}
+            />
+          </section>
+        ) : null}
+
+        {organizer && (meets.upcoming.length || meets.past.length) ? (
+          <section>
+            <h2 className="mb-6 font-display text-4xl font-extrabold text-white uppercase">{t("meetsTitle")}</h2>
+            {meets.upcoming.length ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {meets.upcoming.map((e) => (
+                  <EventCard key={e.id} event={e} />
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("meetsNone")}</p>
+            )}
+            {meets.past.length ? (
+              <div className="mt-10">
+                <h3 className="mb-4 font-display text-2xl font-extrabold text-white/80 uppercase">{t("meetsPast")}</h3>
+                <div className="grid gap-5 opacity-70 grayscale-[40%] sm:grid-cols-2 lg:grid-cols-3">
+                  {meets.past.map((e) => (
+                    <EventCard key={e.id} event={e} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </section>
         ) : null}
 
         {isManager && requests.length ? (

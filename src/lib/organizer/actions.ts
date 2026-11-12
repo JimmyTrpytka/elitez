@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { ORGANIZER_COOKIE, getCurrentOrganizerId, listMyOrganizers } from "@/lib/organizer/current";
 import { redirect } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
@@ -35,15 +37,19 @@ async function requireOrganizer(): Promise<{
 } | null> {
   const supabase = await createClient();
   if (!supabase) return null;
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return null;
-  const { data } = await supabase
-    .from("organizers")
-    .select("id")
-    .eq("profile_id", auth.user.id)
-    .eq("status", "approved")
-    .maybeSingle();
-  return data ? { supabase, organizerId: data.id } : null;
+  // Pořadatel, kterého uživatel právě spravuje (databáze to znovu ověří přes RLS)
+  const organizerId = await getCurrentOrganizerId();
+  return organizerId ? { supabase, organizerId } : null;
+}
+
+/** Přepne, kterého pořadatele uživatel spravuje (vlastní / za crew). */
+export async function switchOrganizer(organizerId: string): Promise<{ ok: boolean }> {
+  const list = await listMyOrganizers();
+  if (!list.some((o) => o.id === organizerId)) return { ok: false };
+  const store = await cookies();
+  store.set(ORGANIZER_COOKIE, organizerId, { path: "/", httpOnly: true, sameSite: "lax", maxAge: 60 * 60 * 24 * 365 });
+  refresh();
+  return { ok: true };
 }
 
 function refresh() {

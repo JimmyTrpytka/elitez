@@ -411,7 +411,8 @@
   "EventAccess": {
     "public": "Public",
     "verified_only": "Verified only",
-    "invite_only": "Invite only"
+    "invite_only": "Invite only",
+    "crew_only": "Crew members only"
   },
   "EventCategory": {
     "tuning": "Tuning",
@@ -528,7 +529,8 @@
     "exportApproved": "Export approved (Excel)",
     "exportAll": "Export all applications",
     "printList": "Print list",
-    "profileLink": "Organizer profile"
+    "profileLink": "Organizer profile",
+    "managingAs": "Managing events for:"
   },
   "EventForm": {
     "createSubmit": "Save draft",
@@ -563,7 +565,8 @@
     "accessText": {
       "public": "Anyone. You can prioritise Verified members.",
       "verified_only": "Only verified club members (Verified).",
-      "invite_only": "Only invited members can see and apply."
+      "invite_only": "Only invited members can see and apply.",
+      "crew_only": "Only active members of your crew can see it and register."
     },
     "capacityLabel": "Capacity (vehicles)",
     "capacityHint": "Empty = unlimited.",
@@ -671,7 +674,8 @@
     "event_started": "The event has started; the application can't be cancelled.",
     "cancelled": "The applicant cancelled this application.",
     "message_too_long": "The message is too long.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "crew_only": "This meet is for crew members only."
   },
   "MyRegistrations": {
     "title": "My registrations",
@@ -839,6 +843,14 @@
       "crew_member_approved": {
         "title": "You're in!",
         "text": "You were accepted into the crew “{crew}”."
+      },
+      "crew_organizer_request": {
+        "title": "A crew wants to host meets",
+        "text": "The crew “{crew}” is asking to host its own meets."
+      },
+      "crew_organizer_approved": {
+        "title": "Your crew can host meets!",
+        "text": "The crew “{crew}” can now create its own meets – even members-only. Find them under Organizer."
       }
     },
     "openVehicle": "View car",
@@ -858,7 +870,8 @@
     "badgeText": "You earned the “{badge}” badge.",
     "openCrew": "View crew",
     "openCrewReview": "Review crews",
-    "crewReason": "Reason: {reason}"
+    "crewReason": "Reason: {reason}",
+    "openOrganizer": "Go to Organizer"
   },
   "Broadcast": {
     "title": "Messages to participants",
@@ -1258,7 +1271,8 @@
     "followHint": "Follow the organizer to get notified about new events, registration opening and cancellations.",
     "upcomingTitle": "Upcoming events",
     "pastTitle": "Past events",
-    "noUpcoming": "Nothing planned right now. Follow the organizer to be the first to know."
+    "noUpcoming": "Nothing planned right now. Follow the organizer to be the first to know.",
+    "crewPage": "Crew page"
   },
   "OrganizerProfile": {
     "title": "Organizer profile",
@@ -1397,8 +1411,19 @@
       "founderCannotLeave": "The founder can't leave their own crew.",
       "notAllowed": "You are not allowed to do that.",
       "tooLong": "Some text is too long.",
-      "generic": "Something went wrong, please try again."
-    }
+      "generic": "Something went wrong, please try again.",
+      "alreadyOrganizer": "The crew can already host meets."
+    },
+    "meetsAdminTitle": "Crew meets",
+    "meetsAdminOn": "The crew can host its own meets – even members-only.",
+    "meetsAdminOff": "Want to host your own meets? Ask the club for permission.",
+    "requestOrganizer": "We want to host meets",
+    "requestOrganizerHint": "Once the club approves, you'll create meets for the crew – public or members-only.",
+    "organizerRequested": "Your request to host meets is waiting for club approval.",
+    "manageMeets": "Manage crew meets",
+    "meetsTitle": "Meets",
+    "meetsNone": "Nothing planned right now.",
+    "meetsPast": "Past meets"
   },
   "AdminCrews": {
     "title": "Crews to review",
@@ -1420,6 +1445,11 @@
     "reasonPlaceholder": "Reason (the founder will see it)",
     "suspend": "Suspend",
     "suspendConfirm": "Suspend the crew? It will no longer be publicly visible.",
-    "restore": "Restore"
+    "restore": "Restore",
+    "organizerOn": "Hosts meets ✓",
+    "organizerOff": "Doesn't host meets",
+    "organizerRequested": "Asks to host meets",
+    "organizerEnable": "Allow hosting",
+    "organizerDisable": "Remove hosting"
   }
 }

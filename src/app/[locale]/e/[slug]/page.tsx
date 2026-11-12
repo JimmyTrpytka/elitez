@@ -8,7 +8,8 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
 import { formatDateTime, formatEventDates, formatTime, hasEnded } from "@/lib/dates";
-import { getEventBySlug, getMyOrganizer } from "@/lib/data/events";
+import { getEventBySlug } from "@/lib/data/events";
+import { listMyOrganizers } from "@/lib/organizer/current";
 import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
@@ -49,11 +50,11 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
     getTranslations("EventCategory"),
     getLocale(),
     getEventBySlug(decodeURIComponent(slug)),
-    getMyOrganizer(),
+    listMyOrganizers(),
   ]);
   // RLS: koncept a event na pozvánky vrátí databáze jen pořadateli
   if (!event) notFound();
-  const isOrganizer = organizer?.id === event.organizer_id;
+  const isOrganizer = organizer.some((o) => o.id === event.organizer_id);
 
   const place = [
     event.venue_name,

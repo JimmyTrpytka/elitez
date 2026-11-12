@@ -150,15 +150,19 @@ async function NotificationsList() {
       case "crew_approved":
       case "crew_rejected":
       case "crew_join_request":
-      case "crew_member_approved": {
+      case "crew_member_approved":
+      case "crew_organizer_request":
+      case "crew_organizer_approved": {
         const v = {
           crew: p.crew_name ?? "",
           name: p.display_name ?? (p.username ? `@${p.username}` : ""),
           reason: p.reason ?? "",
         };
         const href =
-          n.type === "crew_review"
+          n.type === "crew_review" || n.type === "crew_organizer_request"
             ? "/admin/crews"
+            : n.type === "crew_organizer_approved"
+              ? "/organizer"
             : n.type === "crew_rejected"
               ? "/crews"
               : p.crew_slug
@@ -170,7 +174,12 @@ async function NotificationsList() {
             ? `${t("types.crew_rejected.text", v)} ${t("crewReason", v)}`
             : t(`types.${n.type}.text`, v),
           href,
-          linkLabel: n.type === "crew_review" ? t("openCrewReview") : t("openCrew"),
+          linkLabel:
+            n.type === "crew_review" || n.type === "crew_organizer_request"
+              ? t("openCrewReview")
+              : n.type === "crew_organizer_approved"
+                ? t("openOrganizer")
+                : t("openCrew"),
         };
       }
       default:

@@ -132,3 +132,6 @@ Vlastník projektu **není programátor**. Proto:
 - Verified uděluje admin přepínačem v `/admin/users` (`admin_set_verified`) – do Milníku 6.
 - Odznaky crew: tabulka `crew_badges`, kategorie `crew` podle počtu členů (trigger), `crew_of_month` ručně (`admin_award_crew_badge`, zatím bez UI). Obrázky v bucketu `crew-images`.
 - Horní lišta má 4 odkazy → plné menu od `lg`, pod tím hamburger.
+- Crew jako pořadatel: `organizers.crew_id` (pořadatel = člověk NEBO crew). `my_organizer_ids()` zahrnuje crew, kde je uživatel zakladatel/správce. Výběr spravovaného pořadatele: cookie `elitez_organizer` (`src/lib/organizer/current.ts`, akce `switchOrganizer`) – `getMyOrganizer()` vrací ten vybraný.
+- Přístup eventu `crew_only`: RLS `events: read visible` jen pro aktivní členy (`is_organizer_crew_member`), trigger `events_check_crew_only` (jen crew-pořadatel) a `event_registrations_check_crew_only` (přihláška jen člen). Upozornění: `event_audience` = sledující (veřejné/Verified eventy) + členové crew.
+- Žádost o pořádání: `request_crew_organizer`, schválení `admin_set_crew_organizer` (v `/admin/crews`).

@@ -56,9 +56,12 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export function EventForm({
   values,
   seasons,
+  allowCrewOnly = false,
 }: {
   values: EventFormValues;
   seasons: Array<{ id: string; name: string; year: number }>;
+  /** Pořadatel je crew → může dělat srazy jen pro členy */
+  allowCrewOnly?: boolean;
 }) {
   const t = useTranslations("EventForm");
   const tCommon = useTranslations("Common");
@@ -196,7 +199,9 @@ export function EventForm({
           legend={t("accessLabel")}
           name="access"
           defaultValue={values.access}
-          choices={Constants.public.Enums.event_access.map((a) => ({
+          choices={Constants.public.Enums.event_access
+            .filter((a) => a !== "crew_only" || allowCrewOnly)
+            .map((a) => ({
             value: a,
             title: tAccess(a),
             description: t(`accessText.${a}`),

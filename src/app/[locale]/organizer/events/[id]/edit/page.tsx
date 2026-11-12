@@ -51,6 +51,7 @@ async function EditEvent({
       }
     >
       <EventForm
+        allowCrewOnly={Boolean(organizer.crew_id)}
         values={toEventFormValues(event)}
         seasons={seasons.map((s) => ({ id: s.id, name: s.name, year: s.year }))}
       />

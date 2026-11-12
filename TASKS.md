@@ -186,7 +186,7 @@ Pravidla: SPEC.md 5.1f
 
 Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
-**Stav (13. 11. 2026):** část 1 hotová na localhost – úkoly 1–4 (crew, schvalování, stránky, žebříčky a odznaky), přepínač Verified pro admina. Zbývá úkol 5: crew jako pořadatel.
+**Stav (13. 11. 2026):** část 1 hotová na localhost – úkoly 1–4 (crew, schvalování, stránky, žebříčky a odznaky), přepínač Verified pro admina. Část 2 hotová na localhost – úkol 5: crew jako pořadatel (žádost a schválení, přepínač pořadatele, srazy jen pro členy crew, upozornění členům, sekce Srazy na stránce crew).
 
 ---
 

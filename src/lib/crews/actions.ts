@@ -22,6 +22,7 @@ export type CrewError =
   | "founderCannotLeave"
   | "notAllowed"
   | "tooLong"
+  | "alreadyOrganizer"
   | "generic";
 
 const MAP: Record<string, CrewError> = {
@@ -38,6 +39,7 @@ const MAP: Record<string, CrewError> = {
   founder_cannot_leave: "founderCannotLeave",
   not_allowed: "notAllowed",
   not_member: "notAllowed",
+  already_organizer: "alreadyOrganizer",
 };
 
 function toError(message: string | undefined): CrewError {
@@ -212,6 +214,28 @@ export async function adminSetCrewStatus(
     p_status: status,
     p_reason: reason?.slice(0, 500) || undefined,
   });
+  if (error) return { ok: false, error: toError(error.message) };
+  refresh();
+  return { ok: true };
+}
+
+/** Správce crew požádá o možnost pořádat srazy. */
+export async function requestCrewOrganizer(crewId: string): Promise<CrewResult> {
+  if (!UUID.test(crewId)) return { ok: false, error: "notFound" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("request_crew_organizer", { p_crew_id: crewId });
+  if (error) return { ok: false, error: toError(error.message) };
+  refresh();
+  return { ok: true };
+}
+
+/** Admin: povolit / odebrat crew pořádání srazů. */
+export async function adminSetCrewOrganizer(crewId: string, enabled: boolean): Promise<CrewResult> {
+  if (!UUID.test(crewId)) return { ok: false, error: "notFound" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("admin_set_crew_organizer", { p_crew_id: crewId, p_enabled: enabled });
   if (error) return { ok: false, error: toError(error.message) };
   refresh();
   return { ok: true };

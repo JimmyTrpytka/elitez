@@ -1,5 +1,6 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
+import { getCurrentOrganizerId } from "@/lib/organizer/current";
 import { EVENT_IMAGES_BUCKET, eventImagePath, signFiles, type PhotoSize } from "@/lib/storage";
 
 export type Organizer = Tables<"organizers">;
@@ -46,7 +47,7 @@ const PUBLIC_SELECT = "*, organizer:organizers(name, slug), season:seasons(name)
 // ---------------------------------------------------------------------
 
 /** Zveřejněné eventy pro veřejný seznam (bez konceptů a eventů na pozvánky). */
-export async function listPublicEvents(organizerId?: string): Promise<{
+export async function listPublicEvents(organizerId?: string, includeCrewOnly = false): Promise<{
   upcoming: EventView[];
   past: EventView[];
 }> {
@@ -56,7 +57,8 @@ export async function listPublicEvents(organizerId?: string): Promise<{
     .from("events")
     .select(PUBLIC_SELECT)
     .in("status", ["published", "closed", "cancelled"])
-    .in("access", ["public", "verified_only"]);
+    // „jen pro členy crew“ vrátí databáze jen členům (RLS)
+    .in("access", includeCrewOnly ? ["public", "verified_only", "crew_only"] : ["public", "verified_only"]);
   // Volitelně jen eventy jednoho pořadatele (profil pořadatele)
   if (organizerId) query = query.eq("organizer_id", organizerId);
   const { data } = await query.order("starts_at", { ascending: true }).limit(200);
@@ -86,16 +88,19 @@ export async function getEventBySlug(slug: string): Promise<EventView | null> {
 // Pořadatel
 // ---------------------------------------------------------------------
 
-/** Schválený pořadatelský účet přihlášeného uživatele (nebo null). */
+/**
+ * Pořadatel, kterého přihlášený právě spravuje (vlastní nebo za crew;
+ * výběr v sekci Pořadatel). Null = žádný schválený.
+ */
 export async function getMyOrganizer(): Promise<Organizer | null> {
   const supabase = await createClient();
   if (!supabase) return null;
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return null;
+  const id = await getCurrentOrganizerId();
+  if (!id) return null;
   const { data } = await supabase
     .from("organizers")
     .select("*")
-    .eq("profile_id", auth.user.id)
+    .eq("id", id)
     .eq("status", "approved")
     .maybeSingle();
   return data;

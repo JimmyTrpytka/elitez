@@ -33,8 +33,9 @@ async function CrewList() {
   const { data, error } = await supabase.rpc("admin_list_crews", {});
   if (error) notFound();
   const crews = data ?? [];
-  const pending = crews.filter((c) => c.status === "pending");
-  const others = crews.filter((c) => c.status !== "pending");
+  // Ke zpracování: nové crew + žádosti o pořádání srazů
+  const pending = crews.filter((c) => c.status === "pending" || (c.status === "approved" && c.organizer_requested_at));
+  const others = crews.filter((c) => !pending.includes(c));
 
   const row = (c: (typeof crews)[number]) => (
     <li key={c.id} className="flex flex-col gap-4 rounded-card border border-line p-5 lg:flex-row lg:items-start lg:justify-between">
@@ -62,7 +63,12 @@ async function CrewList() {
           </Link>
         ) : null}
       </div>
-      <AdminCrewActions crewId={c.id} status={c.status} />
+      <AdminCrewActions
+        crewId={c.id}
+        status={c.status}
+        organizerStatus={c.organizer_status}
+        organizerRequested={Boolean(c.organizer_requested_at)}
+      />
     </li>
   );
 
