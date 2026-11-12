@@ -169,6 +169,23 @@ Pravidla: SPEC.md 5.1f
 
 ---
 
+## Milník 5d – Crew (skupiny členů)
+
+**Cíl:** členové se sdružují do exkluzivních crew, soupeří v žebříčcích a crew může pořádat vlastní srazy.
+
+Úkoly:
+1. Databáze: crew (unikátní název, stav schválení), členství (otevřené / se schválením, domovská crew), odznaky crew
+2. Založení crew (jen Verified) + admin fronta schvalování
+3. Stránka crew `/c/<slug>`, seznam crew, vstup/odchod, správa členů zakladatelem
+4. Žebříčky crew (největší, nejaktivnější), odznaky crew
+5. Crew jako pořadatel (žádost, schválení, eventy za crew, přístup „jen pro členy crew“, upozornění členům)
+
+**Hotovo, když:** Verified člen založí crew, admin ji schválí, další člen se přidá, crew je v žebříčku a uspořádá sraz jen pro členy.
+
+Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.
