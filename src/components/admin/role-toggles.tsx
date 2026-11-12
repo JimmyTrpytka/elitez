@@ -3,19 +3,21 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { setUserAdmin, setUserOrganizer } from "@/lib/admin/actions";
+import { setUserAdmin, setUserOrganizer, setUserVerified } from "@/lib/admin/actions";
 import { cn } from "@/lib/cn";
 
-/** Přepínače rolí uživatele: Pořadatel a Administrátor (s potvrzením). */
+/** Přepínače rolí uživatele: Verified, Pořadatel a Administrátor (s potvrzením). */
 export function RoleToggles({
   userId,
   isAdmin,
   isOrganizer,
+  isVerified,
   isSelf,
 }: {
   userId: string;
   isAdmin: boolean;
   isOrganizer: boolean;
+  isVerified: boolean;
   isSelf: boolean;
 }) {
   const t = useTranslations("AdminUsers");
@@ -23,20 +25,28 @@ export function RoleToggles({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  function toggle(kind: "admin" | "organizer", next: boolean) {
+  function toggle(kind: "admin" | "organizer" | "verified", next: boolean) {
     const question =
       kind === "admin"
         ? next
           ? t("confirmGrantAdmin")
           : t("confirmRevokeAdmin")
-        : next
-          ? t("confirmGrantOrganizer")
-          : t("confirmRevokeOrganizer");
+        : kind === "verified"
+          ? next
+            ? t("confirmGrantVerified")
+            : t("confirmRevokeVerified")
+          : next
+            ? t("confirmGrantOrganizer")
+            : t("confirmRevokeOrganizer");
     if (!window.confirm(question)) return;
     setError(null);
     startTransition(async () => {
       const result =
-        kind === "admin" ? await setUserAdmin(userId, next) : await setUserOrganizer(userId, next);
+        kind === "admin"
+          ? await setUserAdmin(userId, next)
+          : kind === "verified"
+            ? await setUserVerified(userId, next)
+            : await setUserOrganizer(userId, next);
       if (!result.ok) setError(t(`errors.${result.error}`));
       router.refresh();
     });
@@ -45,6 +55,12 @@ export function RoleToggles({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap gap-2">
+        <Toggle
+          label="Verified"
+          on={isVerified}
+          disabled={pending}
+          onClick={() => toggle("verified", !isVerified)}
+        />
         <Toggle
           label={t("organizer")}
           on={isOrganizer}

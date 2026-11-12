@@ -120,6 +120,7 @@ async function UsersList({
               userId={u.id}
               isAdmin={u.role === "admin"}
               isOrganizer={u.organizer_status === "approved"}
+              isVerified={Boolean(u.verified_at)}
               isSelf={u.id === auth.user?.id}
             />
           </li>

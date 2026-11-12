@@ -35,7 +35,7 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
     );
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         type="button"
         aria-expanded={open}
@@ -66,6 +66,9 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
             </Link>
             <Link href="/leaderboard" className={linkClass("/leaderboard")}>
               {t("leaderboard")}
+            </Link>
+            <Link href="/crews" className={linkClass("/crews")}>
+              {t("crews")}
             </Link>
             <Link href="/organizers" className={linkClass("/organizers")}>
               {t("organizers")}

@@ -125,3 +125,13 @@ Vlastník projektu **není programátor**. Proto:
 - Profil pořadatele `/o/<slug>` (slug z názvu přes `public.slugify`, lze změnit v `/organizer/profile`), seznam `/organizers`. Logo v soukromém bucketu `organizer-logos`: `{organizer_id}/{logo_key}-{sm|md}.{format}`.
 - Sledování pořadatelů jen přes `toggle_organizer_follow`. Upozornění sledujícím vytváří trigger `events_organizer_notify` (zveřejnění, zrušení, přeplánování).
 - `notifications.visible_from`: naplánované upozornění („otevřela se registrace“) RLS neukáže ani nedovolí označit jako přečtené, dokud nenastane. Při změně času registrace se přeplánuje (`schedule_registration_open` / `unschedule_registration_open`).
+
+## Technické poznámky (Milník 5d – Crew)
+- Crew: `crews` + `crew_members`; zápis jen přes funkce `create_crew` (jen Verified, 1 čekající / 3 založené), `admin_set_crew_status`, `join_crew`, `leave_crew` (zakladatel nesmí), `decide_crew_member`, `set_home_crew`. Správce = zakladatel/admin crew (`is_crew_manager`). Zakladatel mění jen popis, zaměření, vstup a obrázky (sloupcová práva).
+- Unikátnost názvu: `crew_name_key` (slugify bez pomlček) + unikátní index mimo zamítnuté. Stránky `/crews`, `/crews/new`, `/c/<slug>`, `/c/<slug>/edit`, admin `/admin/crews`.
+- Verified uděluje admin přepínačem v `/admin/users` (`admin_set_verified`) – do Milníku 6.
+- Odznaky crew: tabulka `crew_badges`, kategorie `crew` podle počtu členů (trigger), `crew_of_month` ručně (`admin_award_crew_badge`, zatím bez UI). Obrázky v bucketu `crew-images`.
+- Horní lišta má 4 odkazy → plné menu od `lg`, pod tím hamburger.
+- Crew jako pořadatel: `organizers.crew_id` (pořadatel = člověk NEBO crew). `my_organizer_ids()` zahrnuje crew, kde je uživatel zakladatel/správce. Výběr spravovaného pořadatele: cookie `elitez_organizer` (`src/lib/organizer/current.ts`, akce `switchOrganizer`) – `getMyOrganizer()` vrací ten vybraný.
+- Přístup eventu `crew_only`: RLS `events: read visible` jen pro aktivní členy (`is_organizer_crew_member`), trigger `events_check_crew_only` (jen crew-pořadatel) a `event_registrations_check_crew_only` (přihláška jen člen). Upozornění: `event_audience` = sledující (veřejné/Verified eventy) + členové crew.
+- Žádost o pořádání: `request_crew_organizer`, schválení `admin_set_crew_organizer` (v `/admin/crews`).

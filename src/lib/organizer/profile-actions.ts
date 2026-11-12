@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
 import { normalizeUrl } from "@/lib/url";
+import { getCurrentOrganizerId } from "@/lib/organizer/current";
 
 /** Chyby jako klíče do překladů `OrganizerProfile.errors`. */
 export type OrganizerProfileError =
@@ -32,12 +33,12 @@ function text(formData: FormData, name: string): string {
 async function myOrganizer() {
   const supabase = await createClient();
   if (!supabase) return null;
-  const { data: auth } = await supabase.auth.getUser();
-  if (!auth.user) return null;
+  const id = await getCurrentOrganizerId();
+  if (!id) return null;
   const { data } = await supabase
     .from("organizers")
     .select("id, logo_key, logo_format")
-    .eq("profile_id", auth.user.id)
+    .eq("id", id)
     .eq("status", "approved")
     .maybeSingle();
   return data ? { supabase, organizer: data } : null;

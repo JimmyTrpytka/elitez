@@ -49,6 +49,10 @@ type Payload = {
   // sledování
   username?: string | null;
   display_name?: string | null;
+  // crew
+  crew_name?: string;
+  crew_slug?: string;
+  reason?: string | null;
   // pořadatelé
   organizer_name?: string;
   organizer_slug?: string;
@@ -140,6 +144,42 @@ async function NotificationsList() {
           text: t(`types.${n.type}.text`, v),
           href: p.event_slug ? `/e/${p.event_slug}` : null,
           linkLabel: t("openEvent"),
+        };
+      }
+      case "crew_review":
+      case "crew_approved":
+      case "crew_rejected":
+      case "crew_join_request":
+      case "crew_member_approved":
+      case "crew_organizer_request":
+      case "crew_organizer_approved": {
+        const v = {
+          crew: p.crew_name ?? "",
+          name: p.display_name ?? (p.username ? `@${p.username}` : ""),
+          reason: p.reason ?? "",
+        };
+        const href =
+          n.type === "crew_review" || n.type === "crew_organizer_request"
+            ? "/admin/crews"
+            : n.type === "crew_organizer_approved"
+              ? "/organizer"
+            : n.type === "crew_rejected"
+              ? "/crews"
+              : p.crew_slug
+                ? `/c/${p.crew_slug}${n.type === "crew_join_request" ? "#zadosti" : ""}`
+                : null;
+        return {
+          title: t(`types.${n.type}.title`, v),
+          text: n.type === "crew_rejected" && p.reason
+            ? `${t("types.crew_rejected.text", v)} ${t("crewReason", v)}`
+            : t(`types.${n.type}.text`, v),
+          href,
+          linkLabel:
+            n.type === "crew_review" || n.type === "crew_organizer_request"
+              ? t("openCrewReview")
+              : n.type === "crew_organizer_approved"
+                ? t("openOrganizer")
+                : t("openCrew"),
         };
       }
       default:

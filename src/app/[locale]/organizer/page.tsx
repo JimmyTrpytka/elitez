@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getMyOrganizer, listMyEvents, listMySeasons } from "@/lib/data/events";
+import { listMyOrganizers } from "@/lib/organizer/current";
+import { OrganizerSwitcher } from "@/components/organizer/organizer-switcher";
 import { PageShell } from "@/components/page-shell";
 import { OrganizerEventList } from "@/components/organizer/event-list";
 import { SeasonForm } from "@/components/organizer/season-form";
@@ -31,9 +33,10 @@ async function OrganizerDashboard() {
   // Jen schválený pořadatel; ostatní dostanou „nenalezeno“
   if (!organizer) notFound();
 
-  const [seasons, unassigned] = await Promise.all([
+  const [seasons, unassigned, myOrganizers] = await Promise.all([
     listMySeasons(organizer.id),
     listMyEvents(organizer.id, null),
+    listMyOrganizers(),
   ]);
 
   return (
@@ -51,6 +54,10 @@ async function OrganizerDashboard() {
         </>
       }
     >
+      <OrganizerSwitcher
+        currentId={organizer.id}
+        options={myOrganizers.map((o) => ({ id: o.id, name: o.name, isCrew: Boolean(o.crewId) }))}
+      />
       <div className="flex flex-col gap-8">
         <section>
           <h2 className="mb-4 text-xl font-semibold">{t("seasonsTitle")}</h2>

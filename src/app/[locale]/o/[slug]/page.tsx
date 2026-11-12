@@ -5,6 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/user";
 import { getOrganizerBySlug } from "@/lib/data/organizers";
+import { listMyOrganizers } from "@/lib/organizer/current";
+import { createClient } from "@/lib/supabase/server";
 import { getOrganizerShare, shareMetadata } from "@/lib/data/share";
 import { listPublicEvents } from "@/lib/data/events";
 import { DisplayHeading, Eyebrow } from "@/components/brand";
@@ -37,8 +39,15 @@ async function OrganizerProfile({ params }: { params: PageProps<"/[locale]/o/[sl
   ]);
   if (!organizer) notFound();
 
-  const { upcoming, past } = await listPublicEvents(organizer.id);
-  const isOwner = user?.id === organizer.profile_id;
+  const supabase = await createClient();
+  const [{ upcoming, past }, mine, crew] = await Promise.all([
+    listPublicEvents(organizer.id),
+    listMyOrganizers(),
+    organizer.crew_id && supabase
+      ? supabase.from("crews").select("slug, name").eq("id", organizer.crew_id).maybeSingle().then((r) => r.data)
+      : Promise.resolve(null),
+  ]);
+  const isOwner = mine.some((o) => o.id === organizer.id);
   const mode = isOwner ? "own" : user ? "active" : "guest";
   const links = [
     { href: organizer.website_url, label: t("website") },
@@ -59,6 +68,7 @@ async function OrganizerProfile({ params }: { params: PageProps<"/[locale]/o/[sl
             />
             <div className="reveal reveal-delay-1 min-w-0">
               <Eyebrow dark className="mb-2">
+                {crew ? "Crew · " : ""}
                 {t("titleSingle")}
               </Eyebrow>
               <DisplayHeading as="h1" size="lg" className="text-white">
@@ -93,6 +103,11 @@ async function OrganizerProfile({ params }: { params: PageProps<"/[locale]/o/[sl
               initialFollowers={organizer.followers}
             />
             <ShareButton title={organizer.name} />
+            {crew ? (
+              <Link href={`/c/${crew.slug}`} className={buttonClasses("outlineDark")}>
+                {t("crewPage")}
+              </Link>
+            ) : null}
             {isOwner ? (
               <Link href="/organizer/profile" className={buttonClasses("light")}>
                 {t("editProfile")}

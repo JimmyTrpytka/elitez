@@ -50,6 +50,7 @@ async function NewEventContent({
 
   return (
     <EventForm
+        allowCrewOnly={Boolean(organizer.crew_id)}
       values={{ ...EMPTY_EVENT_VALUES, season_id: preselected }}
       seasons={seasons.map((s) => ({ id: s.id, name: s.name, year: s.year }))}
     />

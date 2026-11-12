@@ -4,7 +4,8 @@
  */
 export type RegistrationEventFields = {
   status: "draft" | "published" | "closed" | "cancelled";
-  access: "public" | "verified_only" | "invite_only";
+  // crew_only: event vidí jen členové crew (RLS), pro ně platí pravidla jako u veřejného
+  access: "public" | "verified_only" | "invite_only" | "crew_only";
   starts_at: string;
   registration_opens_at: string | null;
   registration_verified_opens_at: string | null;

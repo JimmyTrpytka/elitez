@@ -186,6 +186,8 @@ Pravidla: SPEC.md 5.1f
 
 Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
+**Stav (13. 11. 2026):** část 1 hotová na localhost – úkoly 1–4 (crew, schvalování, stránky, žebříčky a odznaky), přepínač Verified pro admina. Část 2 hotová na localhost – úkol 5: crew jako pořadatel (žádost a schválení, přepínač pořadatele, srazy jen pro členy crew, upozornění členům, sekce Srazy na stránce crew).
+
 ---
 
 ## Milník 6 – Verified (členství v klubu)
@@ -253,3 +255,9 @@ SPOTy a challenge (GPS ověření, hlasování, porota, moderace), slovenština 
 ### První zadání pro Claude Code (Milník 1)
 
 > Přečti `CLAUDE.md`, `SPEC.md` a `TASKS.md`. Začínáme Milníkem 1. Nejdřív mi česky navrhni plán po krocích, ať ho odsouhlasím. Pak založ Next.js projekt (TypeScript, Tailwind, App Router) s PWA základem, světlým designem (černá a žlutý akcent), připoj Supabase a udělej přihlášení e-mailem. Každý krok stručně vysvětli a řekni, jak ho mám vyzkoušet.
+
+---
+
+## Později – monetizace (kostra, k doladění)
+
+Pravidla a nápady: SPEC.md 13a. Doporučené pořadí: Partneři klubu → Bazar s topováním (+ upozornění pro „Aktivně hledám“ z Garáže snů) → Podporovatel klubu → Pořadatel Pro → vstupenky a fotky z eventů. Předpoklad: Stripe, IČO, obchodní podmínky.

@@ -324,6 +324,24 @@ Proč PWA místo nativní aplikace: jedna kódová základna, rychlý vývoj, ž
 - Start (vývoj a testování): **0–500 Kč/měsíc** (bezplatné tarify Supabase, Vercel, Resend)
 - Provoz po spuštění: **cca 1 000–2 500 Kč/měsíc** (Supabase Pro, doména, e-maily, push), roste s počtem uživatelů a fotek
 - Největší náklad v čase: **úložiště a přenos fotek** – proto zmenšování obrázků od začátku
+- Odhad při 1 000 členech / 500 aktivních týdně (12. 11. 2026): minimum Supabase Pro ≈ 25 $ (≈ 600 Kč); doporučeno Supabase Pro + Vercel Pro + Resend Pro ≈ 65 $ (≈ 1 550 Kč, s DPH pro fyzickou osobu ≈ 1 900 Kč). Supabase Pro zapnout nejpozději před veřejným spuštěním (bezplatný projekt se po týdnu nečinnosti uspí, fotky přerostou 1 GB).
+
+## 13a. Monetizace – kostra (návrh 12. 11. 2026, k doladění)
+
+**Základní pravidlo:** za peníze se nikdy neprodává to, co si člen má vydobýt – **turba, odznaky, místa v žebříčcích, Verified, Auto týdne**. Placené věci přidávají pohodlí, viditelnost a styl, ne výhru. Jádro aplikace zůstává zdarma.
+
+Nápady (seřazeno podle doporučeného pořadí):
+1. **Partneři klubu** – dílny, detailing, pneuservisy, pojišťovny, obchody s díly; měsíční poplatek (orientačně 1–3 tis. Kč) za stránku Partneři, **slevové kódy pro členy**, zmínky u eventů. Později **výzvy se sponzorem** (odznak s logem partnera, výhra od něj).
+2. **Bazar s topováním** (v3) – inzerát zdarma; placené topování (např. 99 Kč / 7 dní), zvýraznění, místo na úvodní stránce. Propojení s **Garáží snů**: kdo má sen ve stavu „Aktivně hledám“, dostane upozornění na odpovídající inzerát. Štítek „Ověřený prodejce“ pro Verified.
+3. **Podporovatel klubu** – dobrovolné roční předplatné (orientačně 690 Kč): kosmetika a pohodlí (zlatý rámeček, odznak Podporovatel, víc fotek na auto, video v garáži, vzhled garáže, další designy QR samolepky, fyzická samolepka/nášivka). Verified zůstává oddělené – je to ověření, ne platba.
+4. **Pořadatel Pro** – základ zdarma; placené topování eventu, podrobné statistiky, víc hromadných zpráv, check-in aplikace.
+5. **Vstupenky** (až po ověření spolehlivosti, viz 5.2) – provize 3–5 % placená pořadatelem.
+6. **Merch bez skladu** – tisk na zakázku (samolepky, rámečky SPZ, nášivky, trička); fyzické nášivky z eventů jako doplněk digitálních odznaků.
+7. **Fotky z eventů** – fotograf nahraje galerii, členové kupují fotky svého auta; většina fotografovi, provize ELITEZ; koupená fotka se přidá do garáže.
+
+Hrubý odhad při 1 000 členech: podporovatelé 20–35 tis. Kč/rok, topování 3–5 tis. Kč/měsíc, partneři 2–9 tis. Kč/měsíc – pokryje provoz.
+
+Předpoklady: platební brána **Stripe** (karty, Apple/Google Pay, předplatné), **firma/IČO** a fakturace, obchodní podmínky; platit **přes web**, ne v mobilní aplikaci (Apple/Google si berou 15–30 %).
 
 ## 14. Rizika
 
