@@ -1256,6 +1256,120 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 5d (část 2): crew jako pořadatel, sraz jen pro členy
+-- Carol = zakladatelka crew, Bob = (zatím) nečlen, Alice = admin
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.request_crew_organizer(current_setting('rls.crew_id')::uuid);
+    raise exception 'FAIL: nečlen požádal za crew o pořádání';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+select public.request_crew_organizer(current_setting('rls.crew_id')::uuid);
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-00000000a11c' and type = 'crew_organizer_request') then
+    raise exception 'FAIL: admin nedostal žádost crew o pořádání';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.admin_set_crew_organizer(current_setting('rls.crew_id')::uuid, true);
+do $$ begin
+  -- osobní pořadatel (Alice Events) nesmí mít sraz jen pro členy crew
+  begin
+    insert into public.events (organizer_id, slug, title, starts_at, ends_at, access)
+    values ('00000000-0000-4000-c000-00000000000a', 'rls-spatne-crew', 'Špatně', now() + interval '9 days', now() + interval '10 days', 'crew_only');
+    raise exception 'FAIL: osobní pořadatel vytvořil sraz jen pro členy crew';
+  exception when raise_exception then
+    if sqlerrm <> 'crew_only_requires_crew' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Bob vstoupí do crew (Carol schválí)
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+select public.join_crew(current_setting('rls.crew_id')::uuid);
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare v_org uuid;
+begin
+  perform public.decide_crew_member(current_setting('rls.crew_id')::uuid, '00000000-0000-4000-a000-000000000b0b', 'approve');
+  select id into v_org from public.my_organizers() where crew_id = current_setting('rls.crew_id')::uuid;
+  if v_org is null then
+    raise exception 'FAIL: zakladatel nespravuje pořadatele své crew';
+  end if;
+  perform set_config('rls.crew_org', v_org::text, true);
+  -- Carol založí a zveřejní sraz jen pro členy (přes běžná pravidla pořadatele)
+  insert into public.events (id, organizer_id, slug, title, starts_at, ends_at, status, access, registration_opens_at)
+  values ('00000000-0000-4000-e000-000000000060', v_org, 'rls-crew-sraz', 'Crew sraz',
+          now() + interval '20 days', now() + interval '21 days', 'published', 'crew_only', now() - interval '1 day');
+  update public.organizers set description = 'Pořádáme srazy crew' where id = v_org;
+  if (select description from public.organizers where id = v_org) <> 'Pořádáme srazy crew' then
+    raise exception 'FAIL: správce crew nemůže upravit profil pořadatele';
+  end if;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.events where id = '00000000-0000-4000-e000-000000000060') then
+    raise exception 'FAIL: člen crew nevidí sraz jen pro členy';
+  end if;
+  if not exists (select 1 from public.notifications
+                 where type = 'organizer_event_published' and event_id = '00000000-0000-4000-e000-000000000060') then
+    raise exception 'FAIL: člen crew nedostal upozornění na sraz';
+  end if;
+  perform public.leave_crew(current_setting('rls.crew_id')::uuid);
+  if exists (select 1 from public.events where id = '00000000-0000-4000-e000-000000000060') then
+    raise exception 'FAIL: bývalý člen vidí sraz jen pro členy';
+  end if;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000060', '00000000-0000-4000-b000-0000000000b1',
+      '+420123456789', 'bob@example.invalid', null, true, true);
+    raise exception 'FAIL: nečlen se přihlásil na sraz jen pro členy';
+  exception when raise_exception then
+    if sqlerrm <> 'crew_only' then raise; end if;
+  end;
+  update public.organizers set description = 'hack' where id = current_setting('rls.crew_org')::uuid;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.events where id = '00000000-0000-4000-e000-000000000060') then
+    raise exception 'FAIL: návštěvník vidí sraz jen pro členy';
+  end if;
+  if (select description from public.organizers where id = current_setting('rls.crew_org')::uuid) <> 'Pořádáme srazy crew' then
+    raise exception 'FAIL: nečlen upravil profil pořadatele crew';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

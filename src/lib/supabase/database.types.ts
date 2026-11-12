@@ -158,6 +158,7 @@ export type Database = {
           logo_key: string | null
           name: string
           name_key: string
+          organizer_requested_at: string | null
           rejection_reason: string | null
           slug: string
           status: Database["public"]["Enums"]["crew_status"]
@@ -177,6 +178,7 @@ export type Database = {
           logo_key?: string | null
           name: string
           name_key: string
+          organizer_requested_at?: string | null
           rejection_reason?: string | null
           slug: string
           status?: Database["public"]["Enums"]["crew_status"]
@@ -196,6 +198,7 @@ export type Database = {
           logo_key?: string | null
           name?: string
           name_key?: string
+          organizer_requested_at?: string | null
           rejection_reason?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["crew_status"]
@@ -803,6 +806,7 @@ export type Database = {
       organizers: {
         Row: {
           created_at: string
+          crew_id: string | null
           description: string | null
           facebook_url: string | null
           id: string
@@ -810,7 +814,7 @@ export type Database = {
           logo_format: string | null
           logo_key: string | null
           name: string
-          profile_id: string
+          profile_id: string | null
           show_past_events: boolean
           slug: string
           status: Database["public"]["Enums"]["organizer_status"]
@@ -819,6 +823,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          crew_id?: string | null
           description?: string | null
           facebook_url?: string | null
           id?: string
@@ -826,7 +831,7 @@ export type Database = {
           logo_format?: string | null
           logo_key?: string | null
           name: string
-          profile_id: string
+          profile_id?: string | null
           show_past_events?: boolean
           slug: string
           status?: Database["public"]["Enums"]["organizer_status"]
@@ -835,6 +840,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          crew_id?: string | null
           description?: string | null
           facebook_url?: string | null
           id?: string
@@ -842,7 +848,7 @@ export type Database = {
           logo_format?: string | null
           logo_key?: string | null
           name?: string
-          profile_id?: string
+          profile_id?: string | null
           show_past_events?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["organizer_status"]
@@ -850,6 +856,13 @@ export type Database = {
           website_url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "organizers_crew_id_fkey"
+            columns: ["crew_id"]
+            isOneToOne: true
+            referencedRelation: "crews"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "organizers_profile_id_fkey"
             columns: ["profile_id"]
@@ -1260,6 +1273,8 @@ export type Database = {
           join_policy: Database["public"]["Enums"]["crew_join_policy"]
           members: number
           name: string
+          organizer_requested_at: string
+          organizer_status: Database["public"]["Enums"]["organizer_status"]
           slug: string
           status: Database["public"]["Enums"]["crew_status"]
         }[]
@@ -1288,6 +1303,10 @@ export type Database = {
       }
       admin_set_admin: {
         Args: { p_enabled: boolean; p_user_id: string }
+        Returns: undefined
+      }
+      admin_set_crew_organizer: {
+        Args: { p_crew_id: string; p_enabled: boolean }
         Returns: undefined
       }
       admin_set_crew_status: {
@@ -1497,6 +1516,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      event_audience: {
+        Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
+        Returns: string[]
+      }
       event_email_queue_count: { Args: { p_event_id: string }; Returns: number }
       fail_email: {
         Args: { p_error: string; p_id: string }
@@ -1506,6 +1529,10 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_crew_manager: { Args: { p_crew_id: string }; Returns: boolean }
       is_event_organizer: { Args: { p_event_id: string }; Returns: boolean }
+      is_organizer_crew_member: {
+        Args: { p_organizer_id: string; p_user?: string }
+        Returns: boolean
+      }
       is_registration_organizer: {
         Args: { p_registration_id: string }
         Returns: boolean
@@ -1565,6 +1592,16 @@ export type Database = {
       }
       leave_crew: { Args: { p_crew_id: string }; Returns: undefined }
       my_organizer_ids: { Args: never; Returns: string[] }
+      my_organizers: {
+        Args: never
+        Returns: {
+          crew_id: string
+          crew_slug: string
+          id: string
+          name: string
+          slug: string
+        }[]
+      }
       organizer_event_payload: {
         Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
         Returns: Json
@@ -1693,6 +1730,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      request_crew_organizer: {
+        Args: { p_crew_id: string }
+        Returns: undefined
+      }
       resolve_feedback: {
         Args: { p_id: string; p_resolved: boolean }
         Returns: undefined
@@ -1819,7 +1860,7 @@ export type Database = {
       crew_status: "pending" | "approved" | "rejected" | "suspended"
       dream_status: "dreaming" | "planning" | "searching"
       email_status: "queued" | "sending" | "sent" | "failed"
-      event_access: "public" | "verified_only" | "invite_only"
+      event_access: "public" | "verified_only" | "invite_only" | "crew_only"
       event_category:
         | "tuning"
         | "youngtimer"
@@ -1858,6 +1899,8 @@ export type Database = {
         | "crew_rejected"
         | "crew_join_request"
         | "crew_member_approved"
+        | "crew_organizer_request"
+        | "crew_organizer_approved"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2018,7 +2061,7 @@ export const Constants = {
       crew_status: ["pending", "approved", "rejected", "suspended"],
       dream_status: ["dreaming", "planning", "searching"],
       email_status: ["queued", "sending", "sent", "failed"],
-      event_access: ["public", "verified_only", "invite_only"],
+      event_access: ["public", "verified_only", "invite_only", "crew_only"],
       event_category: [
         "tuning",
         "youngtimer",
@@ -2059,6 +2102,8 @@ export const Constants = {
         "crew_rejected",
         "crew_join_request",
         "crew_member_approved",
+        "crew_organizer_request",
+        "crew_organizer_approved",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [
