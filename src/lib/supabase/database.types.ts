@@ -62,6 +62,155 @@ export type Database = {
         }
         Relationships: []
       }
+      crew_badges: {
+        Row: {
+          awarded_at: string
+          badge_code: string
+          context_key: string
+          crew_id: string
+          id: string
+        }
+        Insert: {
+          awarded_at?: string
+          badge_code: string
+          context_key?: string
+          crew_id: string
+          id?: string
+        }
+        Update: {
+          awarded_at?: string
+          badge_code?: string
+          context_key?: string
+          crew_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crew_badges_badge_code_fkey"
+            columns: ["badge_code"]
+            isOneToOne: false
+            referencedRelation: "badges"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "crew_badges_crew_id_fkey"
+            columns: ["crew_id"]
+            isOneToOne: false
+            referencedRelation: "crews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crew_members: {
+        Row: {
+          crew_id: string
+          is_home: boolean
+          joined_at: string
+          role: Database["public"]["Enums"]["crew_role"]
+          status: Database["public"]["Enums"]["crew_member_status"]
+          user_id: string
+        }
+        Insert: {
+          crew_id: string
+          is_home?: boolean
+          joined_at?: string
+          role?: Database["public"]["Enums"]["crew_role"]
+          status?: Database["public"]["Enums"]["crew_member_status"]
+          user_id: string
+        }
+        Update: {
+          crew_id?: string
+          is_home?: boolean
+          joined_at?: string
+          role?: Database["public"]["Enums"]["crew_role"]
+          status?: Database["public"]["Enums"]["crew_member_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crew_members_crew_id_fkey"
+            columns: ["crew_id"]
+            isOneToOne: false
+            referencedRelation: "crews"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crew_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crews: {
+        Row: {
+          approved_at: string | null
+          cover_format: string | null
+          cover_key: string | null
+          created_at: string
+          description: string | null
+          focus: string | null
+          founder_id: string
+          id: string
+          join_policy: Database["public"]["Enums"]["crew_join_policy"]
+          logo_format: string | null
+          logo_key: string | null
+          name: string
+          name_key: string
+          rejection_reason: string | null
+          slug: string
+          status: Database["public"]["Enums"]["crew_status"]
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string | null
+          cover_format?: string | null
+          cover_key?: string | null
+          created_at?: string
+          description?: string | null
+          focus?: string | null
+          founder_id: string
+          id?: string
+          join_policy?: Database["public"]["Enums"]["crew_join_policy"]
+          logo_format?: string | null
+          logo_key?: string | null
+          name: string
+          name_key: string
+          rejection_reason?: string | null
+          slug: string
+          status?: Database["public"]["Enums"]["crew_status"]
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string | null
+          cover_format?: string | null
+          cover_key?: string | null
+          created_at?: string
+          description?: string | null
+          focus?: string | null
+          founder_id?: string
+          id?: string
+          join_policy?: Database["public"]["Enums"]["crew_join_policy"]
+          logo_format?: string | null
+          logo_key?: string | null
+          name?: string
+          name_key?: string
+          rejection_reason?: string | null
+          slug?: string
+          status?: Database["public"]["Enums"]["crew_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crews_founder_id_fkey"
+            columns: ["founder_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dream_cars: {
         Row: {
           created_at: string
@@ -1095,6 +1244,26 @@ export type Database = {
         }
         Returns: boolean
       }
+      admin_award_crew_badge: {
+        Args: { p_code: string; p_context?: string; p_crew_id: string }
+        Returns: boolean
+      }
+      admin_list_crews: {
+        Args: { p_status?: Database["public"]["Enums"]["crew_status"] }
+        Returns: {
+          created_at: string
+          description: string
+          focus: string
+          founder_name: string
+          founder_username: string
+          id: string
+          join_policy: Database["public"]["Enums"]["crew_join_policy"]
+          members: number
+          name: string
+          slug: string
+          status: Database["public"]["Enums"]["crew_status"]
+        }[]
+      }
       admin_list_users: {
         Args: { p_limit?: number; p_search?: string }
         Returns: {
@@ -1121,6 +1290,14 @@ export type Database = {
         Args: { p_enabled: boolean; p_user_id: string }
         Returns: undefined
       }
+      admin_set_crew_status: {
+        Args: {
+          p_crew_id: string
+          p_reason?: string
+          p_status: Database["public"]["Enums"]["crew_status"]
+        }
+        Returns: undefined
+      }
       admin_set_organizer: {
         Args: { p_enabled: boolean; p_user_id: string }
         Returns: undefined
@@ -1130,6 +1307,10 @@ export type Database = {
           p_organizer_id: string
           p_status: Database["public"]["Enums"]["organizer_status"]
         }
+        Returns: undefined
+      }
+      admin_set_verified: {
+        Args: { p_user_id: string; p_verified: boolean }
         Returns: undefined
       }
       award_badge: {
@@ -1142,6 +1323,10 @@ export type Database = {
           p_source?: string
           p_user: string
         }
+        Returns: boolean
+      }
+      award_crew_badge: {
+        Args: { p_code: string; p_context?: string; p_crew_id: string }
         Returns: boolean
       }
       award_threshold_badges: {
@@ -1223,6 +1408,49 @@ export type Database = {
         Args: { p_id: string; p_provider_id: string }
         Returns: undefined
       }
+      create_crew: {
+        Args: {
+          p_description?: string
+          p_focus?: string
+          p_join_policy?: Database["public"]["Enums"]["crew_join_policy"]
+          p_name: string
+        }
+        Returns: string
+      }
+      crew_member_list: {
+        Args: { p_crew_id: string; p_include_pending?: boolean }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          joined_at: string
+          role: Database["public"]["Enums"]["crew_role"]
+          status: Database["public"]["Enums"]["crew_member_status"]
+          user_id: string
+          username: string
+          verified: boolean
+        }[]
+      }
+      crew_name_key: { Args: { p_name: string }; Returns: string }
+      crew_stats: {
+        Args: { p_crew_id: string }
+        Returns: {
+          members: number
+          my_home: boolean
+          my_role: Database["public"]["Enums"]["crew_role"]
+          my_status: string
+          pending: number
+          turbos_month: number
+          turbos_total: number
+        }[]
+      }
+      crew_turbos_since: {
+        Args: { p_crew_id: string; p_since: string }
+        Returns: number
+      }
+      decide_crew_member: {
+        Args: { p_action: string; p_crew_id: string; p_user_id: string }
+        Returns: undefined
+      }
       decide_registration: {
         Args: {
           p_decision: Database["public"]["Enums"]["registration_status"]
@@ -1276,10 +1504,28 @@ export type Database = {
       }
       fill_from_waitlist: { Args: { p_event_id: string }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
+      is_crew_manager: { Args: { p_crew_id: string }; Returns: boolean }
       is_event_organizer: { Args: { p_event_id: string }; Returns: boolean }
       is_registration_organizer: {
         Args: { p_registration_id: string }
         Returns: boolean
+      }
+      join_crew: {
+        Args: { p_crew_id: string }
+        Returns: Database["public"]["Enums"]["crew_member_status"]
+      }
+      leaderboard_crews: {
+        Args: { p_limit?: number; p_mode?: string; p_period?: string }
+        Returns: {
+          crew_id: string
+          focus: string
+          logo_format: string
+          logo_key: string
+          members: number
+          name: string
+          score: number
+          slug: string
+        }[]
       }
       leaderboard_fans: {
         Args: { p_limit?: number; p_period?: string }
@@ -1317,6 +1563,7 @@ export type Database = {
           year: number
         }[]
       }
+      leave_crew: { Args: { p_crew_id: string }; Returns: undefined }
       my_organizer_ids: { Args: never; Returns: string[] }
       organizer_event_payload: {
         Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
@@ -1340,6 +1587,18 @@ export type Database = {
         }[]
       }
       prague_today: { Args: never; Returns: string }
+      profile_crews: {
+        Args: { p_profile_id: string }
+        Returns: {
+          crew_id: string
+          is_home: boolean
+          logo_format: string
+          logo_key: string
+          name: string
+          role: Database["public"]["Enums"]["crew_role"]
+          slug: string
+        }[]
+      }
       profile_social_stats: {
         Args: { p_profile_id: string }
         Returns: {
@@ -1352,6 +1611,21 @@ export type Database = {
           profile_turbos: number
           received_total: number
           streak: number
+        }[]
+      }
+      public_crews: {
+        Args: { p_limit?: number; p_offset?: number; p_search?: string }
+        Returns: {
+          description: string
+          focus: string
+          id: string
+          join_policy: Database["public"]["Enums"]["crew_join_policy"]
+          logo_format: string
+          logo_key: string
+          members: number
+          name: string
+          slug: string
+          turbos: number
         }[]
       }
       public_members: {
@@ -1458,6 +1732,15 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      set_home_crew: { Args: { p_crew_id: string }; Returns: undefined }
+      similar_crews: {
+        Args: { p_name: string }
+        Returns: {
+          name: string
+          slug: string
+          status: Database["public"]["Enums"]["crew_status"]
+        }[]
+      }
       slugify: { Args: { p_text: string }; Returns: string }
       submit_feedback: {
         Args: {
@@ -1530,6 +1813,10 @@ export type Database = {
         | "waitlist"
         | "approved_verified"
         | "all_active"
+      crew_join_policy: "open" | "approval"
+      crew_member_status: "pending" | "active"
+      crew_role: "founder" | "admin" | "member"
+      crew_status: "pending" | "approved" | "rejected" | "suspended"
       dream_status: "dreaming" | "planning" | "searching"
       email_status: "queued" | "sending" | "sent" | "failed"
       event_access: "public" | "verified_only" | "invite_only"
@@ -1566,6 +1853,11 @@ export type Database = {
         | "organizer_event_published"
         | "organizer_registration_open"
         | "organizer_event_cancelled"
+        | "crew_review"
+        | "crew_approved"
+        | "crew_rejected"
+        | "crew_join_request"
+        | "crew_member_approved"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -1720,6 +2012,10 @@ export const Constants = {
         "approved_verified",
         "all_active",
       ],
+      crew_join_policy: ["open", "approval"],
+      crew_member_status: ["pending", "active"],
+      crew_role: ["founder", "admin", "member"],
+      crew_status: ["pending", "approved", "rejected", "suspended"],
       dream_status: ["dreaming", "planning", "searching"],
       email_status: ["queued", "sending", "sent", "failed"],
       event_access: ["public", "verified_only", "invite_only"],
@@ -1758,6 +2054,11 @@ export const Constants = {
         "organizer_event_published",
         "organizer_registration_open",
         "organizer_event_cancelled",
+        "crew_review",
+        "crew_approved",
+        "crew_rejected",
+        "crew_join_request",
+        "crew_member_approved",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

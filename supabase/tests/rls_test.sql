@@ -1063,6 +1063,199 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 5d: Crew
+-- Carol (veřejná) zakládá, Bob (soukromý, bez Verified) se přidává, Alice = admin
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.admin_set_verified(auth.uid(), true);
+    raise exception 'FAIL: běžný člen si udělil Verified';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    perform public.create_crew('Bobova crew');
+    raise exception 'FAIL: crew založil člověk bez Verified';
+  exception when raise_exception then
+    if sqlerrm <> 'verified_required' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.admin_set_verified('00000000-0000-4000-a000-0000000ca201', true);
+select public.admin_set_verified(auth.uid(), true);
+reset role;
+
+-- Carol založí crew (čeká na schválení)
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+select set_config('rls.crew_id', public.create_crew('Audi RS6 Fans Praha', 'Popis', 'Audi RS · Praha', 'approval')::text, true);
+do $$ begin
+  begin
+    perform public.create_crew('Druhá crew');
+    raise exception 'FAIL: jde mít dvě crew čekající na schválení';
+  exception when raise_exception then
+    if sqlerrm <> 'pending_exists' then raise; end if;
+  end;
+  begin
+    insert into public.crews (slug, name, name_key, founder_id, status)
+    values ('falesna', 'Falešná', 'falesna', auth.uid(), 'approved');
+    raise exception 'FAIL: crew jde zapsat přímo (obejít schválení)';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+-- Alice nesmí založit stejný název (jen jinak napsaný)
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.create_crew('audi  RS6 fans – praha');
+    raise exception 'FAIL: vznikla crew se stejným názvem';
+  exception when raise_exception then
+    if sqlerrm <> 'name_taken' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.public_crews() where name = 'Audi RS6 Fans Praha') then
+    raise exception 'FAIL: neschválená crew je veřejně vidět';
+  end if;
+  if exists (select 1 from public.crews where name = 'Audi RS6 Fans Praha') then
+    raise exception 'FAIL: neschválenou crew jde přečíst z tabulky';
+  end if;
+end $$;
+reset role;
+
+-- Admin schválí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.admin_set_crew_status(current_setting('rls.crew_id')::uuid, 'approved');
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-0000000ca201' and type = 'crew_approved') then
+    raise exception 'FAIL: zakladatel nedostal upozornění o schválení';
+  end if;
+  if not exists (select 1 from public.user_badges
+                 where user_id = '00000000-0000-4000-a000-0000000ca201' and badge_code = 'crew_founder') then
+    raise exception 'FAIL: zakladatel nedostal odznak';
+  end if;
+  if not exists (select 1 from public.crew_members
+                 where user_id = '00000000-0000-4000-a000-0000000ca201' and is_home) then
+    raise exception 'FAIL: crew se zakladateli nenastavila jako domovská';
+  end if;
+end $$;
+
+-- Bob požádá o vstup
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if public.join_crew(current_setting('rls.crew_id')::uuid) <> 'pending' then
+    raise exception 'FAIL: vstup do crew se schválením má čekat';
+  end if;
+  begin
+    insert into public.crew_members (crew_id, user_id, status) values (current_setting('rls.crew_id')::uuid, auth.uid(), 'active');
+    raise exception 'FAIL: členství jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    update public.crews set name = 'Ukradená' where id = current_setting('rls.crew_id')::uuid;
+    raise exception 'FAIL: jde přejmenovat crew';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.decide_crew_member(current_setting('rls.crew_id')::uuid, auth.uid(), 'approve');
+    raise exception 'FAIL: člověk si sám schválil vstup';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.crew_member_list(current_setting('rls.crew_id')::uuid, true) where username = 'rls_bob') then
+    raise exception 'FAIL: veřejnost vidí žádost / soukromého člena';
+  end if;
+  if not exists (select 1 from public.crew_member_list(current_setting('rls.crew_id')::uuid) where username = 'rls_carol') then
+    raise exception 'FAIL: veřejnost nevidí zakladatele';
+  end if;
+end $$;
+reset role;
+
+-- Carol (zakladatelka) žádost vidí a schválí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.crew_member_list(current_setting('rls.crew_id')::uuid, true)
+                 where username = 'rls_bob' and status = 'pending') then
+    raise exception 'FAIL: zakladatel nevidí žádost o vstup';
+  end if;
+  if (select pending from public.crew_stats(current_setting('rls.crew_id')::uuid)) <> 1 then
+    raise exception 'FAIL: počet žádostí nesedí';
+  end if;
+  perform public.decide_crew_member(current_setting('rls.crew_id')::uuid, '00000000-0000-4000-a000-000000000b0b', 'approve');
+  update public.crews set description = 'Nový popis' where id = current_setting('rls.crew_id')::uuid;
+  if (select description from public.crews where id = current_setting('rls.crew_id')::uuid) <> 'Nový popis' then
+    raise exception 'FAIL: zakladatel nemůže upravit popis';
+  end if;
+  begin
+    perform public.leave_crew(current_setting('rls.crew_id')::uuid);
+    raise exception 'FAIL: zakladatel odešel z crew';
+  exception when raise_exception then
+    if sqlerrm <> 'founder_cannot_leave' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.notifications where type = 'crew_member_approved') then
+    raise exception 'FAIL: člen nedostal upozornění o přijetí';
+  end if;
+  if (select my_status from public.crew_stats(current_setting('rls.crew_id')::uuid)) <> 'active' then
+    raise exception 'FAIL: člen není aktivní';
+  end if;
+  if (select pending from public.crew_stats(current_setting('rls.crew_id')::uuid)) <> 0 then
+    raise exception 'FAIL: běžný člen vidí počet žádostí';
+  end if;
+  perform public.leave_crew(current_setting('rls.crew_id')::uuid);
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if not exists (select 1 from public.leaderboard_crews('size', 'all', 100) where name = 'Audi RS6 Fans Praha' and members = 1) then
+    raise exception 'FAIL: crew chybí v žebříčku';
+  end if;
+  if not exists (select 1 from public.profile_crews('00000000-0000-4000-a000-0000000ca201') where is_home) then
+    raise exception 'FAIL: crew chybí na profilu zakladatele';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;
