@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { listPublicEvents } from "@/lib/data/events";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 import { EventCard } from "@/components/events/event-card";
+import { Link } from "@/i18n/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Events");
@@ -21,8 +22,16 @@ export default async function EventsPage() {
         <DisplayHeading as="h1" size="lg" className="reveal reveal-delay-1 text-white">
           {t("title")}
         </DisplayHeading>
-        <p className="reveal reveal-delay-2 mt-4 mb-12 max-w-2xl text-lg text-white/75">
+        <p className="reveal reveal-delay-2 mt-4 max-w-2xl text-lg text-white/75">
           {t("subtitle")}
+        </p>
+        <p className="reveal reveal-delay-2 mt-4 mb-12">
+          <Link
+            href="/organizers"
+            className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4 hover:text-accent"
+          >
+            {t("allOrganizers")} →
+          </Link>
         </p>
         <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
           <EventsList />

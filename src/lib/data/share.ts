@@ -3,6 +3,8 @@ import { createPublicClient } from "@/lib/supabase/server";
 import {
   AVATARS_BUCKET,
   EVENT_IMAGES_BUCKET,
+  ORGANIZER_LOGOS_BUCKET,
+  organizerLogoPath,
   VEHICLE_PHOTOS_BUCKET,
   eventImagePath,
   signFiles,
@@ -96,6 +98,22 @@ export async function getEventShare(slug: string): Promise<ShareInfo | null> {
     description: short(data.description) || short(data.venue_name) || "ELITEZ",
     image,
   };
+}
+
+export async function getOrganizerShare(slug: string): Promise<ShareInfo | null> {
+  const supabase = await createPublicClient();
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from("organizers")
+    .select("id, name, description, logo_key, logo_format")
+    .eq("slug", slug.toLowerCase())
+    .eq("status", "approved")
+    .maybeSingle();
+  if (!data) return null;
+  const path =
+    data.logo_key && data.logo_format ? organizerLogoPath(data.id, data.logo_key, "md", data.logo_format) : null;
+  const image = path ? ((await signFiles(supabase, ORGANIZER_LOGOS_BUCKET, [path])).get(path) ?? null) : null;
+  return { title: data.name, description: short(data.description) || "ELITEZ", image };
 }
 
 /** Převede náhled na metadata stránky (Open Graph + Twitter). */

@@ -159,6 +159,18 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Upozornění sledujícím – jen v aplikaci (zvonek), bez e-mailu:** nový event zveřejněn, otevřela se registrace (Verified dostanou upozornění v čase svého předstihu), event zrušen. Jen u eventů, které daný člověk smí vidět.
 - **Nastavení pořadatele:** logo, popis, odkazy, přepínač „zobrazovat proběhlé eventy“.
 
+### 5.1g Crew – skupiny členů (rozhodnuto 12. 11. 2026, Milník 5d)
+- **Název:** Crew (stejně ve všech jazycích; „klub“ je ELITEZ sám).
+- **Založení:** jen **Verified** členové; každá crew **podléhá schválení adminem** (exkluzivita). Stavy: čeká na schválení → schválená / zamítnutá; admin může crew pozastavit.
+- **Unikátní název:** dvě crew nesmí mít stejný název – porovnává se bez ohledu na velká/malá písmena, diakritiku a mezery („Audi RS6 Fans Praha“ = „audi rs6 fans  praha“). Při zakládání se ukážou podobné existující crew.
+- **Stránka crew** (`/c/<slug>`): logo, úvodní fotka, popis, zaměření (značka/model/region), členové a jejich auta, součet turb, odznaky crew, záložka Srazy.
+- **Vstup:** zakladatel zvolí otevřený vstup, nebo se schválením. Zakladatel může členy schvalovat a odebírat (později i správci crew).
+- **Více crew:** člen může být ve více crew, jednu si zvolí jako **domovskou** (zobrazí se na profilu).
+- **Žebříčky crew:** Největší crew (počet členů) a Nejaktivnější crew (turba členů za období).
+- **Odznaky:** Zakladatel crew (pro člověka); odznaky crew, např. Crew měsíce, 100 členů.
+- **Chat a diskuze:** zatím ne.
+- **Crew jako pořadatel:** pořadatel může být člověk, nebo crew. Zakladatel požádá „Chci pořádat srazy“, admin schválí; zakladatel pak zakládá eventy za crew ve stávající sekci Pořadatel (registrace, schvalování, e-maily, export beze změny). U eventu „Pořádá: <crew>“, na stránce crew záložka Srazy. Nový přístup eventu **jen pro členy crew**. Členové dostávají upozornění na srazy své crew automaticky.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

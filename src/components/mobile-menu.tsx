@@ -67,6 +67,9 @@ export function MobileMenu({ signedIn }: { signedIn: boolean }) {
             <Link href="/leaderboard" className={linkClass("/leaderboard")}>
               {t("leaderboard")}
             </Link>
+            <Link href="/organizers" className={linkClass("/organizers")}>
+              {t("organizers")}
+            </Link>
             {!signedIn ? (
               <Link href="/login" className={linkClass("/login")}>
                 {t("login")}

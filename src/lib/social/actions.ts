@@ -58,3 +58,13 @@ export async function toggleFollow(profileId: string): Promise<FollowResult> {
   if (error || !row) return { ok: false, error: toError(error?.message) };
   return { ok: true, following: row.following, followers: row.followers };
 }
+
+/** Začne / přestane sledovat pořadatele (upozornění na jeho eventy). */
+export async function toggleOrganizerFollow(organizerId: string): Promise<FollowResult> {
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "unknown" };
+  const { data, error } = await supabase.rpc("toggle_organizer_follow", { p_organizer_id: organizerId });
+  const row = data?.[0];
+  if (error || !row) return { ok: false, error: toError(error?.message) };
+  return { ok: true, following: row.following, followers: row.followers };
+}

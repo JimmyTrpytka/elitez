@@ -120,3 +120,8 @@ Vlastník projektu **není programátor**. Proto:
 - QR samolepka: `/garage/qr` (knihovna `qrcode`), QR vždy vede na ostrý web (ne localhost).
 - Čas „teď“ v serverových komponentách přes pomocné funkce (`hasEnded` v `src/lib/dates.ts`) – lint zakazuje `Date.now()` přímo v renderu.
 - Když po `npm run build` vývojový server hlásí `JSON.parse` chyby (500 na všech stránkách), zastav ho, smaž `.next/dev` a spusť znovu.
+
+## Technické poznámky (Milník 5c – pořadatelé)
+- Profil pořadatele `/o/<slug>` (slug z názvu přes `public.slugify`, lze změnit v `/organizer/profile`), seznam `/organizers`. Logo v soukromém bucketu `organizer-logos`: `{organizer_id}/{logo_key}-{sm|md}.{format}`.
+- Sledování pořadatelů jen přes `toggle_organizer_follow`. Upozornění sledujícím vytváří trigger `events_organizer_notify` (zveřejnění, zrušení, přeplánování).
+- `notifications.visible_from`: naplánované upozornění („otevřela se registrace“) RLS neukáže ani nedovolí označit jako přečtené, dokud nenastane. Při změně času registrace se přeplánuje (`schedule_registration_open` / `unschedule_registration_open`).

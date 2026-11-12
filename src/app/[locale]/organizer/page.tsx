@@ -41,9 +41,14 @@ async function OrganizerDashboard() {
       title={t("title")}
       subtitle={organizer.name}
       actions={
-        <Link href="/organizer/events/new" className={buttonClasses("primary")}>
-          {t("newEvent")}
-        </Link>
+        <>
+          <Link href="/organizer/profile" className={buttonClasses("secondary")}>
+            {t("profileLink")}
+          </Link>
+          <Link href="/organizer/events/new" className={buttonClasses("primary")}>
+            {t("newEvent")}
+          </Link>
+        </>
       }
     >
       <div className="flex flex-col gap-8">

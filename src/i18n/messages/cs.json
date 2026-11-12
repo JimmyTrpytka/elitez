@@ -15,7 +15,8 @@
     "menu": "Hlavní menu",
     "openMenu": "Otevřít menu",
     "closeMenu": "Zavřít menu",
-    "leaderboard": "Žebříčky"
+    "leaderboard": "Žebříčky",
+    "organizers": "Pořadatelé"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -149,7 +150,8 @@
     "contactTitle": "Kontakt",
     "contactViaForm": "Napiš nám přes formulář",
     "leaderboard": "Žebříčky",
-    "dreams": "Garáž snů"
+    "dreams": "Garáž snů",
+    "organizers": "Pořadatelé"
   },
   "Common": {
     "save": "Uložit",
@@ -438,7 +440,8 @@
     "rules": "Pravidla",
     "mapTitle": "Místo konání",
     "navigate": "Navigovat",
-    "eyebrow": "Srazy a výstavy"
+    "eyebrow": "Srazy a výstavy",
+    "allOrganizers": "Všichni pořadatelé"
   },
   "Organizer": {
     "title": "Pořadatel",
@@ -517,7 +520,8 @@
     "writeToParticipants": "Napsat účastníkům",
     "exportApproved": "Export schválených (Excel)",
     "exportAll": "Export všech přihlášek",
-    "printList": "Tisk seznamu"
+    "printList": "Tisk seznamu",
+    "profileLink": "Profil pořadatele"
   },
   "EventForm": {
     "createSubmit": "Uložit koncept",
@@ -796,6 +800,18 @@
       "broadcast": {
         "title": "Zpráva od pořadatele",
         "text": ""
+      },
+      "organizer_event_published": {
+        "title": "Nový event: {event}",
+        "text": "{organizer} zveřejnil(a) nový event. Mrkni na podrobnosti a ulož si ho do kalendáře."
+      },
+      "organizer_registration_open": {
+        "title": "Registrace otevřena: {event}",
+        "text": "Na {event} se teď můžeš přihlásit. Místa bývají rychle pryč!"
+      },
+      "organizer_event_cancelled": {
+        "title": "Event zrušen: {event}",
+        "text": "{organizer} zrušil(a) event {event}."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1191,5 +1207,52 @@
     "iosText": "V Safari klepni dole na Sdílet (čtvereček se šipkou) a vyber „Přidat na plochu“.",
     "install": "Přidat na plochu",
     "dismiss": "Teď ne"
+  },
+  "Organizers": {
+    "title": "Pořadatelé",
+    "titleSingle": "Pořadatel",
+    "eyebrow": "Kdo dělá srazy",
+    "subtitle": "Pořadatelé srazů a výstav v klubu ELITEZ. Sleduj je a nezmeškáš žádnou jejich akci.",
+    "empty": "Zatím tu žádní pořadatelé nejsou.",
+    "upcoming": "{count, plural, =0 {Žádný nadcházející event} one {# nadcházející event} few {# nadcházející eventy} many {# nadcházejícího eventu} other {# nadcházejících eventů}}",
+    "followers": "{count, plural, one {# sledující} few {# sledující} many {# sledujících} other {# sledujících}}",
+    "website": "Web",
+    "editProfile": "Upravit profil pořadatele",
+    "followHint": "Sleduj pořadatele a dostaneš upozornění na nové eventy, otevření registrace i případné zrušení.",
+    "upcomingTitle": "Nadcházející eventy",
+    "pastTitle": "Proběhlé eventy",
+    "noUpcoming": "Teď nic naplánovaného. Sleduj pořadatele a dozvíš se o novém eventu jako první."
+  },
+  "OrganizerProfile": {
+    "title": "Profil pořadatele",
+    "back": "← Zpět na správu eventů",
+    "viewPublic": "Zobrazit veřejný profil",
+    "logoTitle": "Logo",
+    "detailsTitle": "Údaje",
+    "logoHint": "Nejlépe čtvercové logo na světlém nebo průhledném pozadí.",
+    "logoAdd": "Nahrát logo",
+    "logoReplace": "Nahrát jiné logo",
+    "logoRemove": "Odebrat logo",
+    "logoUploading": "Nahrávám…",
+    "logoFailed": "Logo se nepodařilo nahrát. Zkus to prosím znovu.",
+    "nameLabel": "Název pořadatele",
+    "slugLabel": "Adresa profilu",
+    "slugHint": "Malá písmena, číslice a pomlčky. Profil bude na {url}",
+    "descriptionLabel": "Popis",
+    "descriptionHint": "Kdo jste, jaké akce děláte, kde vás najít.",
+    "linksLabel": "Odkazy",
+    "websiteLabel": "Web",
+    "showPastLabel": "Zobrazovat proběhlé eventy",
+    "showPastHint": "Historie akcí na profilu buduje důvěru. Když ji vypneš, uvidí lidé jen nadcházející eventy.",
+    "saved": "Uloženo.",
+    "errors": {
+      "nameRequired": "Vyplň název.",
+      "tooLong": "Některý text je moc dlouhý.",
+      "slugInvalid": "Adresa smí obsahovat jen malá písmena, číslice a pomlčky.",
+      "slugTaken": "Tuhle adresu už má jiný pořadatel.",
+      "urlInvalid": "Tohle nevypadá jako odkaz (např. instagram.com/vas-profil).",
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    }
   }
 }

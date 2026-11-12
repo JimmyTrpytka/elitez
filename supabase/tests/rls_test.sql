@@ -968,6 +968,101 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Milník 5c: pořadatelé – profil, sledování, naplánovaná upozornění
+-- Alice = pořadatel „Alice Events“, Bob sleduje
+-- =====================================================================
+do $$ begin
+  if (select slug from public.organizers where id = '00000000-0000-4000-c000-00000000000a') <> 'alice-events' then
+    raise exception 'FAIL: pořadatel nedostal adresu z názvu';
+  end if;
+  if public.slugify('Žluťoučký kůň – Ostrava 2027!') <> 'zlutoucky-kun-ostrava-2027' then
+    raise exception 'FAIL: adresa z názvu neodstraní diakritiku';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r record;
+begin
+  select * into r from public.toggle_organizer_follow('00000000-0000-4000-c000-00000000000a');
+  if not r.following or r.followers <> 1 then raise exception 'FAIL: sledování pořadatele nefunguje'; end if;
+  begin
+    insert into public.organizer_follows (follower_id, organizer_id)
+    values (auth.uid(), '00000000-0000-4000-c000-00000000000a');
+    raise exception 'FAIL: sledování pořadatele jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+  update public.organizers set slug = 'ukradeno', show_past_events = false
+  where id = '00000000-0000-4000-c000-00000000000a';
+  if (select slug from public.organizers where id = '00000000-0000-4000-c000-00000000000a') <> 'alice-events' then
+    raise exception 'FAIL: cizí člověk změnil profil pořadatele';
+  end if;
+end $$;
+reset role;
+
+-- Alice zveřejní event s registrací za 2 dny
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, registration_opens_at)
+values
+  ('00000000-0000-4000-e000-000000000050', '00000000-0000-4000-c000-00000000000a',
+   'rls-novinka', 'Novinka', now() + interval '30 days', now() + interval '31 days',
+   'published', 'public', now() + interval '2 days');
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where type = 'organizer_event_published' and event_id = '00000000-0000-4000-e000-000000000050') then
+    raise exception 'FAIL: sledující nedostal upozornění na nový event';
+  end if;
+  if exists (select 1 from public.notifications
+             where type = 'organizer_registration_open' and event_id = '00000000-0000-4000-e000-000000000050') then
+    raise exception 'FAIL: upozornění na otevření registrace je vidět předčasně';
+  end if;
+  update public.notifications set read_at = now() where user_id = auth.uid();
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b'
+                   and type = 'organizer_registration_open'
+                   and event_id = '00000000-0000-4000-e000-000000000050'
+                   and visible_from > now() and read_at is null) then
+    raise exception 'FAIL: otevření registrace se nenaplánovalo (nebo se označilo jako přečtené)';
+  end if;
+end $$;
+
+-- Zrušení eventu: naplánované upozornění zmizí, přijde „zrušeno“
+update public.events set status = 'cancelled' where id = '00000000-0000-4000-e000-000000000050';
+do $$ begin
+  if exists (select 1 from public.notifications
+             where type = 'organizer_registration_open' and event_id = '00000000-0000-4000-e000-000000000050') then
+    raise exception 'FAIL: po zrušení eventu zůstalo naplánované upozornění';
+  end if;
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b'
+                   and type = 'organizer_event_cancelled' and event_id = '00000000-0000-4000-e000-000000000050') then
+    raise exception 'FAIL: sledující nedostal upozornění na zrušení';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if not exists (select 1 from public.public_organizers() where slug = 'alice-events' and followers = 1) then
+    raise exception 'FAIL: pořadatel chybí ve veřejném seznamu';
+  end if;
+  if (select followers from public.organizer_social_stats('00000000-0000-4000-c000-00000000000a')) <> 1 then
+    raise exception 'FAIL: počet sledujících pořadatele nesedí';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;
