@@ -16,7 +16,8 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "leaderboard": "Leaderboards",
-    "organizers": "Organizers"
+    "organizers": "Organizers",
+    "crews": "Crews"
   },
   "Home": {
     "eyebrow": "The car community club",
@@ -151,7 +152,8 @@
     "contactViaForm": "Write to us via the form",
     "leaderboard": "Leaderboards",
     "dreams": "Dream garage",
-    "organizers": "Organizers"
+    "organizers": "Organizers",
+    "crews": "Crews"
   },
   "Common": {
     "save": "Save",
@@ -195,7 +197,12 @@
     "badgesCount": "{count, plural, =0 {No badges yet} one {# badge} other {# badges}}",
     "streakTitle": "{count, plural, one {# day} other {# days}} streak",
     "streakText": "You haven't given a turbo today. Give at least one to keep your streak.",
-    "streakCta": "Find cars"
+    "streakCta": "Find cars",
+    "myCrews": "My crews",
+    "crewsMeta": "🏠 {name}{count, plural, one {} other { and more}}",
+    "crewsNone": "Not in a crew yet",
+    "adminCrews": "Crews to review",
+    "adminCrewsPending": "{count} waiting for review"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -812,6 +819,26 @@
       "organizer_event_cancelled": {
         "title": "Event cancelled: {event}",
         "text": "{organizer} cancelled {event}."
+      },
+      "crew_review": {
+        "title": "New crew to review",
+        "text": "{name} is founding the crew “{crew}”."
+      },
+      "crew_approved": {
+        "title": "Your crew is approved!",
+        "text": "The crew “{crew}” is live. Invite your people."
+      },
+      "crew_rejected": {
+        "title": "Crew not approved",
+        "text": "The crew “{crew}” was not approved this time."
+      },
+      "crew_join_request": {
+        "title": "Request to join your crew",
+        "text": "{name} wants to join “{crew}”."
+      },
+      "crew_member_approved": {
+        "title": "You're in!",
+        "text": "You were accepted into the crew “{crew}”."
       }
     },
     "openVehicle": "View car",
@@ -828,7 +855,10 @@
     "followerText": "{name} started following you.",
     "followerAnonymous": "Someone started following you.",
     "badgeTitle": "New badge in your Hall of Fame!",
-    "badgeText": "You earned the “{badge}” badge."
+    "badgeText": "You earned the “{badge}” badge.",
+    "openCrew": "View crew",
+    "openCrewReview": "Review crews",
+    "crewReason": "Reason: {reason}"
   },
   "Broadcast": {
     "title": "Messages to participants",
@@ -1034,7 +1064,9 @@
       "not_allowed": "You are not allowed to do this.",
       "cannot_demote_self": "You can't remove your own administrator role.",
       "generic": "The change failed. Please try again."
-    }
+    },
+    "confirmGrantVerified": "Grant Verified status to this member? They will be able to found crews, among other things.",
+    "confirmRevokeVerified": "Remove Verified status from this member?"
   },
   "Social": {
     "turboCount": "{count, plural, one {# turbo} other {# turbos}}",
@@ -1075,7 +1107,12 @@
     "fansTitle": "Most active fans",
     "fansHint": "Who gave the most turbos.",
     "empty": "No turbos in this period yet. Be the first!",
-    "emptyFans": "Nobody has given a turbo in this period yet."
+    "emptyFans": "Nobody has given a turbo in this period yet.",
+    "crewsActiveTitle": "Most active crews",
+    "crewsActiveHint": "Turbos received by crew members.",
+    "crewsSizeTitle": "Biggest crews",
+    "crewsSizeHint": "Number of members.",
+    "emptyCrews": "No crews yet."
   },
   "HallOfFame": {
     "title": "Hall of Fame",
@@ -1254,5 +1291,135 @@
       "notAllowed": "You are not allowed to do that.",
       "generic": "Something went wrong, please try again."
     }
+  },
+  "Crews": {
+    "title": "Crews",
+    "eyebrow": "Crews & communities",
+    "subtitle": "Crews are exclusive groups of members – by make, model or city. Each one is approved by the club.",
+    "searchLabel": "Search crews",
+    "searchPlaceholder": "Name, make or city",
+    "search": "Search",
+    "noResults": "Nothing found.",
+    "empty": "No crews yet. Be the first!",
+    "previous": "← Previous",
+    "next": "Next →",
+    "create": "Found a crew",
+    "createVerifiedOnly": "Only Verified members can found crews. Each crew is approved by the club.",
+    "members": "{count, plural, one {# member} other {# members}}",
+    "policyOpenShort": "Open to join",
+    "policyApprovalShort": "Join on approval",
+    "newTitle": "Found a crew",
+    "backToCrews": "← Back to crews",
+    "newIntro": "Others will see the crew once the club approves it. The name must be unique and after approval only an admin can change it.",
+    "pendingExistsText": "The crew “{name}” is still waiting for approval. You can found another one once it's reviewed.",
+    "openCrew": "View",
+    "nameLabel": "Crew name",
+    "nameHint": "3–60 characters. Must differ from other crews (case and accents don't matter).",
+    "similarTitle": "Similar crews already exist:",
+    "similarPending": "waiting for approval",
+    "similarHint": "Consider joining instead. The same name is not allowed.",
+    "focusLabel": "Focus",
+    "focusHint": "Short: make, model, region – e.g. “Audi RS · Prague”.",
+    "descriptionLabel": "Description",
+    "descriptionHint": "Who you are, what connects you, how you meet.",
+    "policyLabel": "Joining",
+    "policyApproval": "On approval",
+    "policyApprovalText": "People send a request and you approve it.",
+    "policyOpen": "Open",
+    "policyOpenText": "Anyone can join right away.",
+    "reviewNote": "After submitting, a club admin reviews the crew. We'll let you know in the bell.",
+    "creating": "Sending…",
+    "createSubmit": "Submit for approval",
+    "createdNotice": "The crew was submitted for approval. Meanwhile you can upload a logo and cover photo.",
+    "statusNotice": {
+      "pending": "The crew is waiting for club approval – only you can see it.",
+      "rejected": "The crew was not approved.",
+      "suspended": "The crew was suspended by a club admin.",
+      "approved": ""
+    },
+    "rejectedReason": "Reason: {reason}",
+    "statMembers": "Members",
+    "statTurbos": "Member turbos",
+    "statMonth": "Turbos in 30 days",
+    "join": "Join",
+    "requestJoin": "Request to join",
+    "requestSent": "Request sent",
+    "cancelRequest": "Cancel request",
+    "youFounder": "Founder",
+    "youAdmin": "Admin",
+    "youMember": "Member ✓",
+    "isHome": "Home crew",
+    "setHome": "Set as home crew",
+    "leave": "Leave crew",
+    "leaveConfirm": "Really leave this crew?",
+    "edit": "Edit crew",
+    "editTitle": "Edit crew",
+    "logoTitle": "Logo",
+    "coverTitle": "Cover photo",
+    "detailsTitle": "Details",
+    "nameLocked": "Only a club admin can change the crew name (it must stay unique).",
+    "saved": "Saved.",
+    "imageAdd": "Upload",
+    "imageReplace": "Upload another",
+    "uploading": "Uploading…",
+    "imageFailed": "The image could not be uploaded. Please try again.",
+    "requestsTitle": "{count, plural, one {# join request} other {# join requests}}",
+    "approve": "Accept",
+    "reject": "Decline",
+    "remove": "Remove",
+    "removeConfirm": "Really remove this member from the crew?",
+    "badgesTitle": "Crew badges",
+    "membersTitle": "Members",
+    "noMembers": "No members yet.",
+    "hiddenMembers": "+ {count, plural, one {# member} other {# members}} with a private profile",
+    "role": {
+      "founder": "founder",
+      "admin": "admin",
+      "member": "member"
+    },
+    "rarity": {
+      "common": "Common",
+      "rare": "Rare",
+      "epic": "Epic",
+      "legendary": "Legendary"
+    },
+    "errors": {
+      "notAuthenticated": "Please sign in.",
+      "usernameRequired": "Set your username in your profile first.",
+      "verifiedRequired": "Only Verified members can found crews.",
+      "nameInvalid": "The name must have 3–60 characters.",
+      "nameTaken": "A crew with this name already exists. Please choose another.",
+      "pendingExists": "One of your crews is already waiting for approval.",
+      "crewLimit": "You can found at most 3 crews.",
+      "notFound": "This crew is not available.",
+      "alreadyMember": "You're already in this crew.",
+      "membershipLimit": "You can be in at most 20 crews.",
+      "founderCannotLeave": "The founder can't leave their own crew.",
+      "notAllowed": "You are not allowed to do that.",
+      "tooLong": "Some text is too long.",
+      "generic": "Something went wrong, please try again."
+    }
+  },
+  "AdminCrews": {
+    "title": "Crews to review",
+    "pendingTitle": "Waiting for review ({count})",
+    "pendingEmpty": "Nothing waiting. 👍",
+    "allTitle": "All crews",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "suspended": "Suspended"
+    },
+    "founder": "Founder",
+    "members": "{count, plural, one {# member} other {# members}}",
+    "open": "Open crew",
+    "approve": "Approve",
+    "reject": "Reject",
+    "confirmReject": "Confirm rejection",
+    "reasonPlaceholder": "Reason (the founder will see it)",
+    "suspend": "Suspend",
+    "suspendConfirm": "Suspend the crew? It will no longer be publicly visible.",
+    "restore": "Restore"
   }
 }

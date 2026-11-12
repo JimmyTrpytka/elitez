@@ -16,7 +16,8 @@
     "openMenu": "Otevřít menu",
     "closeMenu": "Zavřít menu",
     "leaderboard": "Žebříčky",
-    "organizers": "Pořadatelé"
+    "organizers": "Pořadatelé",
+    "crews": "Crew"
   },
   "Home": {
     "eyebrow": "Klub automobilové komunity",
@@ -151,7 +152,8 @@
     "contactViaForm": "Napiš nám přes formulář",
     "leaderboard": "Žebříčky",
     "dreams": "Garáž snů",
-    "organizers": "Pořadatelé"
+    "organizers": "Pořadatelé",
+    "crews": "Crew"
   },
   "Common": {
     "save": "Uložit",
@@ -195,7 +197,12 @@
     "badgesCount": "{count, plural, =0 {Zatím bez odznaků} one {# odznak} few {# odznaky} many {# odznaku} other {# odznaků}}",
     "streakTitle": "Série {count, plural, one {# den} few {# dny} many {# dne} other {# dní}}",
     "streakText": "Dnes jsi ještě nedal(a) turbo. Dej aspoň jedno, ať o sérii nepřijdeš.",
-    "streakCta": "Najít auta"
+    "streakCta": "Najít auta",
+    "myCrews": "Moje crew",
+    "crewsMeta": "🏠 {name}{count, plural, one {} other { a další}}",
+    "crewsNone": "Zatím v žádné crew",
+    "adminCrews": "Crew ke schválení",
+    "adminCrewsPending": "{count, plural, one {# čeká} few {# čekají} many {# čeká} other {# čeká}} na schválení"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -812,6 +819,26 @@
       "organizer_event_cancelled": {
         "title": "Event zrušen: {event}",
         "text": "{organizer} zrušil(a) event {event}."
+      },
+      "crew_review": {
+        "title": "Nová crew ke schválení",
+        "text": "{name} zakládá crew „{crew}“."
+      },
+      "crew_approved": {
+        "title": "Tvoje crew je schválená!",
+        "text": "Crew „{crew}“ je venku. Pozvi do ní své lidi."
+      },
+      "crew_rejected": {
+        "title": "Crew nebyla schválena",
+        "text": "Crew „{crew}“ tentokrát neprošla."
+      },
+      "crew_join_request": {
+        "title": "Žádost o vstup do crew",
+        "text": "{name} chce do crew „{crew}“."
+      },
+      "crew_member_approved": {
+        "title": "Jsi v crew!",
+        "text": "Byl(a) jsi přijat(a) do crew „{crew}“."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -828,7 +855,10 @@
     "followerText": "{name} tě začal(a) sledovat.",
     "followerAnonymous": "Někdo tě začal sledovat.",
     "badgeTitle": "Nový odznak v Síni slávy!",
-    "badgeText": "Získal(a) jsi odznak „{badge}“."
+    "badgeText": "Získal(a) jsi odznak „{badge}“.",
+    "openCrew": "Zobrazit crew",
+    "openCrewReview": "Schválit crew",
+    "crewReason": "Důvod: {reason}"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -1034,7 +1064,9 @@
       "not_allowed": "K této akci nemáš oprávnění.",
       "cannot_demote_self": "Sám sobě roli administrátora odebrat nemůžeš.",
       "generic": "Změna se nepovedla. Zkus to prosím znovu."
-    }
+    },
+    "confirmGrantVerified": "Udělit tomuto členovi status Verified? Bude moct mimo jiné zakládat crew.",
+    "confirmRevokeVerified": "Odebrat tomuto členovi status Verified?"
   },
   "Social": {
     "turboCount": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}",
@@ -1075,7 +1107,12 @@
     "fansTitle": "Nejaktivnější fanoušci",
     "fansHint": "Kdo rozdal nejvíc turb.",
     "empty": "Za toto období zatím žádná turba. Buď první!",
-    "emptyFans": "Za toto období zatím nikdo turbo nedal."
+    "emptyFans": "Za toto období zatím nikdo turbo nedal.",
+    "crewsActiveTitle": "Nejaktivnější crew",
+    "crewsActiveHint": "Turba, která získali členové crew.",
+    "crewsSizeTitle": "Největší crew",
+    "crewsSizeHint": "Počet členů.",
+    "emptyCrews": "Zatím tu žádné crew nejsou."
   },
   "HallOfFame": {
     "title": "Síň slávy",
@@ -1254,5 +1291,135 @@
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
+  },
+  "Crews": {
+    "title": "Crew",
+    "eyebrow": "Party a komunity",
+    "subtitle": "Crew jsou exkluzivní skupiny členů – podle značky, modelu nebo města. Každou schvaluje klub.",
+    "searchLabel": "Hledat crew",
+    "searchPlaceholder": "Název, značka nebo město",
+    "search": "Hledat",
+    "noResults": "Nic jsme nenašli.",
+    "empty": "Zatím tu žádné crew nejsou. Buď první!",
+    "previous": "← Předchozí",
+    "next": "Další →",
+    "create": "Založit crew",
+    "createVerifiedOnly": "Crew můžou zakládat jen Verified členové. Každou crew schvaluje klub.",
+    "members": "{count, plural, one {# člen} few {# členové} many {# člena} other {# členů}}",
+    "policyOpenShort": "Volný vstup",
+    "policyApprovalShort": "Vstup se schválením",
+    "newTitle": "Založit crew",
+    "backToCrews": "← Zpět na crew",
+    "newIntro": "Crew uvidí ostatní až po schválení klubem. Název musí být unikátní a po schválení ho mění jen admin.",
+    "pendingExistsText": "Crew „{name}“ ještě čeká na schválení. Další můžeš založit, až bude vyřízená.",
+    "openCrew": "Zobrazit",
+    "nameLabel": "Název crew",
+    "nameHint": "3–60 znaků. Musí se lišit od ostatních crew (nezáleží na velikosti písmen ani diakritice).",
+    "similarTitle": "Podobné crew už existují:",
+    "similarPending": "čeká na schválení",
+    "similarHint": "Zvaž, jestli se raději nepřidat. Stejný název mít nejde.",
+    "focusLabel": "Zaměření",
+    "focusHint": "Krátce: značka, model, region – např. „Audi RS · Praha“.",
+    "descriptionLabel": "Popis",
+    "descriptionHint": "Kdo jste, co vás spojuje, jak se scházíte.",
+    "policyLabel": "Vstup do crew",
+    "policyApproval": "Se schválením",
+    "policyApprovalText": "Zájemce pošle žádost a ty ji schválíš.",
+    "policyOpen": "Volný",
+    "policyOpenText": "Kdokoli se může rovnou přidat.",
+    "reviewNote": "Po odeslání crew zkontroluje admin klubu. Dáme ti vědět ve zvonku.",
+    "creating": "Odesílám…",
+    "createSubmit": "Odeslat ke schválení",
+    "createdNotice": "Crew je odeslaná ke schválení. Mezitím můžeš nahrát logo a úvodní fotku.",
+    "statusNotice": {
+      "pending": "Crew čeká na schválení klubem – zatím ji vidíš jen ty.",
+      "rejected": "Crew nebyla schválena.",
+      "suspended": "Crew je pozastavená adminem klubu.",
+      "approved": ""
+    },
+    "rejectedReason": "Důvod: {reason}",
+    "statMembers": "Členové",
+    "statTurbos": "Turba členů",
+    "statMonth": "Turba za 30 dní",
+    "join": "Přidat se",
+    "requestJoin": "Požádat o vstup",
+    "requestSent": "Žádost odeslána",
+    "cancelRequest": "Zrušit žádost",
+    "youFounder": "Zakladatel",
+    "youAdmin": "Správce",
+    "youMember": "Jsi člen ✓",
+    "isHome": "Domovská crew",
+    "setHome": "Nastavit jako domovskou",
+    "leave": "Odejít z crew",
+    "leaveConfirm": "Opravdu odejít z této crew?",
+    "edit": "Upravit crew",
+    "editTitle": "Upravit crew",
+    "logoTitle": "Logo",
+    "coverTitle": "Úvodní fotka",
+    "detailsTitle": "Údaje",
+    "nameLocked": "Název crew mění jen admin klubu (kvůli unikátnosti).",
+    "saved": "Uloženo.",
+    "imageAdd": "Nahrát",
+    "imageReplace": "Nahrát jinou",
+    "uploading": "Nahrávám…",
+    "imageFailed": "Obrázek se nepodařilo nahrát. Zkus to prosím znovu.",
+    "requestsTitle": "{count, plural, one {# žádost o vstup} few {# žádosti o vstup} many {# žádosti o vstup} other {# žádostí o vstup}}",
+    "approve": "Přijmout",
+    "reject": "Zamítnout",
+    "remove": "Odebrat",
+    "removeConfirm": "Opravdu odebrat člena z crew?",
+    "badgesTitle": "Odznaky crew",
+    "membersTitle": "Členové",
+    "noMembers": "Zatím žádní členové.",
+    "hiddenMembers": "+ {count, plural, one {# člen} few {# členové} many {# člena} other {# členů}} se soukromým profilem",
+    "role": {
+      "founder": "zakladatel",
+      "admin": "správce",
+      "member": "člen"
+    },
+    "rarity": {
+      "common": "Běžný",
+      "rare": "Vzácný",
+      "epic": "Epický",
+      "legendary": "Legendární"
+    },
+    "errors": {
+      "notAuthenticated": "Přihlas se, prosím.",
+      "usernameRequired": "Nejdřív si v profilu nastav uživatelské jméno.",
+      "verifiedRequired": "Crew můžou zakládat jen Verified členové.",
+      "nameInvalid": "Název musí mít 3–60 znaků.",
+      "nameTaken": "Crew s tímhle názvem už existuje. Vymysli prosím jiný.",
+      "pendingExists": "Jedna tvoje crew už čeká na schválení.",
+      "crewLimit": "Založit můžeš nejvýš 3 crew.",
+      "notFound": "Tahle crew není dostupná.",
+      "alreadyMember": "V této crew už jsi.",
+      "membershipLimit": "Můžeš být nejvýš ve 20 crew.",
+      "founderCannotLeave": "Zakladatel nemůže odejít ze své crew.",
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "tooLong": "Některý text je moc dlouhý.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    }
+  },
+  "AdminCrews": {
+    "title": "Crew ke schválení",
+    "pendingTitle": "Čeká na schválení ({count})",
+    "pendingEmpty": "Nic nečeká. 👍",
+    "allTitle": "Všechny crew",
+    "status": {
+      "pending": "Čeká",
+      "approved": "Schválená",
+      "rejected": "Zamítnutá",
+      "suspended": "Pozastavená"
+    },
+    "founder": "Zakladatel",
+    "members": "{count, plural, one {# člen} few {# členové} many {# člena} other {# členů}}",
+    "open": "Otevřít crew",
+    "approve": "Schválit",
+    "reject": "Zamítnout",
+    "confirmReject": "Potvrdit zamítnutí",
+    "reasonPlaceholder": "Důvod (uvidí ho zakladatel)",
+    "suspend": "Pozastavit",
+    "suspendConfirm": "Pozastavit crew? Přestane být veřejně vidět.",
+    "restore": "Obnovit"
   }
 }

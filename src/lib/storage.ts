@@ -71,3 +71,10 @@ export function organizerLogoPath(
 ): string {
   return `${organizerId}/${logoKey}-${size}.${format}`;
 }
+
+export const CREW_IMAGES_BUCKET = "crew-images";
+
+/** Logo / úvodní fotka crew: `{crew_id}/{key}-{velikost}.{format}`. */
+export function crewImagePath(crewId: string, key: string, size: PhotoSize, format: string): string {
+  return `${crewId}/${key}-${size}.${format}`;
+}

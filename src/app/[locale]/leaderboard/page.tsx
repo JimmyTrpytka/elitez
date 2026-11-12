@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 import { TurboIcon } from "@/components/social/turbo-icon";
 import { cn } from "@/lib/cn";
+import { getCrewLeaderboard, type CrewLeaderboardRow } from "@/lib/data/crews";
+import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Leaderboard");
@@ -70,7 +72,11 @@ async function Boards({ searchParams }: { searchParams: PageProps<"/[locale]/lea
   const period: LeaderboardPeriod = LEADERBOARD_PERIODS.includes(raw as LeaderboardPeriod)
     ? (raw as LeaderboardPeriod)
     : "week";
-  const { vehicles, garages, fans } = await getLeaderboards(period);
+  const [{ vehicles, garages, fans }, crewsActive, crewsSize] = await Promise.all([
+    getLeaderboards(period),
+    getCrewLeaderboard("active", period),
+    getCrewLeaderboard("size", period),
+  ]);
 
   return (
     <div className="flex flex-col gap-14">
@@ -134,7 +140,61 @@ async function Boards({ searchParams }: { searchParams: PageProps<"/[locale]/lea
           empty={t("emptyFans")}
         />
       </div>
+
+      <div className="grid gap-14 lg:grid-cols-2 lg:gap-8">
+        <CrewBoard title={t("crewsActiveTitle")} hint={t("crewsActiveHint")} rows={crewsActive} empty={t("emptyCrews")} unit="turbo" />
+        <CrewBoard title={t("crewsSizeTitle")} hint={t("crewsSizeHint")} rows={crewsSize} empty={t("emptyCrews")} unit="members" />
+      </div>
     </div>
+  );
+}
+
+function CrewBoard({
+  title,
+  hint,
+  rows,
+  empty,
+  unit,
+}: {
+  title: string;
+  hint: string;
+  rows: CrewLeaderboardRow[];
+  empty: string;
+  unit: "turbo" | "members";
+}) {
+  return (
+    <section>
+      <h2 className="font-display text-4xl font-extrabold text-white uppercase">{title}</h2>
+      <p className="mt-1 text-sm text-night-subtle">{hint}</p>
+      <div className="mt-5">
+        {rows.length ? (
+          <ol className="flex flex-col gap-2">
+            {rows.map((c, i) => (
+              <li key={c.slug}>
+                <Link
+                  href={`/c/${c.slug}`}
+                  className="flex items-center gap-4 rounded-card bg-night-soft p-3 pr-5 ring-1 ring-white/10 transition-all hover:-translate-y-0.5 hover:ring-accent/40"
+                >
+                  <Rank n={i + 1} />
+                  <OrganizerLogo url={c.logoUrl} name={c.name} size={44} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-semibold text-white">{c.name}</p>
+                    {c.focus ? <p className="truncate text-sm text-night-subtle">{c.focus}</p> : null}
+                  </div>
+                  {unit === "turbo" ? (
+                    <TurboCount n={c.score} />
+                  ) : (
+                    <span className="font-display text-2xl font-extrabold text-white tabular-nums">{c.score}</span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <Empty text={empty} />
+        )}
+      </div>
+    </section>
   );
 }
 

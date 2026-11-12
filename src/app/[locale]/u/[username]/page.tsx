@@ -14,6 +14,8 @@ import {
   listUserBadges,
 } from "@/lib/data/social";
 import { HallOfFame } from "@/components/social/hall-of-fame";
+import { listProfileCrews } from "@/lib/data/crews";
+import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { getProfileShare, shareMetadata } from "@/lib/data/share";
 import { ShareButton } from "@/components/share-button";
 import { listDreamsOfOwner } from "@/lib/data/dreams";
@@ -67,13 +69,14 @@ async function PublicProfile({
   if (!profile) notFound();
 
   const isOwner = user?.id === profile.id;
-  const [vehicles, stats, givers, badges, catalog, dreams] = await Promise.all([
+  const [vehicles, stats, givers, badges, catalog, dreams, crews] = await Promise.all([
     listVisibleVehiclesOfOwner(profile.id),
     getProfileSocialStats(profile.id),
     listTurboGivers({ profileId: profile.id }),
     listUserBadges(profile.id),
     isOwner ? listBadgeCatalog() : Promise.resolve([]),
     listDreamsOfOwner(profile.id),
+    listProfileCrews(profile.id),
   ]);
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
@@ -124,6 +127,24 @@ async function PublicProfile({
                   {isFan ? t("fan") : t("owner")}
                 </span>
               </div>
+              {crews.length ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {crews.map((c) => (
+                    <Link
+                      key={c.id}
+                      href={`/c/${c.slug}`}
+                      className={
+                        c.isHome
+                          ? "inline-flex items-center gap-2 rounded-full bg-accent py-1 pr-3 pl-1 text-sm font-bold text-ink"
+                          : "inline-flex items-center gap-2 rounded-full bg-white/10 py-1 pr-3 pl-1 text-sm font-semibold text-white hover:bg-white/15"
+                      }
+                    >
+                      <OrganizerLogo url={c.logoUrl} name={c.name} size={24} />
+                      {c.name}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
               {profile.bio ? (
                 <p className="mt-4 max-w-2xl text-lg whitespace-pre-line text-white/75">
                   {profile.bio}

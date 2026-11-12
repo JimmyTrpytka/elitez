@@ -27,6 +27,8 @@ import {
 import { TurboIcon } from "@/components/social/turbo-icon";
 import { ProfileProgress } from "@/components/account/profile-progress";
 import { InstallHint } from "@/components/install-hint";
+import { listProfileCrews } from "@/lib/data/crews";
+import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/cn";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -128,7 +130,14 @@ async function AccountContent() {
     return redirect({ href: "/login", locale });
   }
 
-  const stats = await getProfileSocialStats(profile.id);
+  const [stats, myCrews, pendingCrews] = await Promise.all([
+    getProfileSocialStats(profile.id),
+    listProfileCrews(profile.id),
+    profile.role === "admin"
+      ? createClient().then(async (s) => (s ? ((await s.rpc("admin_list_crews", { p_status: "pending" })).data?.length ?? 0) : 0))
+      : Promise.resolve(0),
+  ]);
+  const homeCrew = myCrews.find((c) => c.isHome) ?? myCrews[0];
   const name = profile.display_name ?? profile.username ?? user.email ?? "";
   const isFan = counts.vehicles === 0;
   const publicHref = profile.username ? `/u/${profile.username}` : null;
@@ -274,6 +283,12 @@ async function AccountContent() {
             meta={tA("dreamsCount", { count: counts.dreams })}
           />
           <Tile
+            href={homeCrew ? `/c/${homeCrew.slug}` : "/crews"}
+            icon={<ShieldIcon className={icon} />}
+            title={tA("myCrews")}
+            meta={homeCrew ? tA("crewsMeta", { name: homeCrew.name, count: myCrews.length }) : tA("crewsNone")}
+          />
+          <Tile
             href="/account/registrations"
             icon={<CalendarIcon className={icon} />}
             title={tA("myRegistrations")}
@@ -324,6 +339,14 @@ async function AccountContent() {
                   icon={<ShieldIcon className={icon} />}
                   title={tA("adminUsers")}
                   meta={tA("adminTitle")}
+                  dark
+                />
+                <Tile
+                  href="/admin/crews"
+                  icon={<ShieldIcon className={icon} />}
+                  title={tA("adminCrews")}
+                  meta={pendingCrews ? tA("adminCrewsPending", { count: pendingCrews }) : tA("adminTitle")}
+                  highlight={pendingCrews > 0}
                   dark
                 />
                 <Tile

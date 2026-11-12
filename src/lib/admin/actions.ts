@@ -37,3 +37,14 @@ export async function setUserOrganizer(userId: string, enabled: boolean): Promis
   revalidatePath("/", "layout");
   return { ok: true };
 }
+
+/** Udělit / odebrat Verified (do Milníku 6 ručně adminem). */
+export async function setUserVerified(userId: string, enabled: boolean): Promise<RoleResult> {
+  if (!UUID.test(userId)) return { ok: false, error: "generic" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("admin_set_verified", { p_user_id: userId, p_verified: enabled });
+  if (error) return toError(error.message);
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
