@@ -253,3 +253,9 @@ SPOTy a challenge (GPS ověření, hlasování, porota, moderace), slovenština 
 ### První zadání pro Claude Code (Milník 1)
 
 > Přečti `CLAUDE.md`, `SPEC.md` a `TASKS.md`. Začínáme Milníkem 1. Nejdřív mi česky navrhni plán po krocích, ať ho odsouhlasím. Pak založ Next.js projekt (TypeScript, Tailwind, App Router) s PWA základem, světlým designem (černá a žlutý akcent), připoj Supabase a udělej přihlášení e-mailem. Každý krok stručně vysvětli a řekni, jak ho mám vyzkoušet.
+
+---
+
+## Později – monetizace (kostra, k doladění)
+
+Pravidla a nápady: SPEC.md 13a. Doporučené pořadí: Partneři klubu → Bazar s topováním (+ upozornění pro „Aktivně hledám“ z Garáže snů) → Podporovatel klubu → Pořadatel Pro → vstupenky a fotky z eventů. Předpoklad: Stripe, IČO, obchodní podmínky.
