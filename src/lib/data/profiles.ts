@@ -1,17 +1,27 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, signFiles } from "@/lib/storage";
+import { AVATARS_BUCKET, PROFILE_MEDIA_BUCKET, profileCoverPath, signFiles } from "@/lib/storage";
 
 export type Profile = Tables<"profiles">;
-export type ProfileView = Profile & { avatarUrl: string | null };
+export type ProfileView = Profile & { avatarUrl: string | null; coverUrl: string | null };
 
 async function withAvatar(
   supabase: TypedSupabaseClient,
   profile: Profile,
 ): Promise<ProfileView> {
-  if (!profile.avatar_path) return { ...profile, avatarUrl: null };
-  const urls = await signFiles(supabase, AVATARS_BUCKET, [profile.avatar_path]);
-  return { ...profile, avatarUrl: urls.get(profile.avatar_path) ?? null };
+  const coverPath =
+    profile.cover_key && profile.cover_format
+      ? profileCoverPath(profile.id, profile.cover_key, "lg", profile.cover_format)
+      : null;
+  const [avatars, covers] = await Promise.all([
+    profile.avatar_path ? signFiles(supabase, AVATARS_BUCKET, [profile.avatar_path]) : null,
+    coverPath ? signFiles(supabase, PROFILE_MEDIA_BUCKET, [coverPath]) : null,
+  ]);
+  return {
+    ...profile,
+    avatarUrl: profile.avatar_path ? (avatars?.get(profile.avatar_path) ?? null) : null,
+    coverUrl: coverPath ? (covers?.get(coverPath) ?? null) : null,
+  };
 }
 
 /** Profil přihlášeného uživatele (nebo null, když nikdo není přihlášený). */

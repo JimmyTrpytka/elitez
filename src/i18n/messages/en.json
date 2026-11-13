@@ -204,7 +204,9 @@
     "crewsMeta": "🏠 {name}{count, plural, one {} other { and more}}",
     "crewsNone": "Not in a crew yet",
     "adminCrews": "Crews to review",
-    "adminCrewsPending": "{count} waiting for review"
+    "adminCrewsPending": "{count} waiting for review",
+    "portfolio": "Portfolio",
+    "portfolioMeta": "Photos and videos on your profile"
   },
   "Profile": {
     "editTitle": "Edit profile",
@@ -236,7 +238,8 @@
       "notSignedIn": "You are not signed in. Please sign in again.",
       "generic": "Saving failed. Please try again.",
       "socialInvalid": "This doesn't look like a link or @name."
-    }
+    },
+    "coverTitle": "Cover photo"
   },
   "Garage": {
     "title": "My garage",
@@ -395,7 +398,21 @@
     "dreamsTitle": "Dream garage",
     "dreamsSubtitle": "Cars they dream about, plan to buy or are looking for.",
     "dreamsManage": "Manage dream garage",
-    "dreamsEmptyOwner": "Nothing here yet. Add a car you dream about."
+    "dreamsEmptyOwner": "Nothing here yet. Add a car you dream about.",
+    "creator": "Creator",
+    "skills": {
+      "photo": "Photo",
+      "video": "Video",
+      "drone": "Drone"
+    },
+    "portfolioTitle": "Portfolio",
+    "portfolioManage": "Manage portfolio",
+    "portfolioEmptyOwner": "Nothing here yet. Upload your best photos or add a video link.",
+    "archiveLink": "Work archive ({count, plural, one {# piece} other {# pieces}})",
+    "archiveTitle": "Work archive",
+    "archiveText": "Older work that no longer fits among the 12 featured on the profile.",
+    "archiveBack": "Back to {name}'s profile",
+    "archiveEmpty": "The archive is empty for now."
   },
   "PublicVehicle": {
     "metaTitle": "Vehicle",
@@ -1539,5 +1556,73 @@
       "facebook": "name or link"
     },
     "invalid": "This doesn't look like a link or @name."
+  },
+  "Creator": {
+    "legend": "Creator",
+    "toggle": "I'm a Creator – photographer, videographer or reels maker",
+    "toggleHint": "Your profile gets a Creator badge and a Portfolio. You keep your garage if you own a car.",
+    "skillsLabel": "What do you create?",
+    "skills": {
+      "photo": "Photo",
+      "video": "Video / reels",
+      "drone": "Drone"
+    },
+    "coverHint": "A large photo in your profile header. Landscape works best.",
+    "coverAdd": "Upload cover photo",
+    "coverReplace": "Replace cover photo",
+    "coverRemove": "Remove",
+    "uploading": "Uploading…",
+    "saveFailed": "Couldn't save the photo, please try again."
+  },
+  "Portfolio": {
+    "manageTitle": "My portfolio",
+    "backToAccount": "← My account",
+    "viewOnProfile": "View on profile",
+    "notCreatorTitle": "Portfolio is for Creators",
+    "notCreatorText": "Do you shoot photos, film or make reels? Tick “I'm a Creator” in your profile settings and upload your work here.",
+    "becomeCreator": "Edit profile",
+    "addPhotosTitle": "Add photos",
+    "addPhotosHint": "You can pick several photos at once (up to 30). They're resized right on your device; the original isn't sent anywhere.",
+    "addPhotos": "Choose photos",
+    "uploadingProgress": "Uploading {done} / {total}…",
+    "uploadFailedSome": "{count, plural, one {One photo} other {# photos}} couldn't be uploaded:",
+    "addVideoTitle": "Add video",
+    "addVideoHint": "You don't upload videos here – just paste a link from YouTube, Instagram (reels), TikTok or Vimeo. It plays right on your profile.",
+    "videoUrlLabel": "Video link",
+    "captionLabel": "Caption (optional)",
+    "captionPlaceholder": "Caption…",
+    "addVideo": "Add video",
+    "worksTitle": "My work",
+    "worksHint": "Your profile shows {count} pieces: pinned first, then the newest. The rest are in the Work archive.",
+    "empty": "Nothing here yet.",
+    "badgeProfile": "On profile",
+    "badgeArchive": "In archive",
+    "pinned": "Pinned",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "thumbAdd": "Upload thumbnail",
+    "thumbReplace": "Replace thumbnail",
+    "uploading": "Uploading…",
+    "delete": "Delete",
+    "deleteQuestion": "Delete?",
+    "deleteYes": "Yes, delete",
+    "playVideo": "Play video",
+    "openPhoto": "Open photo",
+    "openOn": "Open on {provider}",
+    "providers": {
+      "youtube": "YouTube",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "vimeo": "Vimeo"
+    },
+    "errors": {
+      "notCreator": "First turn on “I'm a Creator” in your profile.",
+      "videoInvalid": "We don't recognise this link. Paste a link to a specific video on YouTube, Instagram, TikTok or Vimeo.",
+      "captionTooLong": "The caption can have at most 300 characters.",
+      "portfolioLimit": "A portfolio can hold at most 300 pieces. Please delete some older ones.",
+      "pinLimit": "You can pin at most 12 pieces.",
+      "notAllowed": "You're not allowed to do that.",
+      "generic": "Something went wrong, please try again."
+    }
   }
 }

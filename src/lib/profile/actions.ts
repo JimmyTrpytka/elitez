@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { parseSocialFields } from "@/lib/social-links";
 import { isSupportedCountry } from "@/lib/countries";
 import { AVATARS_BUCKET } from "@/lib/storage";
+import { CREATOR_SKILLS } from "@/lib/portfolio/skills";
 import {
   LIMITS,
   emptyToNull,
@@ -53,6 +54,8 @@ export async function updateProfile(
     return { status: "error", error: "countryInvalid" };
   const social = parseSocialFields(formData);
   if (!social.ok) return { status: "error", error: "socialInvalid", field: social.field };
+  const isCreator = formData.get("is_creator") === "on";
+  const creatorSkills = CREATOR_SKILLS.filter((k) => formData.getAll("creator_skills").includes(k));
 
   const supabase = await createClient();
   if (!supabase) return { status: "error", error: "generic" };
@@ -68,6 +71,8 @@ export async function updateProfile(
       bio,
       country,
       visibility,
+      is_creator: isCreator,
+      creator_skills: isCreator ? creatorSkills : [],
       ...social.values,
     })
     .eq("id", auth.user.id);

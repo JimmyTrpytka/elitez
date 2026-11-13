@@ -6,6 +6,7 @@ import { getMyProfile } from "@/lib/data/profiles";
 import { PageShell } from "@/components/page-shell";
 import { AvatarUploader } from "@/components/profile/avatar-uploader";
 import { ProfileForm } from "@/components/profile/profile-form";
+import { CoverUploader } from "@/components/profile/cover-uploader";
 import { textLinkClass } from "@/components/auth/auth-shell";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,6 +54,10 @@ async function EditProfileContent() {
         />
       </section>
       <section>
+        <h2 className="mb-4 text-lg font-semibold">{t("coverTitle")}</h2>
+        <CoverUploader userId={profile.id} coverUrl={profile.coverUrl} />
+      </section>
+      <section>
         <h2 className="mb-4 text-lg font-semibold">{t("detailsTitle")}</h2>
         <ProfileForm
           values={{
@@ -62,6 +67,8 @@ async function EditProfileContent() {
             city: profile.city ?? "",
             bio: profile.bio ?? "",
             visibility: profile.visibility,
+            is_creator: profile.is_creator,
+            creator_skills: profile.creator_skills,
             social: {
               website_url: profile.website_url,
               instagram_url: profile.instagram_url,

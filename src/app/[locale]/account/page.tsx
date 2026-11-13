@@ -21,6 +21,7 @@ import {
   SettingsIcon,
   ShieldIcon,
   SparkleIcon,
+  CameraIcon,
   TrophyIcon,
   UserIcon,
 } from "@/components/icons";
@@ -270,6 +271,15 @@ async function AccountContent() {
       <section>
         <h2 className="mb-4 text-xs font-semibold tracking-[0.2em] text-subtle uppercase">{tA("sectionMine")}</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {profile.is_creator ? (
+            <Tile
+              href="/portfolio"
+              icon={<CameraIcon className={icon} />}
+              title={tA("portfolio")}
+              meta={tA("portfolioMeta")}
+              dark
+            />
+          ) : null}
           <Tile
             href="/garage"
             icon={<CarIcon className={icon} />}

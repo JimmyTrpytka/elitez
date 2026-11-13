@@ -78,3 +78,21 @@ export const CREW_IMAGES_BUCKET = "crew-images";
 export function crewImagePath(crewId: string, key: string, size: PhotoSize, format: string): string {
   return `${crewId}/${key}-${size}.${format}`;
 }
+
+export const PROFILE_MEDIA_BUCKET = "profile-media";
+
+/** Úvodní (cover) fotka profilu: `{user_id}/cover/{key}-{velikost}.{format}`. */
+export function profileCoverPath(userId: string, key: string, size: PhotoSize, format: string): string {
+  return `${userId}/cover/${key}-${size}.${format}`;
+}
+
+/** Fotka / náhled v portfoliu: `{user_id}/portfolio/{item_id}/{key}-{velikost}.{format}`. */
+export function portfolioPath(
+  userId: string,
+  itemId: string,
+  key: string,
+  size: PhotoSize,
+  format: string,
+): string {
+  return `${userId}/portfolio/${itemId}/${key}-${size}.${format}`;
+}

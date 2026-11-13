@@ -15,6 +15,7 @@ import { countryOptions } from "@/lib/countries";
 import { updateProfile, type ProfileFormState } from "@/lib/profile/actions";
 import { LIMITS } from "@/lib/validation";
 import { SocialFields } from "@/components/social/social-fields";
+import { CreatorFields } from "@/components/profile/creator-fields";
 
 export type ProfileFormValues = {
   username: string;
@@ -23,6 +24,8 @@ export type ProfileFormValues = {
   city: string;
   bio: string;
   visibility: "public" | "private";
+  is_creator: boolean;
+  creator_skills: string[];
   social: Partial<Record<"website_url" | "instagram_url" | "tiktok_url" | "youtube_url" | "facebook_url", string | null>>;
 };
 
@@ -109,6 +112,7 @@ export function ProfileForm({ values }: { values: ProfileFormValues }) {
         defaultValue={values.bio}
         hint={t("bioHint", { max: LIMITS.bio })}
       />
+      <CreatorFields initialCreator={values.is_creator} initialSkills={values.creator_skills} />
       <SocialFields values={values.social} errorField={errField} errorMessage={errMessage} />
       <ChoiceCards
         legend={t("visibilityLabel")}

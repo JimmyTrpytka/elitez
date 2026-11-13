@@ -149,3 +149,10 @@ Vlastník projektu **není programátor**. Proto:
 - Smazání pořadatele: `delete_organizer` (vlastník/správce crew/admin, jen bez eventů); logo maže server admin klíčem (pravidla úložiště to po smazání už nedovolí). UI dole v `/organizer/profile`.
 - Mazání potvrzuj přímo na stránce (dvoukrokové tlačítko), ne `window.confirm` – mobilní prohlížeče v aplikacích a PWA ho umí potichu blokovat (sen se na mobilu nedal smazat).
 - Patička a `/register` hlídají přihlášení (přihlášený nevidí „Přidat se ke klubu“, z registrace jde do `/account`).
+
+## Technické poznámky (CREATOR – část 1)
+- `profiles.is_creator`, `creator_skills` (photo/video/drone), `cover_key`/`cover_format`. Cover: `CoverUploader`, akce `setProfileCover` (`src/lib/portfolio/actions.ts`).
+- Portfolio: tabulka `portfolio_items` (fotka nebo video odkazem; přidat smí jen Creator – RLS), limity triggerem (300 prací, 12 připíchnutých). Uživatel mění jen popisek, připíchnutí a náhled (sloupcová práva).
+- Úložiště `profile-media` (soukromé): `{user_id}/cover/…` a `{user_id}/portfolio/{item_id}/{key}-{size}.{format}`; čtení = profil je vidět.
+- Videa: `src/lib/portfolio/video.ts` (`parseVideoUrl`, `videoEmbed`, testy) – YouTube (nocookie), Instagram, TikTok, Vimeo; krátké odkazy vm.tiktok.com jen ven. Přehrávač až po klepnutí (`PortfolioGallery`).
+- Data `listPortfolio(owner, "featured" | "archive" | "all")` (`src/lib/data/portfolio.ts`), prvních 12 = profil. Nahrávání více velikostí: `uploadVariants` (`src/lib/images/upload-variants.ts`).
