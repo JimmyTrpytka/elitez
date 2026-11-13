@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { VehicleCreatorPhotos } from "@/components/gallery/vehicle-creator-photos";
 import type { Metadata } from "next";
 import { Translatable, TText } from "@/components/translate/translatable";
 import { needsTranslation } from "@/lib/translate/language";
@@ -203,6 +204,9 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           </section>
         ) : null}
         </Translatable>
+        <Suspense fallback={null}>
+          <VehicleCreatorPhotos vehicleId={vehicle.id} alt={`${vehicle.make} ${vehicle.model}`} isOwner={isOwner} />
+        </Suspense>
       </HeroGallery>
     </article>
   );

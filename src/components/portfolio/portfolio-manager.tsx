@@ -20,11 +20,21 @@ import type { UploadErrorKind } from "@/lib/images/upload-error";
 import { PROFILE_MEDIA_BUCKET, portfolioPath } from "@/lib/storage";
 import { cn } from "@/lib/cn";
 import { VideoProviderIcon } from "./video-provider-icon";
+import { TagEditor } from "./tag-editor";
 
 const FEATURED = 12;
 
 /** Správa portfolia: nahrání fotek, videa odkazem, připíchnutí, popisky, mazání. */
-export function PortfolioManager({ userId, items }: { userId: string; items: PortfolioItemView[] }) {
+export function PortfolioManager({
+  userId,
+  items,
+  mediaEvents,
+}: {
+  userId: string;
+  items: PortfolioItemView[];
+  /** Eventy, kde jsem schválený jako média (pro označení) */
+  mediaEvents: Array<{ id: string; title: string }>;
+}) {
   const t = useTranslations("Portfolio");
   const tUpload = useTranslations("Upload");
   const tPhotos = useTranslations("Photos");
@@ -185,6 +195,7 @@ export function PortfolioManager({ userId, items }: { userId: string; items: Por
                 item={item}
                 userId={userId}
                 featured={index < FEATURED}
+                mediaEvents={mediaEvents}
                 disabled={pending}
                 onPin={() => run(() => updatePortfolioItem({ id: item.id, pinned: !item.pinned }))}
                 onCaption={(caption) => run(() => updatePortfolioItem({ id: item.id, caption }))}
@@ -202,6 +213,7 @@ function ManagedItem({
   item,
   userId,
   featured,
+  mediaEvents,
   disabled,
   onPin,
   onCaption,
@@ -210,6 +222,7 @@ function ManagedItem({
   item: PortfolioItemView;
   userId: string;
   featured: boolean;
+  mediaEvents: Array<{ id: string; title: string }>;
   disabled: boolean;
   onPin: () => void;
   onCaption: (caption: string) => void;
@@ -289,6 +302,7 @@ function ManagedItem({
           }}
           className="h-10 w-full rounded-control border border-line px-3 text-sm text-ink placeholder:text-subtle focus:border-ink focus:outline-none"
         />
+        {item.tags ? <TagEditor itemId={item.id} tags={item.tags} mediaEvents={mediaEvents} /> : null}
         {thumbError ? <p className="text-sm text-danger">{tUpload(thumbError)}</p> : null}
         {confirming ? (
           <div className="flex flex-wrap items-center gap-2">

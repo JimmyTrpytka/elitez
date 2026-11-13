@@ -923,6 +923,10 @@
       "cohost_accepted": {
         "title": "Spolupořádání potvrzeno",
         "text": "{event}: {organizer} × {cohost} – event je teď vidět u obou pořadatelů."
+      },
+      "vehicle_tagged": {
+        "title": "Tvoje {vehicle} na fotce!",
+        "text": "{who} označil(a) tvoje {vehicle} na fotce ve svém portfoliu. Najdeš ji u auta v sekci Fotky od creatorů."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1660,8 +1664,20 @@
       "portfolioLimit": "Portfolio může mít nejvýš 300 prací. Smaž prosím nějaké starší.",
       "pinLimit": "Připíchnout jde nejvýš 12 prací.",
       "notAllowed": "Na tohle nemáš oprávnění.",
-      "generic": "Něco se nepovedlo, zkus to prosím znovu."
-    }
+      "generic": "Něco se nepovedlo, zkus to prosím znovu.",
+      "notEventMedia": "Eventem můžeš označit jen akci, kde jsi schválený/á jako média.",
+      "vehicleUnavailable": "Tohle auto označit nejde (není veřejné)."
+    },
+    "tagsAdd": "Označit event / auto",
+    "tagsEdit": "Upravit označení",
+    "tagEventLabel": "Event (kde jsi fotil/a jako média)",
+    "tagNone": "Bez eventu",
+    "tagEventHint": "Eventem jde označit jen akce, kde tě pořadatel schválil jako média.",
+    "tagVehicleLabel": "Auto na fotce",
+    "tagOwnerLabel": "Uživatelské jméno majitele",
+    "tagFind": "Najít auta",
+    "tagNoVehicles": "Tento člen nemá žádné veřejné auto (nebo neexistuje).",
+    "tagRemove": "Odebrat"
   },
   "Media": {
     "title": "Média",
@@ -1790,5 +1806,29 @@
     "already_requested": "Žádost nebo pozvánka už čeká na potvrzení.",
     "not_pending": "Tahle žádost už není aktuální.",
     "generic": "Něco se nepovedlo, zkus to prosím znovu."
+  },
+  "Gallery": {
+    "title": "Galerie",
+    "count": "{count, plural, one {# fotka} few {# fotky} other {# fotek}} z akce",
+    "managerTitle": "Galerie",
+    "managerIntro": "Nahraj fotky z akce – ukážou se na stránce eventu. Fotky a videa schválených médií se sem přidají samy (když je označí eventem); kterékoli můžeš skrýt.",
+    "addPhotos": "Nahrát fotky",
+    "uploadingProgress": "Nahrávám {done} / {total}…",
+    "organizerPhotos": "Tvoje fotky ({count})",
+    "mediaWorks": "Od médií ({count})",
+    "delete": "Smazat",
+    "deleteYes": "Opravdu smazat",
+    "hide": "Skrýt",
+    "show": "Znovu ukázat",
+    "vehicleTitle": "Fotky od creatorů",
+    "vehicleIntro": "Fotografové a kameramani klubu, kteří toto auto zachytili.",
+    "ownerUntagHint": "Nechceš některou fotku u svého auta? Označení můžeš odebrat (fotka zůstane v portfoliu autora).",
+    "untag": "Odebrat označení",
+    "untagYes": "Ano, odebrat",
+    "errors": {
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "galleryLimit": "Galerie může mít nejvýš 300 fotek.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    }
   }
 }

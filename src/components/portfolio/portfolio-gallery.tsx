@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Lightbox, type LightboxPhoto } from "@/components/lightbox";
 import { CloseIcon } from "@/components/icons";
+import { Link } from "@/i18n/navigation";
 import type { PortfolioItemView } from "@/lib/data/portfolio";
 import { cn } from "@/lib/cn";
 import { VideoProviderIcon } from "./video-provider-icon";
@@ -70,6 +71,14 @@ export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; a
             </button>
             {item.caption ? (
               <p className="mt-1.5 line-clamp-2 text-sm text-night-subtle">{item.caption}</p>
+            ) : null}
+            {item.credit ? (
+              <Link
+                href={`/u/${item.credit.username}#portfolio`}
+                className="mt-1 inline-block text-xs font-semibold text-white/80 underline decoration-accent decoration-2 underline-offset-4"
+              >
+                📸 {item.credit.name}
+              </Link>
             ) : null}
           </li>
         ))}

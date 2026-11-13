@@ -173,3 +173,8 @@ Vlastník projektu **není programátor**. Proto:
 - Spolupořadatel nemá žádná práva na správu eventu (`my_organizer_ids` ani `is_event_organizer` se nemění). Potvrzené řádky čte kdokoli, kdo vidí event.
 - Upozornění: `cohost_request` / `cohost_invite` / `cohost_accepted` správcům (`organizer_manager_ids`), po potvrzení `notify_cohost_audience` (sledující + členové crew, bez duplicit).
 - UI: `src/components/cohosts/` – `HostCohostPanel` (správa eventu), `EventCohostBox` (detail eventu pro správce jiných pořadatelů), `MyCohosting` (sekce v `/organizer`). Profil pořadatele zahrnuje i spolupořádané eventy (`listPublicEvents(organizerId)`).
+
+## Technické poznámky (CREATOR 3a – galerie eventu, označení)
+- `portfolio_items.event_id` / `vehicle_id` (creator mění sám), `hidden_in_event` (jen pořadatel funkcí `set_event_photo_hidden`). Trigger `portfolio_items_check_tags`: event jen se schválenou akreditací (`not_event_media`), auto jen veřejné (`vehicle_unavailable`); `portfolio_items_notify_tag` → upozornění `vehicle_tagged`. Majitel auta odebírá `untag_vehicle_photo`.
+- Fotky pořadatele: tabulka `event_photos` (RLS: zápis/mazání jen pořadatel eventu, čtení kdo vidí event, limit 300), úložiště `event-gallery` `{event_id}/{photo_id}/{key}-{size}.{format}`.
+- Čtení: `event_media_works` (práce médií v galerii, skryté vidí jen pořadatel; pomocná `event_is_visible`), `vehicle_creator_works`. Data `src/lib/data/gallery.ts`, akce `src/lib/gallery/actions.ts`, UI `src/components/gallery/` + `TagEditor` v portfoliu. `PortfolioGallery` umí autora (`credit`).

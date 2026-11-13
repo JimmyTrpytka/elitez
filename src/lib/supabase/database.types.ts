@@ -479,6 +479,57 @@ export type Database = {
           },
         ]
       }
+      event_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          event_id: string
+          height: number | null
+          id: string
+          photo_format: string
+          photo_key: string
+          uploaded_by: string | null
+          width: number | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          event_id: string
+          height?: number | null
+          id?: string
+          photo_format: string
+          photo_key: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          event_id?: string
+          height?: number | null
+          id?: string
+          photo_format?: string
+          photo_key?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_photos_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_photos_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -1083,13 +1134,16 @@ export type Database = {
         Row: {
           caption: string | null
           created_at: string
+          event_id: string | null
           height: number | null
+          hidden_in_event: boolean
           id: string
           kind: string
           owner_id: string
           photo_format: string | null
           photo_key: string | null
           pinned: boolean
+          vehicle_id: string | null
           video_provider: string | null
           video_url: string | null
           width: number | null
@@ -1097,13 +1151,16 @@ export type Database = {
         Insert: {
           caption?: string | null
           created_at?: string
+          event_id?: string | null
           height?: number | null
+          hidden_in_event?: boolean
           id?: string
           kind: string
           owner_id?: string
           photo_format?: string | null
           photo_key?: string | null
           pinned?: boolean
+          vehicle_id?: string | null
           video_provider?: string | null
           video_url?: string | null
           width?: number | null
@@ -1111,23 +1168,40 @@ export type Database = {
         Update: {
           caption?: string | null
           created_at?: string
+          event_id?: string | null
           height?: number | null
+          hidden_in_event?: boolean
           id?: string
           kind?: string
           owner_id?: string
           photo_format?: string | null
           photo_key?: string | null
           pinned?: boolean
+          vehicle_id?: string | null
           video_provider?: string | null
           video_url?: string | null
           width?: number | null
         }
         Relationships: [
           {
+            foreignKeyName: "portfolio_items_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "portfolio_items_owner_id_fkey"
             columns: ["owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "portfolio_items_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
         ]
@@ -1913,6 +1987,7 @@ export type Database = {
         Returns: string[]
       }
       event_email_queue_count: { Args: { p_event_id: string }; Returns: number }
+      event_is_visible: { Args: { p_event_id: string }; Returns: boolean }
       event_media_list: {
         Args: { p_event_id: string }
         Returns: {
@@ -1921,6 +1996,23 @@ export type Database = {
           skills: string[]
           user_id: string
           username: string
+        }[]
+      }
+      event_media_works: {
+        Args: { p_event_id: string }
+        Returns: {
+          caption: string
+          created_at: string
+          display_name: string
+          hidden: boolean
+          id: string
+          kind: string
+          owner_id: string
+          photo_format: string
+          photo_key: string
+          username: string
+          video_provider: string
+          video_url: string
         }[]
       }
       fail_email: {
@@ -2261,6 +2353,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      set_event_photo_hidden: {
+        Args: { p_hidden: boolean; p_item_id: string }
+        Returns: undefined
+      }
       set_home_crew: { Args: { p_crew_id: string }; Returns: undefined }
       similar_crews: {
         Args: { p_name: string }
@@ -2319,7 +2415,24 @@ export type Database = {
         Args: { p_event_id: string; p_user?: string }
         Returns: undefined
       }
+      untag_vehicle_photo: { Args: { p_item_id: string }; Returns: undefined }
       user_streak: { Args: { p_user: string }; Returns: number }
+      vehicle_creator_works: {
+        Args: { p_vehicle_id: string }
+        Returns: {
+          caption: string
+          created_at: string
+          display_name: string
+          id: string
+          kind: string
+          owner_id: string
+          photo_format: string
+          photo_key: string
+          username: string
+          video_provider: string
+          video_url: string
+        }[]
+      }
       vehicle_has_event_history: {
         Args: { p_vehicle_id: string }
         Returns: boolean
@@ -2396,6 +2509,7 @@ export type Database = {
         | "cohost_request"
         | "cohost_invite"
         | "cohost_accepted"
+        | "vehicle_tagged"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2606,6 +2720,7 @@ export const Constants = {
         "cohost_request",
         "cohost_invite",
         "cohost_accepted",
+        "vehicle_tagged",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

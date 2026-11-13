@@ -14,6 +14,8 @@ export type PortfolioError =
   | "captionTooLong"
   | "portfolioLimit"
   | "pinLimit"
+  | "notEventMedia"
+  | "vehicleUnavailable"
   | "notAllowed"
   | "generic";
 
@@ -29,6 +31,8 @@ async function requireUser() {
 function toError(message: string | undefined): PortfolioResult {
   if (message === "portfolio_limit") return { ok: false, error: "portfolioLimit" };
   if (message === "pin_limit") return { ok: false, error: "pinLimit" };
+  if (message === "not_event_media") return { ok: false, error: "notEventMedia" };
+  if (message === "vehicle_unavailable") return { ok: false, error: "vehicleUnavailable" };
   if (message?.includes("row-level security")) return { ok: false, error: "notCreator" };
   return { ok: false, error: "generic" };
 }
@@ -221,4 +225,51 @@ export async function deletePortfolioItem(id: string): Promise<PortfolioResult> 
   }
   refresh();
   return { ok: true };
+}
+
+/** Označení práce: event (jen se schválenou akreditací) a auto (jen veřejné). */
+export async function setPortfolioTags(input: {
+  id: string;
+  eventId: string | null;
+  vehicleId: string | null;
+}): Promise<PortfolioResult> {
+  const ctx = await requireUser();
+  if (!ctx || !UUID.test(input.id)) return { ok: false, error: "notAllowed" };
+  if (input.eventId && !UUID.test(input.eventId)) return { ok: false, error: "notAllowed" };
+  if (input.vehicleId && !UUID.test(input.vehicleId)) return { ok: false, error: "notAllowed" };
+  const { data, error } = await ctx.supabase
+    .from("portfolio_items")
+    .update({ event_id: input.eventId, vehicle_id: input.vehicleId })
+    .eq("id", input.id)
+    .eq("owner_id", ctx.userId)
+    .select("id");
+  if (error) return toError(error.message);
+  if (!data?.length) return { ok: false, error: "notAllowed" };
+  refresh();
+  return { ok: true };
+}
+
+/** Veřejná auta člena podle uživatelského jména (pro označení na fotce). */
+export async function listMemberVehicles(
+  username: string,
+): Promise<Array<{ id: string; name: string }>> {
+  const clean = username.trim().replace(/^@/, "").toLowerCase();
+  if (!/^[a-z0-9._]{3,30}$/.test(clean)) return [];
+  const supabase = await createClient();
+  if (!supabase) return [];
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("username", clean)
+    .eq("visibility", "public")
+    .maybeSingle();
+  if (!profile) return [];
+  const { data } = await supabase
+    .from("vehicles")
+    .select("id, make, model, year")
+    .eq("owner_id", profile.id)
+    .eq("visibility", "public")
+    .order("created_at", { ascending: false })
+    .limit(50);
+  return (data ?? []).map((v) => ({ id: v.id, name: `${v.make} ${v.model}${v.year ? ` (${v.year})` : ""}` }));
 }

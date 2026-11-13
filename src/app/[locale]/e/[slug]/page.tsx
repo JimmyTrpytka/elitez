@@ -17,6 +17,7 @@ import { RegistrationBox } from "@/components/registrations/registration-box";
 import { MediaSection } from "@/components/media/media-section";
 import { listEventCohosts } from "@/lib/data/cohosts";
 import { EventCohostBox } from "@/components/cohosts/event-cohost-box";
+import { EventGallerySection } from "@/components/gallery/event-gallery-section";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { DisplayHeading } from "@/components/brand";
@@ -232,6 +233,10 @@ async function EventDetail({
 
         <Suspense fallback={null}>
           <MediaSection event={event} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <EventGallerySection eventId={event.id} title={event.title} />
         </Suspense>
 
         <TextBlock title={t("program")} text={texts.program} />
