@@ -859,6 +859,14 @@
       "crew_organizer_approved": {
         "title": "Tvoje crew může pořádat srazy!",
         "text": "Crew „{crew}“ teď může zakládat vlastní srazy – i jen pro členy. Najdeš je v sekci Pořadatel."
+      },
+      "organizer_member_added": {
+        "title": "Jsi spolupořadatel: {organizer}",
+        "text": "Můžeš zakládat a upravovat eventy pořadatele {organizer}. Najdeš je v sekci Pořadatel."
+      },
+      "crew_admin_added": {
+        "title": "Jsi správce crew",
+        "text": "V crew „{crew}“ teď můžeš schvalovat členy, upravovat crew a spravovat její srazy."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1312,6 +1320,24 @@
       "urlInvalid": "Tohle nevypadá jako odkaz (např. instagram.com/vas-profil).",
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    },
+    "coTitle": "Spolupořadatelé",
+    "coIntro": "Spolupořadatelé zakládají a upravují eventy tohoto pořadatele, schvalují přihlášky a posílají zprávy. Další lidi přidávat nemůžou.",
+    "coEmpty": "Zatím žádní spolupořadatelé.",
+    "coUsernameLabel": "Uživatelské jméno",
+    "coUsernamePlaceholder": "@uzivatelske.jmeno",
+    "coAdd": "Přidat spolupořadatele",
+    "coAdded": "@{username} je teď spolupořadatel.",
+    "coRemove": "Odebrat",
+    "coLeave": "Odejít",
+    "coRemoveConfirm": "Odebrat tohoto spolupořadatele?",
+    "coLeaveConfirm": "Opravdu přestat být spolupořadatelem?",
+    "coErrors": {
+      "notAllowed": "Spolupořadatele může přidávat jen vlastník pořadatele.",
+      "userNotFound": "Člena s tímhle uživatelským jménem jsme nenašli.",
+      "alreadyMember": "Tenhle člověk už pořadatele spravuje.",
+      "limit": "Pořadatel může mít nejvýš 20 spolupořadatelů.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
   },
   "Crews": {
@@ -1431,7 +1457,9 @@
     "manageMeets": "Spravovat srazy crew",
     "meetsTitle": "Srazy",
     "meetsNone": "Teď nic naplánovaného.",
-    "meetsPast": "Proběhlé srazy"
+    "meetsPast": "Proběhlé srazy",
+    "makeAdmin": "Udělat správcem",
+    "revokeAdmin": "Odvolat správce"
   },
   "AdminCrews": {
     "title": "Crew ke schválení",

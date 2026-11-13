@@ -859,6 +859,14 @@
       "crew_organizer_approved": {
         "title": "Your crew can host meets!",
         "text": "The crew “{crew}” can now create its own meets – even members-only. Find them under Organizer."
+      },
+      "organizer_member_added": {
+        "title": "You're a co-organizer: {organizer}",
+        "text": "You can now create and edit events for {organizer}. Find them under Organizer."
+      },
+      "crew_admin_added": {
+        "title": "You're a crew admin",
+        "text": "In the crew “{crew}” you can now approve members, edit the crew and manage its meets."
       }
     },
     "openVehicle": "View car",
@@ -1312,6 +1320,24 @@
       "urlInvalid": "This doesn't look like a link (e.g. instagram.com/your-profile).",
       "notAllowed": "You are not allowed to do that.",
       "generic": "Something went wrong, please try again."
+    },
+    "coTitle": "Co-organizers",
+    "coIntro": "Co-organizers create and edit this organizer's events, approve registrations and send messages. They can't add other people.",
+    "coEmpty": "No co-organizers yet.",
+    "coUsernameLabel": "Username",
+    "coUsernamePlaceholder": "@username",
+    "coAdd": "Add co-organizer",
+    "coAdded": "@{username} is now a co-organizer.",
+    "coRemove": "Remove",
+    "coLeave": "Leave",
+    "coRemoveConfirm": "Remove this co-organizer?",
+    "coLeaveConfirm": "Really stop being a co-organizer?",
+    "coErrors": {
+      "notAllowed": "Only the organizer's owner can add co-organizers.",
+      "userNotFound": "We couldn't find a member with this username.",
+      "alreadyMember": "This person already manages the organizer.",
+      "limit": "An organizer can have at most 20 co-organizers.",
+      "generic": "Something went wrong, please try again."
     }
   },
   "Crews": {
@@ -1431,7 +1457,9 @@
     "manageMeets": "Manage crew meets",
     "meetsTitle": "Meets",
     "meetsNone": "Nothing planned right now.",
-    "meetsPast": "Past meets"
+    "meetsPast": "Past meets",
+    "makeAdmin": "Make admin",
+    "revokeAdmin": "Remove admin"
   },
   "AdminCrews": {
     "title": "Crews to review",

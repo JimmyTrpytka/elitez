@@ -118,3 +118,38 @@ export async function removeOrganizerLogo(): Promise<{ ok: boolean }> {
   revalidatePath("/", "layout");
   return { ok: true };
 }
+
+export type CoOrganizerResult = { ok: true } | { ok: false; error: "notAllowed" | "userNotFound" | "alreadyMember" | "limit" | "generic" };
+
+function coError(message: string | undefined): CoOrganizerResult {
+  if (message === "not_allowed") return { ok: false, error: "notAllowed" };
+  if (message === "user_not_found") return { ok: false, error: "userNotFound" };
+  if (message === "already_member") return { ok: false, error: "alreadyMember" };
+  if (message === "member_limit") return { ok: false, error: "limit" };
+  return { ok: false, error: "generic" };
+}
+
+/** Přidá spolupořadatele (podle uživatelského jména) k právě spravovanému pořadateli. */
+export async function addCoOrganizer(username: string): Promise<CoOrganizerResult> {
+  const clean = username.trim().replace(/^@/, "").toLowerCase();
+  if (!/^[a-z0-9._]{3,30}$/.test(clean)) return { ok: false, error: "userNotFound" };
+  const supabase = await createClient();
+  const id = await getCurrentOrganizerId();
+  if (!supabase || !id) return { ok: false, error: "notAllowed" };
+  const { error } = await supabase.rpc("add_organizer_member", { p_organizer_id: id, p_username: clean });
+  if (error) return coError(error.message);
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/** Odebere spolupořadatele (vlastník), nebo odejde sám. */
+export async function removeCoOrganizer(userId: string): Promise<CoOrganizerResult> {
+  if (!UUID.test(userId)) return { ok: false, error: "notAllowed" };
+  const supabase = await createClient();
+  const id = await getCurrentOrganizerId();
+  if (!supabase || !id) return { ok: false, error: "notAllowed" };
+  const { error } = await supabase.rpc("remove_organizer_member", { p_organizer_id: id, p_user_id: userId });
+  if (error) return coError(error.message);
+  revalidatePath("/", "layout");
+  return { ok: true };
+}

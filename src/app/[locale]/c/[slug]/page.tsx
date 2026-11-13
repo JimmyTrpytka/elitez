@@ -247,8 +247,14 @@ async function CrewDetail({ params, searchParams }: PageProps<"/[locale]/c/[slug
                       </span>
                     </span>
                   </Link>
-                  {isManager && m.role === "member" ? (
-                    <CrewMemberAdmin crewId={crew.id} userId={m.userId} status="active" />
+                  {isManager && m.role !== "founder" && (m.role === "member" || crew.stats.myRole === "founder") ? (
+                    <CrewMemberAdmin
+                      crewId={crew.id}
+                      userId={m.userId}
+                      status="active"
+                      role={m.role}
+                      canSetRole={crew.stats.myRole === "founder"}
+                    />
                   ) : null}
                 </li>
               ))}

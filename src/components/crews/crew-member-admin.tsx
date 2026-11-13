@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { decideCrewMember } from "@/lib/crews/actions";
+import { decideCrewMember, setCrewMemberRole } from "@/lib/crews/actions";
 import { Button } from "@/components/ui/button";
 
 /** Tlačítka správce u člena / žádosti: Přijmout, Zamítnout, Odebrat. */
@@ -11,10 +11,15 @@ export function CrewMemberAdmin({
   crewId,
   userId,
   status,
+  role = "member",
+  canSetRole = false,
 }: {
   crewId: string;
   userId: string;
   status: "pending" | "active";
+  role?: "founder" | "admin" | "member";
+  /** Zakladatel smí jmenovat / odvolat správce */
+  canSetRole?: boolean;
 }) {
   const t = useTranslations("Crews");
   const router = useRouter();
@@ -43,6 +48,23 @@ export function CrewMemberAdmin({
           </Button>
         </>
       ) : (
+        <>
+        {canSetRole ? (
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() =>
+              startTransition(async () => {
+                const res = await setCrewMemberRole(crewId, userId, role === "admin" ? "member" : "admin");
+                if (!res.ok) setFailed(true);
+                router.refresh();
+              })
+            }
+            className="text-xs font-semibold text-accent underline hover:text-white"
+          >
+            {role === "admin" ? t("revokeAdmin") : t("makeAdmin")}
+          </button>
+        ) : null}
         <button
           type="button"
           disabled={pending}
@@ -51,6 +73,7 @@ export function CrewMemberAdmin({
         >
           {t("remove")}
         </button>
+        </>
       )}
       {failed ? <span className="text-xs text-accent">{t("errors.generic")}</span> : null}
     </div>

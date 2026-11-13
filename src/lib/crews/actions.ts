@@ -240,3 +240,14 @@ export async function adminSetCrewOrganizer(crewId: string, enabled: boolean): P
   refresh();
   return { ok: true };
 }
+
+/** Zakladatel jmenuje / odvolá správce crew. */
+export async function setCrewMemberRole(crewId: string, userId: string, role: "admin" | "member"): Promise<CrewResult> {
+  if (!UUID.test(crewId) || !UUID.test(userId)) return { ok: false, error: "notAllowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("set_crew_member_role", { p_crew_id: crewId, p_user_id: userId, p_role: role });
+  if (error) return { ok: false, error: toError(error.message) };
+  refresh();
+  return { ok: true };
+}

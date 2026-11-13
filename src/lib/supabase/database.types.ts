@@ -803,6 +803,49 @@ export type Database = {
           },
         ]
       }
+      organizer_members: {
+        Row: {
+          added_by: string | null
+          created_at: string
+          organizer_id: string
+          user_id: string
+        }
+        Insert: {
+          added_by?: string | null
+          created_at?: string
+          organizer_id: string
+          user_id: string
+        }
+        Update: {
+          added_by?: string | null
+          created_at?: string
+          organizer_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizer_members_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organizer_members_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organizer_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizers: {
         Row: {
           created_at: string
@@ -1275,6 +1318,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_organizer_member: {
+        Args: { p_organizer_id: string; p_username: string }
+        Returns: undefined
+      }
       admin_award_badge: {
         Args: {
           p_code: string
@@ -1560,6 +1607,7 @@ export type Database = {
         Args: { p_organizer_id: string; p_user?: string }
         Returns: boolean
       }
+      is_organizer_owner: { Args: { p_organizer_id: string }; Returns: boolean }
       is_registration_organizer: {
         Args: { p_registration_id: string }
         Returns: boolean
@@ -1632,6 +1680,16 @@ export type Database = {
       organizer_event_payload: {
         Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
         Returns: Json
+      }
+      organizer_member_list: {
+        Args: { p_organizer_id: string }
+        Returns: {
+          avatar_path: string
+          created_at: string
+          display_name: string
+          user_id: string
+          username: string
+        }[]
       }
       organizer_social_stats: {
         Args: { p_organizer_id: string }
@@ -1757,6 +1815,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      remove_organizer_member: {
+        Args: { p_organizer_id: string; p_user_id: string }
+        Returns: undefined
+      }
       request_crew_organizer: {
         Args: { p_crew_id: string }
         Returns: undefined
@@ -1799,6 +1861,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      set_crew_member_role: {
+        Args: {
+          p_crew_id: string
+          p_role: Database["public"]["Enums"]["crew_role"]
+          p_user_id: string
+        }
+        Returns: undefined
       }
       set_home_crew: { Args: { p_crew_id: string }; Returns: undefined }
       similar_crews: {
@@ -1928,6 +1998,8 @@ export type Database = {
         | "crew_member_approved"
         | "crew_organizer_request"
         | "crew_organizer_approved"
+        | "organizer_member_added"
+        | "crew_admin_added"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2131,6 +2203,8 @@ export const Constants = {
         "crew_member_approved",
         "crew_organizer_request",
         "crew_organizer_approved",
+        "organizer_member_added",
+        "crew_admin_added",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [
