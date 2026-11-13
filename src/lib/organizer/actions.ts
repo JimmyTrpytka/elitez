@@ -163,6 +163,7 @@ export type EventErrorKey =
   | "countryInvalid"
   | "tooLong"
   | "socialInvalid"
+  | "mediaCapacityInvalid"
   | "notAllowed"
   | "generic";
 
@@ -236,6 +237,10 @@ export async function saveEvent(
   if (seasonId && !UUID.test(seasonId)) return { status: "error", error: "notAllowed" };
   const social = parseSocialFields(formData);
   if (!social.ok) return { status: "error", error: "socialInvalid", field: social.field };
+  const mediaEnabled = formData.get("media_enabled") === "on";
+  const mediaLimited = mediaEnabled && text(formData, "media_limit") === "limited";
+  const mediaCapacity = mediaLimited ? parseIntInRange(text(formData, "media_capacity"), 1, 500) : null;
+  if (mediaLimited && !mediaCapacity) return { status: "error", error: "mediaCapacityInvalid" };
 
   const ctx = await requireOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
@@ -266,6 +271,8 @@ export async function saveEvent(
     registration_closes_at: closesAt,
     ...longTexts,
     ...social.values,
+    media_enabled: mediaEnabled,
+    media_capacity: mediaCapacity ?? null,
   };
 
   let eventId = id;

@@ -625,10 +625,20 @@
       "notAllowed": "Nemáš oprávnění upravovat tento event.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
       "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku).",
-      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno.",
+      "mediaCapacityInvalid": "Zadej počet míst pro média (1–500), nebo zvol Neomezeně."
     },
     "closesHint": "Nepovinné. Bez uzávěrky se lze hlásit až do začátku eventu.",
-    "opensHint": "Bez data se zatím nikdo přihlásit nemůže."
+    "opensHint": "Bez data se zatím nikdo přihlásit nemůže.",
+    "mediaTitle": "Média (fotografové a kameramani)",
+    "mediaEnabledLabel": "Přijímáme média",
+    "mediaEnabledHint": "Creatoři (fotografové, kameramani, tvůrci reels) se na event můžou přihlásit jako média. Žádosti schvaluješ ty a schválení se ukážou na stránce eventu.",
+    "mediaLimitLegend": "Počet míst pro média",
+    "mediaLimit": {
+      "unlimited": "Neomezeně",
+      "limited": "Omezený počet"
+    },
+    "mediaCapacityLabel": "Kolik médií přijmeš"
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -890,6 +900,14 @@
       "crew_admin_added": {
         "title": "Jsi správce crew",
         "text": "V crew „{crew}“ teď můžeš schvalovat členy, upravovat crew a spravovat její srazy."
+      },
+      "media_approved": {
+        "title": "Akreditace schválena!",
+        "text": "Na {event} jsi schválen(a) jako média. Ukážeš se na stránce eventu."
+      },
+      "media_rejected": {
+        "title": "Akreditace nepřijata",
+        "text": "Žádost o akreditaci médií na {event} tentokrát nebyla přijata."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -910,7 +928,8 @@
     "openCrew": "Zobrazit crew",
     "openCrewReview": "Schválit crew",
     "crewReason": "Důvod: {reason}",
-    "openOrganizer": "Do sekce Pořadatel"
+    "openOrganizer": "Do sekce Pořadatel",
+    "organizerMessage": "Zpráva od pořadatele: {message}"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -1624,5 +1643,80 @@
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
+  },
+  "Media": {
+    "title": "Média",
+    "intro": "Fotí a točí pro nás:",
+    "introEmpty": "Fotíš, natáčíš nebo děláš reels? Přihlas se jako média.",
+    "capacity": "Míst pro média: {count}.",
+    "skills": {
+      "photo": "Foto",
+      "video": "Video",
+      "drone": "Dron"
+    },
+    "notCreatorHint": "Jsi fotograf nebo kameraman? Zapni si v profilu „Jsem Creator“ a můžeš se přihlásit jako média.",
+    "becomeCreator": "Upravit profil",
+    "guestHint": "Fotografové a kameramani se můžou přihlásit jako média.",
+    "login": "Přihlásit se",
+    "cta": "Přihlásit se jako média",
+    "ctaText": "Chceš na eventu fotit nebo točit? Pošli pořadateli žádost o akreditaci.",
+    "formTitle": "Přihláška jako média",
+    "formIntro": "Pořadatel uvidí tvůj profil a portfolio. Kontakt slouží jen pro domluvu k eventu.",
+    "skillsLabel": "Co budeš dělat?",
+    "phoneLabel": "Telefon",
+    "emailLabel": "E-mail",
+    "messageLabel": "Pro koho fotíš / točíš (nepovinné)",
+    "messageHint": "Např. vlastní Instagram, magazín, YouTube kanál, co pořadateli nabízíš.",
+    "consent": "Souhlasím, že pořadatel uvidí můj kontakt a profil kvůli akreditaci.",
+    "submit": "Odeslat žádost",
+    "myRequest": "Moje akreditace",
+    "status": {
+      "pending": "Čeká na schválení",
+      "approved": "Schváleno",
+      "rejected": "Nepřijato",
+      "cancelled": "Zrušeno"
+    },
+    "statusText": {
+      "pending": "Pořadatel tvou žádost ještě neposoudil. Dáme ti vědět.",
+      "approved": "Jsi schválen(a) jako média – tvůj profil je vidět na stránce eventu.",
+      "rejected": "Tentokrát to nevyšlo.",
+      "cancelled": "Žádost je zrušená."
+    },
+    "organizerMessage": "Zpráva od pořadatele",
+    "cancel": "Zrušit akreditaci",
+    "cancelQuestion": "Opravdu zrušit?",
+    "cancelYes": "Ano, zrušit",
+    "myTitle": "Akreditace jako média",
+    "organizerTitle": "Média",
+    "organizerDisabled": "U tohoto eventu média nepřijímáš.",
+    "organizerEnable": "Zapnout v úpravě eventu →",
+    "organizerEmpty": "Zatím žádné žádosti.",
+    "organizerUnlimited": "Schváleno: {approved} (bez limitu)",
+    "organizerLimited": "Schváleno: {approved} z {capacity}",
+    "approve": "Schválit",
+    "reject": "Zamítnout",
+    "backToPending": "Vrátit k posouzení",
+    "decisionPlaceholder": "Zpráva pro žadatele (nepovinné)",
+    "yourMessage": "Tvoje zpráva"
+  },
+  "MediaErrors": {
+    "not_signed_in": "Nejdřív se přihlas.",
+    "not_creator": "Jako média se můžou hlásit jen Creatoři – zapni si to v úpravě profilu.",
+    "username_required": "Nejdřív si v profilu nastav uživatelské jméno.",
+    "event_unavailable": "Tento event teď není dostupný.",
+    "media_disabled": "Pořadatel u tohoto eventu média nepřijímá.",
+    "invite_only": "Event je jen na pozvánky.",
+    "crew_only": "Event je jen pro členy crew.",
+    "registration_closed": "Event už začal, přihlásit se nejde.",
+    "consent_required": "Potvrď prosím souhlas.",
+    "contact_invalid": "Zkontroluj telefon a e-mail.",
+    "already_registered": "Žádost už máš odeslanou.",
+    "not_allowed": "Na tohle nemáš oprávnění.",
+    "not_cancellable": "Tuhle žádost už zrušit nejde.",
+    "event_started": "Event už začal.",
+    "cancelled": "Žádost byla zrušená.",
+    "message_too_long": "Zpráva je moc dlouhá.",
+    "media_full": "Místa pro média jsou plná. Zvyš limit v úpravě eventu, nebo někoho vrať k posouzení.",
+    "generic": "Něco se nepovedlo, zkus to prosím znovu."
   }
 }

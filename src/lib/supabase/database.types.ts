@@ -357,6 +357,76 @@ export type Database = {
           },
         ]
       }
+      event_media_requests: {
+        Row: {
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          skills: string[]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          contact_email: string
+          contact_phone: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_message?: string | null
+          event_id: string
+          id?: string
+          message?: string | null
+          skills?: string[]
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          contact_email?: string
+          contact_phone?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_message?: string | null
+          event_id?: string
+          id?: string
+          message?: string | null
+          skills?: string[]
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_media_requests_decided_by_fkey"
+            columns: ["decided_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_media_requests_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_media_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -504,6 +574,8 @@ export type Database = {
           instagram_url: string | null
           lat: number | null
           lng: number | null
+          media_capacity: number | null
+          media_enabled: boolean
           organizer_id: string
           program: string | null
           published_at: string | null
@@ -542,6 +614,8 @@ export type Database = {
           instagram_url?: string | null
           lat?: number | null
           lng?: number | null
+          media_capacity?: number | null
+          media_enabled?: boolean
           organizer_id: string
           program?: string | null
           published_at?: string | null
@@ -580,6 +654,8 @@ export type Database = {
           instagram_url?: string | null
           lat?: number | null
           lng?: number | null
+          media_capacity?: number | null
+          media_enabled?: boolean
           organizer_id?: string
           program?: string | null
           published_at?: string | null
@@ -1558,6 +1634,30 @@ export type Database = {
           user_id: string
         }[]
       }
+      cancel_media_request: {
+        Args: { p_request_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          skills: string[]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_media_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       cancel_registration: {
         Args: { p_registration_id: string }
         Returns: {
@@ -1660,6 +1760,30 @@ export type Database = {
         Args: { p_action: string; p_crew_id: string; p_user_id: string }
         Returns: undefined
       }
+      decide_media_request: {
+        Args: { p_decision: string; p_message?: string; p_request_id: string }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          skills: string[]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_media_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       decide_registration: {
         Args: {
           p_decision: Database["public"]["Enums"]["registration_status"]
@@ -1712,6 +1836,16 @@ export type Database = {
         Returns: string[]
       }
       event_email_queue_count: { Args: { p_event_id: string }; Returns: number }
+      event_media_list: {
+        Args: { p_event_id: string }
+        Returns: {
+          avatar_path: string
+          display_name: string
+          skills: string[]
+          user_id: string
+          username: string
+        }[]
+      }
       fail_email: {
         Args: { p_error: string; p_id: string }
         Returns: undefined
@@ -1940,6 +2074,37 @@ export type Database = {
         Args: { p_crew_id: string }
         Returns: undefined
       }
+      request_media: {
+        Args: {
+          p_consent: boolean
+          p_email: string
+          p_event_id: string
+          p_message: string
+          p_phone: string
+          p_skills: string[]
+        }
+        Returns: {
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          skills: string[]
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_media_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       resolve_feedback: {
         Args: { p_id: string; p_resolved: boolean }
         Returns: undefined
@@ -2117,6 +2282,8 @@ export type Database = {
         | "crew_organizer_approved"
         | "organizer_member_added"
         | "crew_admin_added"
+        | "media_approved"
+        | "media_rejected"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2322,6 +2489,8 @@ export const Constants = {
         "crew_organizer_approved",
         "organizer_member_added",
         "crew_admin_added",
+        "media_approved",
+        "media_rejected",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [
