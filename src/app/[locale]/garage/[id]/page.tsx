@@ -51,10 +51,10 @@ async function ManageVehicle({
       title={title}
       subtitle={
         <Link
-          href={vehicle.status === "former" ? "/garage/archive" : "/garage"}
+          href="/garage"
           className={textLinkClass}
         >
-          {vehicle.status === "former" ? t("backToArchive") : t("backToGarage")}
+          {t("backToGarage")}
         </Link>
       }
       actions={

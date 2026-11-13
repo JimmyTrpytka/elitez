@@ -47,13 +47,17 @@ async function GarageContent() {
     );
   }
 
-  const [vehicles, counts] = await Promise.all([listMyVehicles("current"), getMyCounts()]);
-  const social = await getVehicleSocial(vehicles.map((v) => v.id));
+  const [vehicles, former, counts] = await Promise.all([
+    listMyVehicles("current"),
+    listMyVehicles("former"),
+    getMyCounts(),
+  ]);
+  const social = await getVehicleSocial([...vehicles, ...former].map((v) => v.id));
 
   return (
     <>
       <GarageTabs active="cars" counts={counts} />
-      {vehicles.length === 0 ? (
+      {vehicles.length === 0 && former.length === 0 ? (
         <div className="flex flex-col items-start gap-4 rounded-card bg-muted p-8">
           <p className="text-lg font-semibold text-ink">{t("emptyTitle")}</p>
           <p className="text-ink-soft">{t("emptyText")}</p>
@@ -67,7 +71,7 @@ async function GarageContent() {
           </div>
           <p className="text-sm text-subtle">{t("fanHint")}</p>
         </div>
-      ) : (
+      ) : vehicles.length === 0 ? null : (
         <VehicleGrid>
           {vehicles.map((v) => (
             <VehicleCard
@@ -80,6 +84,25 @@ async function GarageContent() {
           ))}
         </VehicleGrid>
       )}
+
+      {/* Prodaná auta – na předchozí projekty jsou lidé hrdí */}
+      {former.length ? (
+        <section id="prodana" className="mt-12 scroll-mt-24">
+          <h2 className="mb-1 font-display text-3xl font-extrabold text-ink uppercase">{t("formerSection")}</h2>
+          <p className="mb-5 text-sm text-subtle">{t("formerSectionHint")}</p>
+          <VehicleGrid>
+            {former.map((v) => (
+              <VehicleCard
+                key={v.id}
+                vehicle={v}
+                href={`/garage/${v.id}`}
+                showVisibility
+                turbos={social.get(v.id)?.turbos}
+              />
+            ))}
+          </VehicleGrid>
+        </section>
+      ) : null}
     </>
   );
 }

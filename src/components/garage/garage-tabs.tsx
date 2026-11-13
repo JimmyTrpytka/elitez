@@ -4,7 +4,7 @@ import type { MyCounts } from "@/lib/data/account";
 import { buttonClasses } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
-export type GarageTab = "cars" | "dreams" | "former";
+export type GarageTab = "cars" | "dreams";
 
 /**
  * Záložky garáže: Moje auta · Garáž snů · Předchozí auta (s počty)
@@ -13,9 +13,8 @@ export type GarageTab = "cars" | "dreams" | "former";
 export async function GarageTabs({ active, counts }: { active: GarageTab; counts: MyCounts }) {
   const t = await getTranslations("Garage");
   const tabs: Array<{ key: GarageTab; href: string; label: string; count: number }> = [
-    { key: "cars", href: "/garage", label: t("tabCars"), count: counts.vehicles },
+    { key: "cars", href: "/garage", label: t("tabCars"), count: counts.vehicles + counts.former },
     { key: "dreams", href: "/garage/dreams", label: t("tabDreams"), count: counts.dreams },
-    { key: "former", href: "/garage/archive", label: t("tabFormer"), count: counts.former },
   ];
   const action =
     active === "cars"

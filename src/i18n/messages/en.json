@@ -266,7 +266,9 @@
     "tabDreams": "Dream garage",
     "tabFormer": "Previous cars",
     "addDream": "Add dream",
-    "qrSticker": "QR sticker"
+    "qrSticker": "QR sticker",
+    "formerSection": "Sold cars",
+    "formerSectionHint": "Previous builds stay in your garage and on your profile – they're part of your story."
   },
   "Vehicle": {
     "newTitle": "New vehicle",
@@ -316,7 +318,9 @@
       "usernameRequired": "Choose a username in your profile first.",
       "notAllowed": "You are not allowed to do this, or the vehicle doesn't exist.",
       "generic": "Saving failed. Please try again."
-    }
+    },
+    "soldBadge": "Sold",
+    "soldIn": "Sold {year}"
   },
   "Photos": {
     "empty": "No photos yet. The first photo will be the main one.",

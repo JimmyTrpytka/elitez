@@ -266,7 +266,9 @@
     "tabDreams": "Garáž snů",
     "tabFormer": "Předchozí auta",
     "addDream": "Přidat sen",
-    "qrSticker": "QR samolepka"
+    "qrSticker": "QR samolepka",
+    "formerSection": "Prodaná auta",
+    "formerSectionHint": "Předchozí projekty zůstávají v garáži i na tvém profilu – jsou součástí tvého příběhu."
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",
@@ -316,7 +318,9 @@
       "usernameRequired": "Nejdřív si v profilu zvol uživatelské jméno.",
       "notAllowed": "K této akci nemáš oprávnění, nebo vozidlo neexistuje.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
-    }
+    },
+    "soldBadge": "Prodáno",
+    "soldIn": "Prodáno {year}"
   },
   "Photos": {
     "empty": "Zatím žádné fotky. První fotka bude hlavní.",
