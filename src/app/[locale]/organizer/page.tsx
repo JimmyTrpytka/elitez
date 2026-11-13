@@ -11,6 +11,7 @@ import { OrganizerEventList } from "@/components/organizer/event-list";
 import { SeasonForm } from "@/components/organizer/season-form";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { MyCohosting } from "@/components/cohosts/my-cohosting";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Organizer");
@@ -59,6 +60,7 @@ async function OrganizerDashboard() {
         options={myOrganizers.map((o) => ({ id: o.id, name: o.name, isCrew: Boolean(o.crewId) }))}
       />
       <div className="flex flex-col gap-8">
+        <MyCohosting organizerIds={myOrganizers.map((o) => o.id)} />
         <section>
           <h2 className="mb-4 text-xl font-semibold">{t("seasonsTitle")}</h2>
           {seasons.length ? (

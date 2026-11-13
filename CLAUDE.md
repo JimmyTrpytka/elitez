@@ -167,3 +167,9 @@ Vlastník projektu **není programátor**. Proto:
 - `profiles.promo_consent_at` / `promo_consent_version` – uživatel je nemůže měnit přímo. Registrace posílá `promo_consent_version` v údajích (trigger `handle_new_user` ho zapíše), stávající člen přes `accept_promo_consent`.
 - Verze textu: `PROMO_CONSENT_VERSION` v `src/lib/consent.ts` – při změně znění zvyš verzi → všichni souhlasí znovu.
 - Okno pro stávající členy: `PromoConsentGate` v `src/app/[locale]/layout.tsx` (na `/privacy` se nezobrazí, jde se odhlásit).
+
+## Technické poznámky (spolupořádání eventů)
+- Tabulka `event_cohosts` (event × pořadatel, stav pending/accepted/declined, `invited_by_host` = kdo začal). Zápis jen funkcemi `request_event_cohost` (spolupořadatel), `invite_event_cohost` (hlavní, podle slugu), `decide_event_cohost` (potvrzuje vždy strana, která nezačala), `remove_event_cohost`. Protistrana už čekající → okamžité potvrzení.
+- Spolupořadatel nemá žádná práva na správu eventu (`my_organizer_ids` ani `is_event_organizer` se nemění). Potvrzené řádky čte kdokoli, kdo vidí event.
+- Upozornění: `cohost_request` / `cohost_invite` / `cohost_accepted` správcům (`organizer_manager_ids`), po potvrzení `notify_cohost_audience` (sledující + členové crew, bez duplicit).
+- UI: `src/components/cohosts/` – `HostCohostPanel` (správa eventu), `EventCohostBox` (detail eventu pro správce jiných pořadatelů), `MyCohosting` (sekce v `/organizer`). Profil pořadatele zahrnuje i spolupořádané eventy (`listPublicEvents(organizerId)`).

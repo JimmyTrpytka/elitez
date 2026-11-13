@@ -60,7 +60,19 @@ export async function listPublicEvents(organizerId?: string, includeCrewOnly = f
     // „jen pro členy crew“ vrátí databáze jen členům (RLS)
     .in("access", includeCrewOnly ? ["public", "verified_only", "crew_only"] : ["public", "verified_only"]);
   // Volitelně jen eventy jednoho pořadatele (profil pořadatele)
-  if (organizerId) query = query.eq("organizer_id", organizerId);
+  if (organizerId) {
+    // i eventy, které pořadatel potvrzeně spolupořádá
+    const { data: cohosted } = await supabase
+      .from("event_cohosts")
+      .select("event_id")
+      .eq("organizer_id", organizerId)
+      .eq("status", "accepted")
+      .limit(200);
+    const ids = (cohosted ?? []).map((r) => r.event_id).filter((id) => /^[0-9a-f-]{36}$/i.test(id));
+    query = ids.length
+      ? query.or(`organizer_id.eq.${organizerId},id.in.(${ids.join(",")})`)
+      : query.eq("organizer_id", organizerId);
+  }
   const { data } = await query.order("starts_at", { ascending: true }).limit(200);
   const all = await withCovers(supabase, data ?? [], ["md"]);
   const now = Date.now();

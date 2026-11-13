@@ -15,6 +15,9 @@ import { Card } from "@/components/ui/card";
 import { textLinkClass } from "@/components/auth/auth-shell";
 import { listEventMediaRequests, mediaStatus } from "@/lib/data/media";
 import { OrganizerMediaList } from "@/components/media/organizer-media-list";
+import { listEventCohosts } from "@/lib/data/cohosts";
+import { listPublicOrganizers } from "@/lib/data/organizers";
+import { HostCohostPanel } from "@/components/cohosts/host-cohost-panel";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Organizer");
@@ -48,7 +51,13 @@ async function ManageEvent({
   if (!organizer) notFound();
   const event = await getMyEvent(organizer.id, id);
   if (!event) notFound();
-  const [tMedia, mediaRows] = await Promise.all([getTranslations("Media"), listEventMediaRequests(event.id)]);
+  const [tMedia, tCohosts, mediaRows, cohosts, allOrganizers] = await Promise.all([
+    getTranslations("Media"),
+    getTranslations("Cohosts"),
+    listEventMediaRequests(event.id),
+    listEventCohosts(event.id),
+    listPublicOrganizers(),
+  ]);
   const mediaApproved = mediaRows.filter((r) => r.status === "approved").length;
 
   const facts: Array<[string, string]> = [
@@ -140,6 +149,15 @@ async function ManageEvent({
               {t("printList")}
             </Link>
           </div>
+        </Card>
+        <Card>
+          <h2 className="mb-1 text-lg font-semibold">{tCohosts("hostTitle")}</h2>
+          <HostCohostPanel
+            eventId={event.id}
+            eligible={event.status === "published" && (event.access === "public" || event.access === "verified_only")}
+            cohosts={cohosts}
+            options={allOrganizers.filter((o) => o.id !== event.organizer_id).map((o) => ({ slug: o.slug, name: o.name }))}
+          />
         </Card>
         <Card>
           <h2 className="mb-1 text-lg font-semibold">{tMedia("organizerTitle")}</h2>

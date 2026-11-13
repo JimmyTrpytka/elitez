@@ -479,7 +479,8 @@
     "autoTranslated": "Automatically translated{lang, select, cs { from Czech} en {} other {}}.",
     "showOriginal": "Show original",
     "showingOriginal": "You're viewing the original text.",
-    "showTranslation": "Show translation"
+    "showTranslation": "Show translation",
+    "organizedByMany": "Organized by:"
   },
   "Organizer": {
     "title": "Organizer",
@@ -910,6 +911,18 @@
       "media_rejected": {
         "title": "Accreditation not accepted",
         "text": "Your media accreditation request for {event} wasn't accepted this time."
+      },
+      "cohost_request": {
+        "title": "Co-hosting request",
+        "text": "{cohost} wants to co-host {event}. Accept or decline in the event management."
+      },
+      "cohost_invite": {
+        "title": "Co-hosting invitation",
+        "text": "{organizer} invites {cohost} to co-host {event}. Accept or decline in the Organizer section."
+      },
+      "cohost_accepted": {
+        "title": "Co-hosting confirmed",
+        "text": "{event}: {organizer} × {cohost} – the event now shows up for both organizers."
       }
     },
     "openVehicle": "View car",
@@ -1734,5 +1747,48 @@
     "accept": "I agree, continue",
     "logout": "Log out",
     "failed": "Couldn't save your consent, please try again."
+  },
+  "Cohosts": {
+    "hostTitle": "Event co-hosts",
+    "hostIntro": "Another organizer or crew can be shown as a co-host: the event will appear on their profile too and their followers get notified. Only you keep managing the event and registrations.",
+    "hostStatus": {
+      "incoming": "Wants to co-host – accept or decline",
+      "outgoing": "Invitation sent, waiting for acceptance",
+      "accepted": "Co-hosting",
+      "none": ""
+    },
+    "inviteLabel": "Invite an organizer or crew",
+    "invitePlaceholder": "Choose an organizer…",
+    "invite": "Invite",
+    "invitedPending": "Invitation sent. Co-hosting starts once they accept.",
+    "invitedAccepted": "Done – this organizer had already asked, co-hosting is confirmed.",
+    "notEligible": "Co-hosts can only be added to a published event open to everyone or to Verified members.",
+    "boxTitle": "Do you co-host this event?",
+    "boxStatus": {
+      "none": "not co-hosting yet",
+      "incoming": "invitation waiting for your acceptance",
+      "outgoing": "request sent, waiting for the main organizer",
+      "accepted": "co-hosting"
+    },
+    "request": "Request to co-host",
+    "requestAs": "Request to co-host as {name}",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw",
+    "end": "End co-hosting",
+    "endQuestion": "Really end it?",
+    "endYes": "Yes, end",
+    "dashboardTitle": "Co-hosting"
+  },
+  "CohostErrors": {
+    "not_allowed": "You're not allowed to do that.",
+    "event_unavailable": "Only published events open to everyone or to Verified members can be co-hosted.",
+    "own_event": "This is your own event.",
+    "organizer_unavailable": "We couldn't find that organizer.",
+    "cohost_limit": "An event can have at most 10 co-hosts.",
+    "already_cohost": "This organizer already co-hosts the event.",
+    "already_requested": "A request or invitation is already waiting.",
+    "not_pending": "This request is no longer current.",
+    "generic": "Something went wrong, please try again."
   }
 }

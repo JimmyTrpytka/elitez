@@ -15,6 +15,8 @@ import { listMyOrganizers } from "@/lib/organizer/current";
 import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
 import { MediaSection } from "@/components/media/media-section";
+import { listEventCohosts } from "@/lib/data/cohosts";
+import { EventCohostBox } from "@/components/cohosts/event-cohost-box";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { DisplayHeading } from "@/components/brand";
@@ -81,6 +83,8 @@ async function EventDetail({
     rules: translated?.[3]?.text || event.rules,
   };
   const isOrganizer = organizer.some((o) => o.id === event.organizer_id);
+  const cohosts = await listEventCohosts(event.id);
+  const acceptedCohosts = cohosts.filter((c) => c.status === "accepted");
 
   const place = [
     event.venue_name,
@@ -135,7 +139,26 @@ async function EventDetail({
           <DisplayHeading as="h1" size="lg" className="reveal reveal-delay-1 text-white">
             {event.title}
           </DisplayHeading>
-          {event.organizerName ? (
+          {event.organizerName && acceptedCohosts.length ? (
+            <p className="reveal reveal-delay-2 mt-3 text-white/70">
+              {t("organizedByMany")}{" "}
+              {[{ name: event.organizerName, slug: event.organizerSlug }, ...acceptedCohosts].map((o, i) => (
+                <span key={o.slug ?? i}>
+                  {i > 0 ? <span className="text-accent"> × </span> : null}
+                  {o.slug ? (
+                    <Link
+                      href={`/o/${o.slug}`}
+                      className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4"
+                    >
+                      {o.name}
+                    </Link>
+                  ) : (
+                    o.name
+                  )}
+                </span>
+              ))}
+            </p>
+          ) : event.organizerName ? (
             <p className="reveal reveal-delay-2 mt-3 text-white/70">
               {event.organizerSlug ? (
                 <Link
@@ -160,6 +183,7 @@ async function EventDetail({
           <ShareButton title={event.title} />
           <SocialLinks links={event} className="items-center" />
         </div>
+        <EventCohostBox event={event} myOrganizers={organizer} cohosts={cohosts} />
         {isOrganizer ? (
           <div className="mb-8">
             <Link href={`/organizer/events/${event.id}`} className={buttonClasses("light")}>

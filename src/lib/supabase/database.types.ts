@@ -357,6 +357,58 @@ export type Database = {
           },
         ]
       }
+      event_cohosts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          decided_at: string | null
+          event_id: string
+          invited_by_host: boolean
+          organizer_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          decided_at?: string | null
+          event_id: string
+          invited_by_host: boolean
+          organizer_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          decided_at?: string | null
+          event_id?: string
+          invited_by_host?: boolean
+          organizer_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_cohosts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_cohosts_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_cohosts_organizer_id_fkey"
+            columns: ["organizer_id"]
+            isOneToOne: false
+            referencedRelation: "organizers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_media_requests: {
         Row: {
           contact_email: string
@@ -1720,6 +1772,20 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      cohost_check_event: {
+        Args: {
+          p_event: Database["public"]["Tables"]["events"]["Row"]
+          p_organizer_id: string
+        }
+        Returns: undefined
+      }
+      cohost_payload: {
+        Args: {
+          p_event: Database["public"]["Tables"]["events"]["Row"]
+          p_organizer_id: string
+        }
+        Returns: Json
+      }
       complete_email: {
         Args: { p_id: string; p_provider_id: string }
         Returns: undefined
@@ -1765,6 +1831,10 @@ export type Database = {
       }
       decide_crew_member: {
         Args: { p_action: string; p_crew_id: string; p_user_id: string }
+        Returns: undefined
+      }
+      decide_event_cohost: {
+        Args: { p_accept: boolean; p_event_id: string; p_organizer_id: string }
         Returns: undefined
       }
       decide_media_request: {
@@ -1858,6 +1928,10 @@ export type Database = {
         Returns: undefined
       }
       fill_from_waitlist: { Args: { p_event_id: string }; Returns: undefined }
+      invite_event_cohost: {
+        Args: { p_event_id: string; p_organizer_slug: string }
+        Returns: string
+      }
       is_admin: { Args: never; Returns: boolean }
       is_crew_manager: { Args: { p_crew_id: string }; Returns: boolean }
       is_event_organizer: { Args: { p_event_id: string }; Returns: boolean }
@@ -1935,9 +2009,29 @@ export type Database = {
           slug: string
         }[]
       }
+      notify_cohost_audience: {
+        Args: {
+          p_event: Database["public"]["Tables"]["events"]["Row"]
+          p_organizer_id: string
+        }
+        Returns: undefined
+      }
+      notify_organizer_managers: {
+        Args: {
+          p_event: Database["public"]["Tables"]["events"]["Row"]
+          p_organizer_id: string
+          p_payload: Json
+          p_type: Database["public"]["Enums"]["notification_type"]
+        }
+        Returns: undefined
+      }
       organizer_event_payload: {
         Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
         Returns: Json
+      }
+      organizer_manager_ids: {
+        Args: { p_organizer_id: string }
+        Returns: string[]
       }
       organizer_member_list: {
         Args: { p_organizer_id: string }
@@ -2073,6 +2167,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      remove_event_cohost: {
+        Args: { p_event_id: string; p_organizer_id: string }
+        Returns: undefined
+      }
       remove_organizer_member: {
         Args: { p_organizer_id: string; p_user_id: string }
         Returns: undefined
@@ -2080,6 +2178,10 @@ export type Database = {
       request_crew_organizer: {
         Args: { p_crew_id: string }
         Returns: undefined
+      }
+      request_event_cohost: {
+        Args: { p_event_id: string; p_organizer_id: string }
+        Returns: string
       }
       request_media: {
         Args: {
@@ -2291,6 +2393,9 @@ export type Database = {
         | "crew_admin_added"
         | "media_approved"
         | "media_rejected"
+        | "cohost_request"
+        | "cohost_invite"
+        | "cohost_accepted"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2498,6 +2603,9 @@ export const Constants = {
         "crew_admin_added",
         "media_approved",
         "media_rejected",
+        "cohost_request",
+        "cohost_invite",
+        "cohost_accepted",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [
