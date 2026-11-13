@@ -955,6 +955,33 @@ export type Database = {
           },
         ]
       }
+      translations: {
+        Row: {
+          characters: number
+          created_at: string
+          source_hash: string
+          source_lang: string | null
+          target_lang: string
+          translated: string
+        }
+        Insert: {
+          characters?: number
+          created_at?: string
+          source_hash: string
+          source_lang?: string | null
+          target_lang: string
+          translated: string
+        }
+        Update: {
+          characters?: number
+          created_at?: string
+          source_hash?: string
+          source_lang?: string | null
+          target_lang?: string
+          translated?: string
+        }
+        Relationships: []
+      }
       turbo_days: {
         Row: {
           day: string

@@ -451,7 +451,11 @@
     "mapTitle": "Místo konání",
     "navigate": "Navigovat",
     "eyebrow": "Srazy a výstavy",
-    "allOrganizers": "Všichni pořadatelé"
+    "allOrganizers": "Všichni pořadatelé",
+    "autoTranslated": "Automaticky přeloženo{lang, select, cs {} en { z angličtiny} other {}}.",
+    "showOriginal": "Zobrazit originál",
+    "showingOriginal": "Zobrazuješ původní text.",
+    "showTranslation": "Zobrazit překlad"
   },
   "Organizer": {
     "title": "Pořadatel",
@@ -1463,5 +1467,12 @@
     "network": "Spojení se přerušilo. Zkontroluj internet a zkus to znovu.",
     "permission": "Nahrání nebylo povoleno. Zkus se odhlásit a znovu přihlásit.",
     "server": "Chyba na naší straně. Zkus to prosím za chvíli – když to bude trvat, pošli nám připomínku."
+  },
+  "Translate": {
+    "translate": "Přeložit do češtiny",
+    "showOriginal": "Zobrazit originál",
+    "translating": "Překládám…",
+    "autoNote": "Přeloženo automaticky.",
+    "failed": "Překlad teď není k dispozici."
   }
 }

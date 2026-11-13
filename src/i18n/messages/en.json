@@ -451,7 +451,11 @@
     "mapTitle": "Venue",
     "navigate": "Get directions",
     "eyebrow": "Meets and shows",
-    "allOrganizers": "All organizers"
+    "allOrganizers": "All organizers",
+    "autoTranslated": "Automatically translated{lang, select, cs { from Czech} en {} other {}}.",
+    "showOriginal": "Show original",
+    "showingOriginal": "You're viewing the original text.",
+    "showTranslation": "Show translation"
   },
   "Organizer": {
     "title": "Organizer",
@@ -1463,5 +1467,12 @@
     "network": "The connection dropped. Check your internet and try again.",
     "permission": "The upload wasn't allowed. Try signing out and back in.",
     "server": "Something went wrong on our side. Please try again in a moment – if it keeps happening, send us feedback."
+  },
+  "Translate": {
+    "translate": "Translate to English",
+    "showOriginal": "Show original",
+    "translating": "Translating…",
+    "autoNote": "Translated automatically.",
+    "failed": "Translation is not available right now."
   }
 }
