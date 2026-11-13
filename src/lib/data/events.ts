@@ -40,7 +40,7 @@ async function withCovers(
   }));
 }
 
-const PUBLIC_SELECT = "*, organizer:organizers(name, slug), season:seasons(name)";
+const PUBLIC_SELECT = "*, organizer:organizers!events_organizer_id_fkey(name, slug), season:seasons(name)";
 
 // ---------------------------------------------------------------------
 // Veřejnost
