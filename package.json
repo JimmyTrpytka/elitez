@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:db": "supabase db query --remote --yes -f supabase/tests/rls_test.sql",
+    "test:api": "vitest run --config vitest.api.config.mts",
     "db:push": "supabase db push --remote",
     "db:types": "supabase gen types --remote --schema public > src/lib/supabase/database.types.ts"
   },

@@ -53,7 +53,7 @@ Vlastník projektu **není programátor**. Proto:
 
 ## Postup práce
 1. Před úkolem: přečti `SPEC.md`, shrň plán, počkej na souhlas u větších změn.
-2. Implementuj po malých částech, spusť `npm run lint` a testy.
+2. Implementuj po malých částech, spusť `npm run lint` a testy (`npm test`, `npm run test:db`, `npm run test:api`).
 3. Po dokončení: stručně popiš, co se změnilo, jak to vyzkoušet a co zbývá.
 4. Při nejasnosti produktového rozhodnutí **zeptej se**, neodhaduj.
 5. Změny rozsahu zapisuj do `SPEC.md`.
@@ -63,6 +63,7 @@ Vlastník projektu **není programátor**. Proto:
 - Kontrola kódu: `npm run lint`
 - Sestavení (odhalí i chyby typů): `npm run build`
 - Testy: `npm test` (unit testy, Vitest) a `npm run test:db` (test pravidel RLS proti databázi, vše se vrací rollbackem)
+- Kontrola dotazů: `npm run test:api` – najde ve zdrojovém kódu všechny `.from(…).select(…)` s propojenými tabulkami a spustí je proti databázi jako návštěvník (jen čtení). Chytí nejednoznačná / chybějící propojení a neexistující sloupce. **Spouštěj po každé migraci (po `db:push`) a před každým commitem, který mění dotazy.**
 - Migrace do databáze: `npm run db:push` (Supabase CLI, projekt je propojený přes `supabase link`)
 - Typy z databáze po migraci: `npm run db:types` → `src/lib/supabase/database.types.ts`
 
