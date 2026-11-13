@@ -135,3 +135,9 @@ Vlastník projektu **není programátor**. Proto:
 - Crew jako pořadatel: `organizers.crew_id` (pořadatel = člověk NEBO crew). `my_organizer_ids()` zahrnuje crew, kde je uživatel zakladatel/správce. Výběr spravovaného pořadatele: cookie `elitez_organizer` (`src/lib/organizer/current.ts`, akce `switchOrganizer`) – `getMyOrganizer()` vrací ten vybraný.
 - Přístup eventu `crew_only`: RLS `events: read visible` jen pro aktivní členy (`is_organizer_crew_member`), trigger `events_check_crew_only` (jen crew-pořadatel) a `event_registrations_check_crew_only` (přihláška jen člen). Upozornění: `event_audience` = sledující (veřejné/Verified eventy) + členové crew.
 - Žádost o pořádání: `request_crew_organizer`, schválení `admin_set_crew_organizer` (v `/admin/crews`).
+
+## Technické poznámky (připomínky testerů, překlady)
+- Nahrávání obrázků: `loadImage` má zálohu přes `<img>`; chyby rozlišuje `classifyUploadError` (`src/lib/images/upload-error.ts`) → texty `Upload.*` (heic, format, size, network, permission, server) a detail do konzole.
+- Dlouhé formuláře: tlačítko v `StickyActions` (přilepené dole) a po přesměrování `?saved=1` + `SavedNotice`.
+- Nepovinné `DateTimeField` (bez `required`) mají tlačítko × pro smazání (Safari neumí vymazat datum).
+- Překlady: DeepL (`DEEPL_API_KEY`, jen server; klíč končící `:fx` = bezplatné API). Mezipaměť `translations` (jen service_role, klíč = sha256 textu + cílový jazyk). `translateTexts` v `src/lib/translate/index.ts`; `needsTranslation` přeskočí text už v jazyce čtenáře. Eventy se překládají automaticky (`?original=1` = originál), auta a profily tlačítkem (`Translatable`/`TText`, akce `translateContent` s RLS volajícího). Bez klíče se nic nepřekládá a tlačítko se nezobrazí.

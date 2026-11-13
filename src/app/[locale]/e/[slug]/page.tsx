@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { translateTexts } from "@/lib/translate";
 import { getEventShare, shareMetadata } from "@/lib/data/share";
 import { ShareButton } from "@/components/share-button";
 import { AddToCalendar } from "@/components/events/add-to-calendar";
@@ -22,13 +23,13 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/e/[slug]
   return shareMetadata(await getEventShare(slug), t("detailMetaTitle"));
 }
 
-export default async function EventDetailPage({ params }: PageProps<"/[locale]/e/[slug]">) {
+export default async function EventDetailPage({ params, searchParams }: PageProps<"/[locale]/e/[slug]">) {
   const tAuth = await getTranslations("Auth");
   return (
     <Suspense
       fallback={<p className="mx-auto max-w-5xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}
     >
-      <EventDetail params={params} />
+      <EventDetail params={params} searchParams={searchParams} />
     </Suspense>
   );
 }
@@ -43,8 +44,14 @@ function TextBlock({ title, text }: { title: string; text: string | null }) {
   );
 }
 
-async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">["params"] }) {
-  const { slug } = await params;
+async function EventDetail({
+  params,
+  searchParams,
+}: {
+  params: PageProps<"/[locale]/e/[slug]">["params"];
+  searchParams: PageProps<"/[locale]/e/[slug]">["searchParams"];
+}) {
+  const [{ slug }, { original }] = await Promise.all([params, searchParams]);
   const [t, tCat, locale, event, organizer] = await Promise.all([
     getTranslations("Events"),
     getTranslations("EventCategory"),
@@ -54,6 +61,23 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
   ]);
   // RLS: koncept a event na pozvánky vrátí databáze jen pořadateli
   if (!event) notFound();
+
+  // Automatický překlad textů eventu do jazyka čtenáře (DeepL, s mezipamětí)
+  const showOriginal = original === "1";
+  const translated = showOriginal
+    ? null
+    : await translateTexts(
+        [event.description ?? "", event.program ?? "", event.selection_criteria ?? "", event.rules ?? ""],
+        locale === "en" ? "en" : "cs",
+      );
+  const anyTranslated = Boolean(translated?.some((x) => x.translated));
+  const sourceLang = translated?.find((x) => x.translated)?.sourceLang ?? null;
+  const texts = {
+    description: translated?.[0]?.text || event.description,
+    program: translated?.[1]?.text || event.program,
+    selection: translated?.[2]?.text || event.selection_criteria,
+    rules: translated?.[3]?.text || event.rules,
+  };
   const isOrganizer = organizer.some((o) => o.id === event.organizer_id);
 
   const place = [
@@ -147,9 +171,22 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
           </div>
         ) : null}
 
-        {event.description ? (
+        {anyTranslated || showOriginal ? (
+          <p className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-night-subtle">
+            <span aria-hidden>🌐</span>
+            {showOriginal ? t("showingOriginal") : t("autoTranslated", { lang: sourceLang ?? "" })}
+            <Link
+              href={showOriginal ? `/e/${event.slug}` : { pathname: `/e/${event.slug}`, query: { original: "1" } }}
+              className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4"
+            >
+              {showOriginal ? t("showTranslation") : t("showOriginal")}
+            </Link>
+          </p>
+        ) : null}
+
+        {texts.description ? (
           <p className="mb-10 max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">
-            {event.description}
+            {texts.description}
           </p>
         ) : null}
 
@@ -166,9 +203,9 @@ async function EventDetail({ params }: { params: PageProps<"/[locale]/e/[slug]">
           <RegistrationBox event={event} />
         </Suspense>
 
-        <TextBlock title={t("program")} text={event.program} />
-        <TextBlock title={t("selection")} text={event.selection_criteria} />
-        <TextBlock title={t("rules")} text={event.rules} />
+        <TextBlock title={t("program")} text={texts.program} />
+        <TextBlock title={t("selection")} text={texts.selection} />
+        <TextBlock title={t("rules")} text={texts.rules} />
 
         {event.lat !== null && event.lng !== null ? (
           <section className="mb-12">

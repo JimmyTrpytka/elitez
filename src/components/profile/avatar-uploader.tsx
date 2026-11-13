@@ -7,6 +7,7 @@ import { Avatar } from "@/components/avatar";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { loadImage, resizeImage } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { removeAvatar, setAvatar } from "@/lib/profile/actions";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { AVATARS_BUCKET } from "@/lib/storage";
@@ -21,14 +22,21 @@ export function AvatarUploader({
   avatarUrl: string | null;
 }) {
   const t = useTranslations("Profile");
+  const tUpload = useTranslations("Upload");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<UploadErrorKind | null>(null);
 
   async function onFile(file: File) {
     setBusy(true);
-    setFailed(false);
+    setFailed(null);
+    const pre = precheckImage(file);
+    if (pre) {
+      setFailed(pre);
+      setBusy(false);
+      return;
+    }
     try {
       const bitmap = await loadImage(file);
       const image = await resizeImage(bitmap, 512, { square: true });
@@ -42,8 +50,8 @@ export function AvatarUploader({
       const result = await setAvatar(path);
       if (!result.ok) throw new Error("setAvatar failed");
       router.refresh();
-    } catch {
-      setFailed(true);
+    } catch (e) {
+      setFailed(classifyUploadError(e, file));
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -52,9 +60,9 @@ export function AvatarUploader({
 
   async function onRemove() {
     setBusy(true);
-    setFailed(false);
+    setFailed(null);
     const result = await removeAvatar();
-    if (!result.ok) setFailed(true);
+    if (!result.ok) setFailed("server");
     router.refresh();
     setBusy(false);
   }
@@ -88,7 +96,7 @@ export function AvatarUploader({
           }}
         />
       </div>
-      {failed ? <Alert tone="error">{t("avatarFailed")}</Alert> : null}
+      {failed ? <Alert tone="error">{tUpload(failed)}</Alert> : null}
     </div>
   );
 }

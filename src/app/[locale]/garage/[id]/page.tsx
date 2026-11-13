@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getVehicle, isMyVehicle } from "@/lib/data/vehicles";
 import { PageShell } from "@/components/page-shell";
+import { SavedNotice } from "@/components/ui/saved-notice";
 import { PhotoManager } from "@/components/garage/photo-manager";
 import { ModsManager } from "@/components/garage/mods-manager";
 import { VehicleSettings } from "@/components/garage/vehicle-settings";
@@ -67,6 +68,7 @@ async function ManageVehicle({
         </>
       }
     >
+      <SavedNotice />
       <div className="flex flex-col gap-6">
         <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("photosTitle")}</h2>

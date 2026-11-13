@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { loadImage, resizeImage, supportsWebpEncoding } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { removeEventCover, setEventCover } from "@/lib/organizer/actions";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { EVENT_IMAGES_BUCKET, eventImagePath, type PhotoSize } from "@/lib/storage";
@@ -24,14 +25,21 @@ export function EventCoverUploader({
   coverUrl: string | null;
 }) {
   const t = useTranslations("Organizer");
+  const tUpload = useTranslations("Upload");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<UploadErrorKind | null>(null);
 
   async function onFile(file: File) {
     setBusy(true);
-    setFailed(false);
+    setFailed(null);
+    const pre = precheckImage(file);
+    if (pre) {
+      setFailed(pre);
+      setBusy(false);
+      return;
+    }
     const supabase = createBrowserSupabase();
     const imageId = crypto.randomUUID();
     const prefix = `${eventId}/${imageId}`;
@@ -54,9 +62,9 @@ export function EventCoverUploader({
       const result = await setEventCover({ eventId, imageId, format });
       if (!result.ok) throw new Error(result.error);
       router.refresh();
-    } catch {
+    } catch (e) {
       if (uploaded.length) await supabase.storage.from(EVENT_IMAGES_BUCKET).remove(uploaded);
-      setFailed(true);
+      setFailed(classifyUploadError(e, file));
     } finally {
       setBusy(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -66,7 +74,7 @@ export function EventCoverUploader({
   async function onRemove() {
     setBusy(true);
     const result = await removeEventCover(eventId);
-    if (!result.ok) setFailed(true);
+    if (!result.ok) setFailed("server");
     router.refresh();
     setBusy(false);
   }
@@ -83,7 +91,7 @@ export function EventCoverUploader({
           </div>
         )}
       </div>
-      {failed ? <Alert tone="error">{t("coverFailed")}</Alert> : null}
+      {failed ? <Alert tone="error">{tUpload(failed)}</Alert> : null}
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" disabled={busy} onClick={() => inputRef.current?.click()}>
           {busy ? t("coverUploading") : coverUrl ? t("coverChange") : t("coverUpload")}

@@ -18,6 +18,7 @@ export function DateTimeField({
   defaultTime,
   required,
   error,
+  hint,
 }: {
   label: string;
   name: string;
@@ -27,6 +28,8 @@ export function DateTimeField({
   defaultTime: string;
   required?: boolean;
   error?: string;
+  /** Nápověda pod polem (např. že je nepovinné) */
+  hint?: string;
 }) {
   const t = useTranslations("Common");
   const [date, setDate] = useState(defaultValue.slice(0, 10));
@@ -37,7 +40,7 @@ export function DateTimeField({
   return (
     <fieldset className="flex flex-col gap-1.5" data-field={name}>
       <legend className="mb-1.5 text-sm font-medium text-ink">{label}</legend>
-      <div className="grid grid-cols-[1fr_7.5rem] gap-2">
+      <div className={cn("grid gap-2", required ? "grid-cols-[1fr_7.5rem]" : "grid-cols-[1fr_7.5rem_auto]")}>
         <label htmlFor={dateId} className="sr-only">
           {t("date")}
         </label>
@@ -69,8 +72,21 @@ export function DateTimeField({
           )}
           aria-invalid={error ? true : undefined}
         />
+        {/* Nepovinné datum jde smazat (Safari to v kalendáři neumí) */}
+        {!required ? (
+          <button
+            type="button"
+            onClick={() => setDate("")}
+            disabled={!date}
+            aria-label={t("clearDate")}
+            title={t("clearDate")}
+            className="inline-flex h-12 w-12 items-center justify-center rounded-control border border-line text-xl text-ink-soft transition-colors hover:bg-muted disabled:opacity-30"
+          >
+            ×
+          </button>
+        ) : null}
       </div>
-      <FieldMessage id={`${name}-message`} error={error} />
+      <FieldMessage id={`${name}-message`} error={error} hint={hint} />
       <input type="hidden" name={name} value={date && time ? `${date}T${time.slice(0, 5)}` : ""} />
     </fieldset>
   );

@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Translatable, TText } from "@/components/translate/translatable";
+import { needsTranslation } from "@/lib/translate/language";
+import { translationEnabled } from "@/lib/translate";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -151,9 +154,16 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           <p className="mb-8 text-sm text-night-subtle">{t("noPhotosForTurbo")}</p>
         ) : null}
 
+        <Translatable
+          kind="vehicle"
+          id={vehicle.id}
+          show={translationEnabled() && [vehicle.description ?? "", vehicle.story ?? "", ...vehicle.mods.map((m) => m.description)].some((x) =>
+            needsTranslation(x, locale === "en" ? "en" : "cs"),
+          )}
+        >
         {vehicle.description ? (
           <p className="mb-10 max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">
-            {vehicle.description}
+            <TText k="description" original={vehicle.description} />
           </p>
         ) : null}
 
@@ -170,7 +180,7 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           <section className="mb-12">
             <h2 className="mb-4 font-display text-3xl font-extrabold text-white uppercase">{t("story")}</h2>
             <p className="max-w-3xl leading-relaxed whitespace-pre-line text-white/75">
-              {vehicle.story}
+              <TText k="story" original={vehicle.story} />
             </p>
           </section>
         ) : null}
@@ -184,13 +194,15 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
                   <span className="w-32 shrink-0 text-xs font-semibold tracking-[0.15em] text-accent uppercase">
                     {tMods(`categories.${m.category}`)}
                   </span>
-                  <span className="text-white/85">{m.description}</span>
+                  <span className="text-white/85">
+                    <TText k={`mod:${m.id}`} original={m.description} />
+                  </span>
                 </li>
               ))}
             </ul>
           </section>
         ) : null}
-
+        </Translatable>
       </HeroGallery>
     </article>
   );

@@ -164,7 +164,9 @@
     "visibilityPrivate": "Soukromé",
     "date": "Datum",
     "time": "Čas",
-    "turbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}"
+    "turbos": "{count, plural, one {# turbo} few {# turba} many {# turba} other {# turb}}",
+    "clearDate": "Smazat datum",
+    "savedNotice": "Změny jsou uložené ✓"
   },
   "Account": {
     "finishProfileTitle": "Dokonči svůj profil.",
@@ -449,7 +451,11 @@
     "mapTitle": "Místo konání",
     "navigate": "Navigovat",
     "eyebrow": "Srazy a výstavy",
-    "allOrganizers": "Všichni pořadatelé"
+    "allOrganizers": "Všichni pořadatelé",
+    "autoTranslated": "Automaticky přeloženo{lang, select, cs {} en { z angličtiny} other {}}.",
+    "showOriginal": "Zobrazit originál",
+    "showingOriginal": "Zobrazuješ původní text.",
+    "showTranslation": "Zobrazit překlad"
   },
   "Organizer": {
     "title": "Pořadatel",
@@ -597,7 +603,9 @@
       "notAllowed": "Nemáš oprávnění upravovat tento event.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
       "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku)."
-    }
+    },
+    "closesHint": "Nepovinné. Bez uzávěrky se lze hlásit až do začátku eventu.",
+    "opensHint": "Bez data se zatím nikdo přihlásit nemůže."
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -1451,5 +1459,20 @@
     "organizerRequested": "Žádá o pořádání srazů",
     "organizerEnable": "Povolit pořádání",
     "organizerDisable": "Odebrat pořádání"
+  },
+  "Upload": {
+    "heic": "Fotka je ve formátu HEIC (z iPhonu nebo Macu), který tento prohlížeč neumí otevřít. Ulož ji jako JPG (v Náhledu: Soubor → Exportovat → JPEG), nebo ji nahraj přes Safari či přímo z iPhonu.",
+    "format": "Tenhle soubor se nepodařilo otevřít jako obrázek. Zkus fotku ve formátu JPG nebo PNG.",
+    "size": "Soubor je moc velký (nejvýš 40 MB). Zkus menší fotku.",
+    "network": "Spojení se přerušilo. Zkontroluj internet a zkus to znovu.",
+    "permission": "Nahrání nebylo povoleno. Zkus se odhlásit a znovu přihlásit.",
+    "server": "Chyba na naší straně. Zkus to prosím za chvíli – když to bude trvat, pošli nám připomínku."
+  },
+  "Translate": {
+    "translate": "Přeložit do češtiny",
+    "showOriginal": "Zobrazit originál",
+    "translating": "Překládám…",
+    "autoNote": "Přeloženo automaticky.",
+    "failed": "Překlad teď není k dispozici."
   }
 }

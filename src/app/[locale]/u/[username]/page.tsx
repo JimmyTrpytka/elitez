@@ -1,5 +1,8 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Translatable, TText } from "@/components/translate/translatable";
+import { needsTranslation } from "@/lib/translate/language";
+import { translationEnabled } from "@/lib/translate";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/auth/user";
@@ -146,9 +149,13 @@ async function PublicProfile({
                 </div>
               ) : null}
               {profile.bio ? (
-                <p className="mt-4 max-w-2xl text-lg whitespace-pre-line text-white/75">
-                  {profile.bio}
-                </p>
+                <div className="mt-4">
+                  <Translatable kind="profile" id={profile.id} show={translationEnabled() && needsTranslation(profile.bio, locale === "en" ? "en" : "cs")}>
+                    <p className="max-w-2xl text-lg whitespace-pre-line text-white/75">
+                      <TText k="bio" original={profile.bio} />
+                    </p>
+                  </Translatable>
+                </div>
               ) : null}
             </div>
           </div>
