@@ -145,3 +145,7 @@ Vlastník projektu **není programátor**. Proto:
 - Správce crew jmenuje jen zakladatel (`set_crew_member_role`), UI u členů na `/c/<slug>`.
 - Pravidla úložiště: v poddotazu nad tabulkou se sloupcem `name` (crews, organizers) VŽDY psát `storage.foldername(objects.name)` – jinak se `name` vezme z té tabulky (byla to chyba u obrázků crew a log pořadatelů).
 - Sociální sítě: sloupce `website_url`, `instagram_url`, `facebook_url`, `tiktok_url`, `youtube_url` u `profiles`, `organizers`, `crews`. Formulář `SocialFields`, zobrazení `SocialLinks`, čtení z formuláře `parseSocialFields` (`@jmeno` → celý odkaz přes `normalizeSocial`).
+- Sociální sítě i u `events` (formulář eventu, ikonky pod hlavičkou eventu).
+- Smazání pořadatele: `delete_organizer` (vlastník/správce crew/admin, jen bez eventů); logo maže server admin klíčem (pravidla úložiště to po smazání už nedovolí). UI dole v `/organizer/profile`.
+- Mazání potvrzuj přímo na stránce (dvoukrokové tlačítko), ne `window.confirm` – mobilní prohlížeče v aplikacích a PWA ho umí potichu blokovat (sen se na mobilu nedal smazat).
+- Patička a `/register` hlídají přihlášení (přihlášený nevidí „Přidat se ke klubu“, z registrace jde do `/account`).

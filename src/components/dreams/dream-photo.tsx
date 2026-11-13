@@ -147,29 +147,47 @@ export function DreamPhoto({
   );
 }
 
-/** Smazání snu (s potvrzením). */
+/**
+ * Smazání snu: potvrzení přímo na stránce (ne okno prohlížeče – to některé
+ * mobilní prohlížeče a aplikace přidané na plochu potichu blokují).
+ */
 export function DeleteDreamButton({ dreamId }: { dreamId: string }) {
   const t = useTranslations("Dreams");
+  const tCommon = useTranslations("Common");
   const locale = useLocale();
   const [pending, startTransition] = useTransition();
+  const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   return (
     <div className="flex flex-col items-start gap-3">
       {error ? <Alert tone="error">{error}</Alert> : null}
-      <Button
-        type="button"
-        variant="secondary"
-        disabled={pending}
-        onClick={() => {
-          if (!window.confirm(t("deleteConfirm"))) return;
-          startTransition(async () => {
-            const res = await deleteDream(dreamId, locale);
-            if (res && !res.ok) setError(t(`errors.${res.error}`));
-          });
-        }}
-      >
-        {t("delete")}
-      </Button>
+      {confirming ? (
+        <>
+          <p className="font-semibold text-ink">{t("deleteConfirm")}</p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() =>
+                startTransition(async () => {
+                  const res = await deleteDream(dreamId, locale);
+                  if (res && !res.ok) setError(t(`errors.${res.error}`));
+                })
+              }
+              className="h-11 rounded-full bg-danger px-5 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              {pending ? tCommon("saving") : t("deleteYes")}
+            </button>
+            <Button type="button" variant="ghost" disabled={pending} onClick={() => setConfirming(false)}>
+              {tCommon("cancel")}
+            </Button>
+          </div>
+        </>
+      ) : (
+        <Button type="button" variant="secondary" onClick={() => setConfirming(true)}>
+          {t("delete")}
+        </Button>
+      )}
     </div>
   );
 }

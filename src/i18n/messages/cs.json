@@ -607,7 +607,8 @@
       "tooLong": "Některý text je příliš dlouhý (nejvýš 5000 znaků).",
       "notAllowed": "Nemáš oprávnění upravovat tento event.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
-      "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku)."
+      "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku).",
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
     },
     "closesHint": "Nepovinné. Bez uzávěrky se lze hlásit až do začátku eventu.",
     "opensHint": "Bez data se zatím nikdo přihlásit nemůže."
@@ -1230,7 +1231,8 @@
       "ownVehicle": "Vlastní auto do Garáže snů přidat nejde.",
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
-    }
+    },
+    "deleteYes": "Ano, smazat sen"
   },
   "Qr": {
     "title": "QR samolepka",
@@ -1343,6 +1345,16 @@
       "alreadyMember": "Tenhle člověk už pořadatele spravuje.",
       "limit": "Pořadatel může mít nejvýš 20 spolupořadatelů.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    },
+    "deleteTitle": "Smazat pořadatele",
+    "deleteText": "Založil(a) jsi pořadatele omylem? Dokud nemá žádný event (ani koncept), můžeš ho smazat. Spolupořadatelé a sledující se odeberou.",
+    "deleteButton": "Smazat tohoto pořadatele",
+    "deleteQuestion": "Opravdu trvale smazat pořadatele „{name}“?",
+    "deleteYes": "Ano, smazat pořadatele",
+    "deleteErrors": {
+      "hasEvents": "Pořadatel už má eventy, proto smazat nejde.",
+      "notAllowed": "Smazat pořadatele může jen jeho vlastník.",
+      "generic": "Smazání se nepovedlo, zkus to prosím znovu."
     }
   },
   "Crews": {

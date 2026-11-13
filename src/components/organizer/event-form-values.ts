@@ -27,6 +27,13 @@ export function toEventFormValues(e: EventRow): EventFormValues {
     verified_head_start_hours: e.verified_head_start_hours,
     registration_opens_at: utcToZonedLocal(e.registration_opens_at, e.timezone),
     registration_closes_at: utcToZonedLocal(e.registration_closes_at, e.timezone),
+    social: {
+      website_url: e.website_url,
+      instagram_url: e.instagram_url,
+      facebook_url: e.facebook_url,
+      tiktok_url: e.tiktok_url,
+      youtube_url: e.youtube_url,
+    },
   };
 }
 
@@ -52,4 +59,5 @@ export const EMPTY_EVENT_VALUES: EventFormValues = {
   verified_head_start_hours: 0,
   registration_opens_at: "",
   registration_closes_at: "",
+  social: {},
 };

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { translateTexts } from "@/lib/translate";
 import { getEventShare, shareMetadata } from "@/lib/data/share";
 import { ShareButton } from "@/components/share-button";
+import { SocialLinks } from "@/components/social/social-links";
 import { AddToCalendar } from "@/components/events/add-to-calendar";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -156,6 +157,7 @@ async function EventDetail({
             <AddToCalendar event={event} />
           ) : null}
           <ShareButton title={event.title} />
+          <SocialLinks links={event} className="items-center" />
         </div>
         {isOrganizer ? (
           <div className="mb-8">

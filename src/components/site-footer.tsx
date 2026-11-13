@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { getCurrentUser } from "@/lib/auth/user";
 import { Link } from "@/i18n/navigation";
 import { SITE } from "@/lib/site-config";
 import { Logo } from "@/components/logo";
@@ -19,7 +21,6 @@ export async function SiteFooter() {
         { href: "/leaderboard", label: t("leaderboard") },
         { href: "/crews", label: t("crews") },
         { href: "/organizers", label: t("organizers") },
-        { href: "/register", label: t("register") },
       ],
     },
     {
@@ -47,9 +48,9 @@ export async function SiteFooter() {
         <div className="flex flex-col items-start gap-5">
           <Logo dark />
           <p className="max-w-sm text-sm leading-relaxed">{t("about")}</p>
-          <Link href="/register" className={buttonClasses("primary")}>
-            {t("cta")}
-          </Link>
+          <Suspense fallback={null}>
+            <FooterCta />
+          </Suspense>
         </div>
 
         <nav aria-label={t("sitemap")} className="grid grid-cols-2 gap-8 sm:grid-cols-3">
@@ -110,5 +111,19 @@ export async function SiteFooter() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/** Nepřihlášeným „Přidat se ke klubu“, přihlášeným odkaz do garáže. */
+async function FooterCta() {
+  const [t, user] = await Promise.all([getTranslations("Footer"), getCurrentUser()]);
+  return user ? (
+    <Link href="/garage" className={buttonClasses("primary")}>
+      {t("garage")}
+    </Link>
+  ) : (
+    <Link href="/register" className={buttonClasses("primary")}>
+      {t("cta")}
+    </Link>
   );
 }

@@ -607,7 +607,8 @@
       "tooLong": "Some text is too long (max. 5000 characters).",
       "notAllowed": "You are not allowed to edit this event.",
       "generic": "Saving failed. Please try again.",
-      "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start)."
+      "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start).",
+      "socialInvalid": "This doesn't look like a link or @name."
     },
     "closesHint": "Optional. Without a deadline people can register until the event starts.",
     "opensHint": "Without a date nobody can register yet."
@@ -1230,7 +1231,8 @@
       "ownVehicle": "You can't add your own car to your dream garage.",
       "notAllowed": "You are not allowed to do that.",
       "generic": "Something went wrong, please try again."
-    }
+    },
+    "deleteYes": "Yes, delete dream"
   },
   "Qr": {
     "title": "QR sticker",
@@ -1343,6 +1345,16 @@
       "alreadyMember": "This person already manages the organizer.",
       "limit": "An organizer can have at most 20 co-organizers.",
       "generic": "Something went wrong, please try again."
+    },
+    "deleteTitle": "Delete organizer",
+    "deleteText": "Created this organizer by mistake? As long as it has no events (not even drafts), you can delete it. Co-organizers and followers will be removed.",
+    "deleteButton": "Delete this organizer",
+    "deleteQuestion": "Permanently delete the organizer “{name}”?",
+    "deleteYes": "Yes, delete organizer",
+    "deleteErrors": {
+      "hasEvents": "This organizer already has events, so it can't be deleted.",
+      "notAllowed": "Only the owner can delete this organizer.",
+      "generic": "Deleting failed, please try again."
     }
   },
   "Crews": {
