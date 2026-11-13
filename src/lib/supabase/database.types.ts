@@ -150,9 +150,11 @@ export type Database = {
           cover_key: string | null
           created_at: string
           description: string | null
+          facebook_url: string | null
           focus: string | null
           founder_id: string
           id: string
+          instagram_url: string | null
           join_policy: Database["public"]["Enums"]["crew_join_policy"]
           logo_format: string | null
           logo_key: string | null
@@ -162,7 +164,10 @@ export type Database = {
           rejection_reason: string | null
           slug: string
           status: Database["public"]["Enums"]["crew_status"]
+          tiktok_url: string | null
           updated_at: string
+          website_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           approved_at?: string | null
@@ -170,9 +175,11 @@ export type Database = {
           cover_key?: string | null
           created_at?: string
           description?: string | null
+          facebook_url?: string | null
           focus?: string | null
           founder_id: string
           id?: string
+          instagram_url?: string | null
           join_policy?: Database["public"]["Enums"]["crew_join_policy"]
           logo_format?: string | null
           logo_key?: string | null
@@ -182,7 +189,10 @@ export type Database = {
           rejection_reason?: string | null
           slug: string
           status?: Database["public"]["Enums"]["crew_status"]
+          tiktok_url?: string | null
           updated_at?: string
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           approved_at?: string | null
@@ -190,9 +200,11 @@ export type Database = {
           cover_key?: string | null
           created_at?: string
           description?: string | null
+          facebook_url?: string | null
           focus?: string | null
           founder_id?: string
           id?: string
+          instagram_url?: string | null
           join_policy?: Database["public"]["Enums"]["crew_join_policy"]
           logo_format?: string | null
           logo_key?: string | null
@@ -202,7 +214,10 @@ export type Database = {
           rejection_reason?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["crew_status"]
+          tiktok_url?: string | null
           updated_at?: string
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: [
           {
@@ -861,8 +876,10 @@ export type Database = {
           show_past_events: boolean
           slug: string
           status: Database["public"]["Enums"]["organizer_status"]
+          tiktok_url: string | null
           updated_at: string
           website_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           created_at?: string
@@ -878,8 +895,10 @@ export type Database = {
           show_past_events?: boolean
           slug: string
           status?: Database["public"]["Enums"]["organizer_status"]
+          tiktok_url?: string | null
           updated_at?: string
           website_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           created_at?: string
@@ -895,8 +914,10 @@ export type Database = {
           show_past_events?: boolean
           slug?: string
           status?: Database["public"]["Enums"]["organizer_status"]
+          tiktok_url?: string | null
           updated_at?: string
           website_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: [
           {
@@ -923,13 +944,18 @@ export type Database = {
           country: string | null
           created_at: string
           display_name: string | null
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
           locale: string
           role: string
+          tiktok_url: string | null
           updated_at: string
           username: string | null
           verified_at: string | null
           visibility: Database["public"]["Enums"]["visibility"]
+          website_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           avatar_path?: string | null
@@ -938,13 +964,18 @@ export type Database = {
           country?: string | null
           created_at?: string
           display_name?: string | null
+          facebook_url?: string | null
           id: string
+          instagram_url?: string | null
           locale?: string
           role?: string
+          tiktok_url?: string | null
           updated_at?: string
           username?: string | null
           verified_at?: string | null
           visibility?: Database["public"]["Enums"]["visibility"]
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           avatar_path?: string | null
@@ -953,13 +984,18 @@ export type Database = {
           country?: string | null
           created_at?: string
           display_name?: string | null
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           locale?: string
           role?: string
+          tiktok_url?: string | null
           updated_at?: string
           username?: string | null
           verified_at?: string | null
           visibility?: Database["public"]["Enums"]["visibility"]
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: []
       }

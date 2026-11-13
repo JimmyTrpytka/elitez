@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { parseSocialFields } from "@/lib/social-links";
 import { isSupportedCountry } from "@/lib/countries";
 import { AVATARS_BUCKET } from "@/lib/storage";
 import {
@@ -18,12 +19,13 @@ export type ProfileErrorKey =
   | "cityTooLong"
   | "bioTooLong"
   | "countryInvalid"
+  | "socialInvalid"
   | "notSignedIn"
   | "generic";
 
 export type ProfileFormState =
   | { status: "idle" }
-  | { status: "error"; error: ProfileErrorKey }
+  | { status: "error"; error: ProfileErrorKey; field?: string }
   | { status: "success" };
 
 function text(formData: FormData, name: string): string {
@@ -49,6 +51,8 @@ export async function updateProfile(
   if (bio && bio.length > LIMITS.bio) return { status: "error", error: "bioTooLong" };
   if (country && !isSupportedCountry(country))
     return { status: "error", error: "countryInvalid" };
+  const social = parseSocialFields(formData);
+  if (!social.ok) return { status: "error", error: "socialInvalid", field: social.field };
 
   const supabase = await createClient();
   if (!supabase) return { status: "error", error: "generic" };
@@ -64,6 +68,7 @@ export async function updateProfile(
       bio,
       country,
       visibility,
+      ...social.values,
     })
     .eq("id", auth.user.id);
 

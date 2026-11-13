@@ -89,6 +89,8 @@ async function Content() {
             website_url: organizer.website_url ?? "",
             instagram_url: organizer.instagram_url ?? "",
             facebook_url: organizer.facebook_url ?? "",
+            tiktok_url: organizer.tiktok_url ?? "",
+            youtube_url: organizer.youtube_url ?? "",
             show_past_events: organizer.show_past_events,
           }}
         />

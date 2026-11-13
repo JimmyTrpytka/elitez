@@ -1456,6 +1456,35 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Úložiště: logo/úvodní fotka crew a logo pořadatele (oprava „name“)
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+insert into storage.objects (bucket_id, name)
+values ('crew-images', current_setting('rls.crew_id') || '/k-sm.webp');
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+insert into storage.objects (bucket_id, name)
+values ('organizer-logos', '00000000-0000-4000-c000-00000000000a/k-sm.webp');
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if not exists (select 1 from storage.objects where bucket_id = 'crew-images') then
+    raise exception 'FAIL: obrázek schválené crew není vidět';
+  end if;
+  if not exists (select 1 from storage.objects where bucket_id = 'organizer-logos') then
+    raise exception 'FAIL: logo pořadatele není vidět';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

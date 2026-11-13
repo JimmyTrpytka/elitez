@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
-import { normalizeUrl } from "@/lib/url";
+import { parseSocialFields } from "@/lib/social-links";
 import { getCurrentOrganizerId } from "@/lib/organizer/current";
 
 /** Chyby jako klíče do překladů `OrganizerProfile.errors`. */
@@ -57,22 +57,14 @@ export async function saveOrganizerProfile(
   if (name.length > 80 || (description?.length ?? 0) > 2000) return { status: "error", error: "tooLong" };
   if (!SLUG.test(slug) || slug.length > 60) return { status: "error", error: "slugInvalid", field: "slug" };
 
-  const urls: Record<"website_url" | "instagram_url" | "facebook_url", string | null> = {
-    website_url: null,
-    instagram_url: null,
-    facebook_url: null,
-  };
-  for (const key of Object.keys(urls) as Array<keyof typeof urls>) {
-    const normalized = normalizeUrl(text(formData, key));
-    if (normalized === undefined) return { status: "error", error: "urlInvalid", field: key };
-    urls[key] = normalized;
-  }
+  const social = parseSocialFields(formData);
+  if (!social.ok) return { status: "error", error: "urlInvalid", field: social.field };
 
   const ctx = await myOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
   const { error } = await ctx.supabase
     .from("organizers")
-    .update({ name, description, slug, show_past_events: showPast, ...urls })
+    .update({ name, description, slug, show_past_events: showPast, ...social.values })
     .eq("id", ctx.organizer.id);
   if (error) {
     if (error.code === "23505") return { status: "error", error: "slugTaken", field: "slug" };

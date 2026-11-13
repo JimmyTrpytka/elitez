@@ -234,7 +234,8 @@
       "bioTooLong": "Text „O mně“ je příliš dlouhý.",
       "countryInvalid": "Vyber zemi ze seznamu.",
       "notSignedIn": "Nejsi přihlášen(a). Přihlas se prosím znovu.",
-      "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
+      "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
     }
   },
   "Garage": {
@@ -1446,7 +1447,8 @@
       "notAllowed": "Na tohle nemáš oprávnění.",
       "tooLong": "Některý text je moc dlouhý.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu.",
-      "alreadyOrganizer": "Crew už srazy pořádat může."
+      "alreadyOrganizer": "Crew už srazy pořádat může.",
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
     },
     "meetsAdminTitle": "Srazy crew",
     "meetsAdminOn": "Crew může pořádat vlastní srazy – i jen pro členy.",
@@ -1502,5 +1504,24 @@
     "translating": "Překládám…",
     "autoNote": "Přeloženo automaticky.",
     "failed": "Překlad teď není k dispozici."
+  },
+  "SocialLinks": {
+    "legend": "Sociální sítě a web",
+    "hint": "Stačí napsat jen @jméno – odkaz doplníme sami. Všechna pole jsou nepovinná.",
+    "labels": {
+      "website": "Web",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "facebook": "Facebook"
+    },
+    "placeholders": {
+      "website": "www.mujweb.cz",
+      "instagram": "@jmeno",
+      "tiktok": "@jmeno",
+      "youtube": "@kanal",
+      "facebook": "jmeno nebo odkaz"
+    },
+    "invalid": "Tohle nevypadá jako odkaz ani @jméno."
   }
 }

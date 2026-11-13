@@ -6,6 +6,7 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import { CREW_IMAGES_BUCKET, crewImagePath } from "@/lib/storage";
+import { parseSocialFields } from "@/lib/social-links";
 
 /** Chyby jako klíče do překladů `Crews.errors`. */
 export type CrewError =
@@ -143,7 +144,10 @@ export async function decideCrewMember(
   return { ok: true };
 }
 
-export type CrewEditState = { status: "idle" } | { status: "saved" } | { status: "error"; error: CrewError };
+export type CrewEditState =
+  | { status: "idle" }
+  | { status: "saved" }
+  | { status: "error"; error: CrewError | "socialInvalid"; field?: string };
 
 /** Úprava crew správcem (popis, zaměření, vstup). */
 export async function updateCrew(_prev: CrewEditState, formData: FormData): Promise<CrewEditState> {
@@ -153,11 +157,13 @@ export async function updateCrew(_prev: CrewEditState, formData: FormData): Prom
   const joinPolicy = text(formData, "join_policy") === "open" ? "open" : "approval";
   if (!UUID.test(id)) return { status: "error", error: "notAllowed" };
   if (focus.length > 80 || description.length > 2000) return { status: "error", error: "tooLong" };
+  const social = parseSocialFields(formData);
+  if (!social.ok) return { status: "error", error: "socialInvalid", field: social.field };
   const supabase = await createClient();
   if (!supabase) return { status: "error", error: "generic" };
   const { data, error } = await supabase
     .from("crews")
-    .update({ focus: focus || null, description: description || null, join_policy: joinPolicy })
+    .update({ focus: focus || null, description: description || null, join_policy: joinPolicy, ...social.values })
     .eq("id", id)
     .select("id");
   if (error) return { status: "error", error: "generic" };

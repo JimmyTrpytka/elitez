@@ -234,7 +234,8 @@
       "bioTooLong": "The “About me” text is too long.",
       "countryInvalid": "Choose a country from the list.",
       "notSignedIn": "You are not signed in. Please sign in again.",
-      "generic": "Saving failed. Please try again."
+      "generic": "Saving failed. Please try again.",
+      "socialInvalid": "This doesn't look like a link or @name."
     }
   },
   "Garage": {
@@ -1446,7 +1447,8 @@
       "notAllowed": "You are not allowed to do that.",
       "tooLong": "Some text is too long.",
       "generic": "Something went wrong, please try again.",
-      "alreadyOrganizer": "The crew can already host meets."
+      "alreadyOrganizer": "The crew can already host meets.",
+      "socialInvalid": "This doesn't look like a link or @name."
     },
     "meetsAdminTitle": "Crew meets",
     "meetsAdminOn": "The crew can host its own meets – even members-only.",
@@ -1502,5 +1504,24 @@
     "translating": "Translating…",
     "autoNote": "Translated automatically.",
     "failed": "Translation is not available right now."
+  },
+  "SocialLinks": {
+    "legend": "Social media & website",
+    "hint": "Just type @name – we'll complete the link. All fields are optional.",
+    "labels": {
+      "website": "Website",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "facebook": "Facebook"
+    },
+    "placeholders": {
+      "website": "www.mysite.com",
+      "instagram": "@name",
+      "tiktok": "@name",
+      "youtube": "@channel",
+      "facebook": "name or link"
+    },
+    "invalid": "This doesn't look like a link or @name."
   }
 }

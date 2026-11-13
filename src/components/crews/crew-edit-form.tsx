@@ -10,13 +10,20 @@ import { Field } from "@/components/ui/field";
 import { TextareaField } from "@/components/ui/textarea";
 import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
 import { updateCrew, type CrewEditState } from "@/lib/crews/actions";
+import { SocialFields } from "@/components/social/social-fields";
 
 const initial: CrewEditState = { status: "idle" };
 
 export function CrewEditForm({
   values,
 }: {
-  values: { id: string; focus: string; description: string; join_policy: "open" | "approval" };
+  values: {
+    id: string;
+    focus: string;
+    description: string;
+    join_policy: "open" | "approval";
+    social: Partial<Record<"website_url" | "instagram_url" | "tiktok_url" | "youtube_url" | "facebook_url", string | null>>;
+  };
 }) {
   const t = useTranslations("Crews");
   const tCommon = useTranslations("Common");
@@ -26,9 +33,14 @@ export function CrewEditForm({
     <form onSubmit={submit} className="flex flex-col gap-5">
       <input type="hidden" name="id" value={values.id} />
       {state.status === "saved" ? <Alert tone="success">{t("saved")}</Alert> : null}
-      {state.status === "error" ? <Alert tone="error">{t(`errors.${state.error}`)}</Alert> : null}
+      {state.status === "error" && !state.field ? <Alert tone="error">{t(`errors.${state.error}`)}</Alert> : null}
       <Field label={t("focusLabel")} name="focus" maxLength={80} defaultValue={values.focus} hint={t("focusHint")} />
       <TextareaField label={t("descriptionLabel")} name="description" rows={5} maxLength={2000} defaultValue={values.description} />
+      <SocialFields
+        values={values.social}
+        errorField={state.status === "error" ? state.field : undefined}
+        errorMessage={state.status === "error" ? t(`errors.${state.error}`) : undefined}
+      />
       <ChoiceCards
         legend={t("policyLabel")}
         name="join_policy"
