@@ -234,7 +234,8 @@
       "bioTooLong": "Text „O mně“ je příliš dlouhý.",
       "countryInvalid": "Vyber zemi ze seznamu.",
       "notSignedIn": "Nejsi přihlášen(a). Přihlas se prosím znovu.",
-      "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
+      "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
     }
   },
   "Garage": {
@@ -265,7 +266,9 @@
     "tabDreams": "Garáž snů",
     "tabFormer": "Předchozí auta",
     "addDream": "Přidat sen",
-    "qrSticker": "QR samolepka"
+    "qrSticker": "QR samolepka",
+    "formerSection": "Prodaná auta",
+    "formerSectionHint": "Předchozí projekty zůstávají v garáži i na tvém profilu – jsou součástí tvého příběhu."
   },
   "Vehicle": {
     "newTitle": "Nové vozidlo",
@@ -315,7 +318,9 @@
       "usernameRequired": "Nejdřív si v profilu zvol uživatelské jméno.",
       "notAllowed": "K této akci nemáš oprávnění, nebo vozidlo neexistuje.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
-    }
+    },
+    "soldBadge": "Prodáno",
+    "soldIn": "Prodáno {year}"
   },
   "Photos": {
     "empty": "Zatím žádné fotky. První fotka bude hlavní.",
@@ -859,6 +864,14 @@
       "crew_organizer_approved": {
         "title": "Tvoje crew může pořádat srazy!",
         "text": "Crew „{crew}“ teď může zakládat vlastní srazy – i jen pro členy. Najdeš je v sekci Pořadatel."
+      },
+      "organizer_member_added": {
+        "title": "Jsi spolupořadatel: {organizer}",
+        "text": "Můžeš zakládat a upravovat eventy pořadatele {organizer}. Najdeš je v sekci Pořadatel."
+      },
+      "crew_admin_added": {
+        "title": "Jsi správce crew",
+        "text": "V crew „{crew}“ teď můžeš schvalovat členy, upravovat crew a spravovat její srazy."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1312,6 +1325,24 @@
       "urlInvalid": "Tohle nevypadá jako odkaz (např. instagram.com/vas-profil).",
       "notAllowed": "Na tohle nemáš oprávnění.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    },
+    "coTitle": "Spolupořadatelé",
+    "coIntro": "Spolupořadatelé zakládají a upravují eventy tohoto pořadatele, schvalují přihlášky a posílají zprávy. Další lidi přidávat nemůžou.",
+    "coEmpty": "Zatím žádní spolupořadatelé.",
+    "coUsernameLabel": "Uživatelské jméno",
+    "coUsernamePlaceholder": "@uzivatelske.jmeno",
+    "coAdd": "Přidat spolupořadatele",
+    "coAdded": "@{username} je teď spolupořadatel.",
+    "coRemove": "Odebrat",
+    "coLeave": "Odejít",
+    "coRemoveConfirm": "Odebrat tohoto spolupořadatele?",
+    "coLeaveConfirm": "Opravdu přestat být spolupořadatelem?",
+    "coErrors": {
+      "notAllowed": "Spolupořadatele může přidávat jen vlastník pořadatele.",
+      "userNotFound": "Člena s tímhle uživatelským jménem jsme nenašli.",
+      "alreadyMember": "Tenhle člověk už pořadatele spravuje.",
+      "limit": "Pořadatel může mít nejvýš 20 spolupořadatelů.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
   },
   "Crews": {
@@ -1420,7 +1451,8 @@
       "notAllowed": "Na tohle nemáš oprávnění.",
       "tooLong": "Některý text je moc dlouhý.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu.",
-      "alreadyOrganizer": "Crew už srazy pořádat může."
+      "alreadyOrganizer": "Crew už srazy pořádat může.",
+      "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
     },
     "meetsAdminTitle": "Srazy crew",
     "meetsAdminOn": "Crew může pořádat vlastní srazy – i jen pro členy.",
@@ -1431,7 +1463,9 @@
     "manageMeets": "Spravovat srazy crew",
     "meetsTitle": "Srazy",
     "meetsNone": "Teď nic naplánovaného.",
-    "meetsPast": "Proběhlé srazy"
+    "meetsPast": "Proběhlé srazy",
+    "makeAdmin": "Udělat správcem",
+    "revokeAdmin": "Odvolat správce"
   },
   "AdminCrews": {
     "title": "Crew ke schválení",
@@ -1474,5 +1508,24 @@
     "translating": "Překládám…",
     "autoNote": "Přeloženo automaticky.",
     "failed": "Překlad teď není k dispozici."
+  },
+  "SocialLinks": {
+    "legend": "Sociální sítě a web",
+    "hint": "Stačí napsat jen @jméno – odkaz doplníme sami. Všechna pole jsou nepovinná.",
+    "labels": {
+      "website": "Web",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "facebook": "Facebook"
+    },
+    "placeholders": {
+      "website": "www.mujweb.cz",
+      "instagram": "@jmeno",
+      "tiktok": "@jmeno",
+      "youtube": "@kanal",
+      "facebook": "jmeno nebo odkaz"
+    },
+    "invalid": "Tohle nevypadá jako odkaz ani @jméno."
   }
 }

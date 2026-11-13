@@ -1370,6 +1370,121 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Spolupořadatelé a správci crew
+-- Alice vlastní „Alice Events“, Carol = zakladatelka crew, Bob = člen
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.add_organizer_member('00000000-0000-4000-c000-00000000000a', 'rls_bob');
+    raise exception 'FAIL: cizí člověk přidal spolupořadatele';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.add_organizer_member('00000000-0000-4000-c000-00000000000a', 'rls_bob');
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.my_organizers() where id = '00000000-0000-4000-c000-00000000000a') then
+    raise exception 'FAIL: spolupořadatel nespravuje pořadatele';
+  end if;
+  if not exists (select 1 from public.notifications where type = 'organizer_member_added') then
+    raise exception 'FAIL: spolupořadatel nedostal upozornění';
+  end if;
+  insert into public.events (organizer_id, slug, title, starts_at, ends_at)
+  values ('00000000-0000-4000-c000-00000000000a', 'rls-spolu', 'Od spolupořadatele', now() + interval '9 days', now() + interval '10 days');
+  begin
+    perform public.add_organizer_member('00000000-0000-4000-c000-00000000000a', 'rls_carol');
+    raise exception 'FAIL: spolupořadatel přidal dalšího člověka';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    insert into public.organizer_members (organizer_id, user_id) values ('00000000-0000-4000-c000-00000000000a', '00000000-0000-4000-a000-0000000ca201');
+    raise exception 'FAIL: spolupořadatele jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+  perform public.remove_organizer_member('00000000-0000-4000-c000-00000000000a', auth.uid());
+  if exists (select 1 from public.my_organizers() where id = '00000000-0000-4000-c000-00000000000a') then
+    raise exception 'FAIL: spolupořadatel neodešel';
+  end if;
+end $$;
+reset role;
+
+-- Bob znovu do crew a Carol z něj udělá správce
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+select public.join_crew(current_setting('rls.crew_id')::uuid);
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+select public.decide_crew_member(current_setting('rls.crew_id')::uuid, '00000000-0000-4000-a000-000000000b0b', 'approve');
+select public.set_crew_member_role(current_setting('rls.crew_id')::uuid, '00000000-0000-4000-a000-000000000b0b', 'admin');
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if not exists (select 1 from public.my_organizers() where crew_id = current_setting('rls.crew_id')::uuid) then
+    raise exception 'FAIL: správce crew nespravuje její srazy';
+  end if;
+  if not exists (select 1 from public.notifications where type = 'crew_admin_added') then
+    raise exception 'FAIL: správce crew nedostal upozornění';
+  end if;
+  begin
+    perform public.set_crew_member_role(current_setting('rls.crew_id')::uuid, auth.uid(), 'member');
+    raise exception 'FAIL: správce crew měnil role (smí jen zakladatel)';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- =====================================================================
+-- Úložiště: logo/úvodní fotka crew a logo pořadatele (oprava „name“)
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+insert into storage.objects (bucket_id, name)
+values ('crew-images', current_setting('rls.crew_id') || '/k-sm.webp');
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+insert into storage.objects (bucket_id, name)
+values ('organizer-logos', '00000000-0000-4000-c000-00000000000a/k-sm.webp');
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if not exists (select 1 from storage.objects where bucket_id = 'crew-images') then
+    raise exception 'FAIL: obrázek schválené crew není vidět';
+  end if;
+  if not exists (select 1 from storage.objects where bucket_id = 'organizer-logos') then
+    raise exception 'FAIL: logo pořadatele není vidět';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

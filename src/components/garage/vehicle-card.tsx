@@ -24,6 +24,8 @@ export async function VehicleCard({
   const t = await getTranslations("Vehicle");
   const tCommon = await getTranslations("Common");
   const title = `${vehicle.make} ${vehicle.model}`;
+  const sold = vehicle.status === "former";
+  const soldYear = vehicle.sold_on ? vehicle.sold_on.slice(0, 4) : null;
 
   return (
     <Link
@@ -42,7 +44,10 @@ export async function VehicleCard({
             src={vehicle.cover.urls.md}
             alt={title}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className={cn(
+              "h-full w-full object-cover transition-all duration-700 group-hover:scale-105",
+              sold && "grayscale group-hover:grayscale-0",
+            )}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-subtle">
@@ -54,6 +59,11 @@ export async function VehicleCard({
             <TurboIcon className="h-4 w-4 text-accent" />
             {turbos}
             <span className="sr-only">{tCommon("turbos", { count: turbos })}</span>
+          </span>
+        ) : null}
+        {sold ? (
+          <span className="absolute top-3 right-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-ink">
+            {soldYear ? t("soldIn", { year: soldYear }) : t("soldBadge")}
           </span>
         ) : null}
         {showVisibility && vehicle.visibility === "private" ? (

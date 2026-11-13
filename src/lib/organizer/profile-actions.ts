@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
-import { normalizeUrl } from "@/lib/url";
+import { parseSocialFields } from "@/lib/social-links";
 import { getCurrentOrganizerId } from "@/lib/organizer/current";
 
 /** Chyby jako klíče do překladů `OrganizerProfile.errors`. */
@@ -57,22 +57,14 @@ export async function saveOrganizerProfile(
   if (name.length > 80 || (description?.length ?? 0) > 2000) return { status: "error", error: "tooLong" };
   if (!SLUG.test(slug) || slug.length > 60) return { status: "error", error: "slugInvalid", field: "slug" };
 
-  const urls: Record<"website_url" | "instagram_url" | "facebook_url", string | null> = {
-    website_url: null,
-    instagram_url: null,
-    facebook_url: null,
-  };
-  for (const key of Object.keys(urls) as Array<keyof typeof urls>) {
-    const normalized = normalizeUrl(text(formData, key));
-    if (normalized === undefined) return { status: "error", error: "urlInvalid", field: key };
-    urls[key] = normalized;
-  }
+  const social = parseSocialFields(formData);
+  if (!social.ok) return { status: "error", error: "urlInvalid", field: social.field };
 
   const ctx = await myOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
   const { error } = await ctx.supabase
     .from("organizers")
-    .update({ name, description, slug, show_past_events: showPast, ...urls })
+    .update({ name, description, slug, show_past_events: showPast, ...social.values })
     .eq("id", ctx.organizer.id);
   if (error) {
     if (error.code === "23505") return { status: "error", error: "slugTaken", field: "slug" };
@@ -115,6 +107,41 @@ export async function removeOrganizerLogo(): Promise<{ ok: boolean }> {
     .eq("id", ctx.organizer.id);
   if (error) return { ok: false };
   await removeLogoFiles(ctx.supabase, ctx.organizer);
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export type CoOrganizerResult = { ok: true } | { ok: false; error: "notAllowed" | "userNotFound" | "alreadyMember" | "limit" | "generic" };
+
+function coError(message: string | undefined): CoOrganizerResult {
+  if (message === "not_allowed") return { ok: false, error: "notAllowed" };
+  if (message === "user_not_found") return { ok: false, error: "userNotFound" };
+  if (message === "already_member") return { ok: false, error: "alreadyMember" };
+  if (message === "member_limit") return { ok: false, error: "limit" };
+  return { ok: false, error: "generic" };
+}
+
+/** Přidá spolupořadatele (podle uživatelského jména) k právě spravovanému pořadateli. */
+export async function addCoOrganizer(username: string): Promise<CoOrganizerResult> {
+  const clean = username.trim().replace(/^@/, "").toLowerCase();
+  if (!/^[a-z0-9._]{3,30}$/.test(clean)) return { ok: false, error: "userNotFound" };
+  const supabase = await createClient();
+  const id = await getCurrentOrganizerId();
+  if (!supabase || !id) return { ok: false, error: "notAllowed" };
+  const { error } = await supabase.rpc("add_organizer_member", { p_organizer_id: id, p_username: clean });
+  if (error) return coError(error.message);
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/** Odebere spolupořadatele (vlastník), nebo odejde sám. */
+export async function removeCoOrganizer(userId: string): Promise<CoOrganizerResult> {
+  if (!UUID.test(userId)) return { ok: false, error: "notAllowed" };
+  const supabase = await createClient();
+  const id = await getCurrentOrganizerId();
+  if (!supabase || !id) return { ok: false, error: "notAllowed" };
+  const { error } = await supabase.rpc("remove_organizer_member", { p_organizer_id: id, p_user_id: userId });
+  if (error) return coError(error.message);
   revalidatePath("/", "layout");
   return { ok: true };
 }

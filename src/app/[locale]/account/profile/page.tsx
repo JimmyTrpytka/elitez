@@ -62,6 +62,13 @@ async function EditProfileContent() {
             city: profile.city ?? "",
             bio: profile.bio ?? "",
             visibility: profile.visibility,
+            social: {
+              website_url: profile.website_url,
+              instagram_url: profile.instagram_url,
+              tiktok_url: profile.tiktok_url,
+              youtube_url: profile.youtube_url,
+              facebook_url: profile.facebook_url,
+            },
           }}
         />
       </section>

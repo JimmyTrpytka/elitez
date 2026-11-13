@@ -13,6 +13,7 @@ import { DisplayHeading, Eyebrow } from "@/components/brand";
 import { EventCard } from "@/components/events/event-card";
 import { FollowButton } from "@/components/social/follow-button";
 import { ShareButton } from "@/components/share-button";
+import { SocialLinks } from "@/components/social/social-links";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { buttonClasses } from "@/components/ui/button";
 
@@ -49,11 +50,7 @@ async function OrganizerProfile({ params }: { params: PageProps<"/[locale]/o/[sl
   ]);
   const isOwner = mine.some((o) => o.id === organizer.id);
   const mode = isOwner ? "own" : user ? "active" : "guest";
-  const links = [
-    { href: organizer.website_url, label: t("website") },
-    { href: organizer.instagram_url, label: "Instagram" },
-    { href: organizer.facebook_url, label: "Facebook" },
-  ].filter((l): l is { href: string; label: string } => Boolean(l.href));
+
 
   return (
     <div className="flex-1 bg-night text-night-text">
@@ -77,21 +74,7 @@ async function OrganizerProfile({ params }: { params: PageProps<"/[locale]/o/[sl
               {organizer.description ? (
                 <p className="mt-4 max-w-2xl text-lg whitespace-pre-line text-white/75">{organizer.description}</p>
               ) : null}
-              {links.length ? (
-                <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                  {links.map((l) => (
-                    <a
-                      key={l.label}
-                      href={l.href}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4 hover:text-accent"
-                    >
-                      {l.label} ↗
-                    </a>
-                  ))}
-                </p>
-              ) : null}
+              <SocialLinks links={organizer} className="mt-4" />
             </div>
           </div>
           <div className="reveal reveal-delay-2 mt-8 flex flex-wrap items-center gap-4 border-t border-white/10 pt-8">

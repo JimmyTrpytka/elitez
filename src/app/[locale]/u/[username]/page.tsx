@@ -17,6 +17,7 @@ import {
   listUserBadges,
 } from "@/lib/data/social";
 import { HallOfFame } from "@/components/social/hall-of-fame";
+import { SocialLinks } from "@/components/social/social-links";
 import { listProfileCrews } from "@/lib/data/crews";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { getProfileShare, shareMetadata } from "@/lib/data/share";
@@ -148,6 +149,7 @@ async function PublicProfile({
                   ))}
                 </div>
               ) : null}
+              <SocialLinks links={profile} className="mt-4" />
               {profile.bio ? (
                 <div className="mt-4">
                   <Translatable kind="profile" id={profile.id} show={translationEnabled() && needsTranslation(profile.bio, locale === "en" ? "en" : "cs")}>

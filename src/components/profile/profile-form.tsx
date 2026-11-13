@@ -14,6 +14,7 @@ import { TextareaField } from "@/components/ui/textarea";
 import { countryOptions } from "@/lib/countries";
 import { updateProfile, type ProfileFormState } from "@/lib/profile/actions";
 import { LIMITS } from "@/lib/validation";
+import { SocialFields } from "@/components/social/social-fields";
 
 export type ProfileFormValues = {
   username: string;
@@ -22,6 +23,7 @@ export type ProfileFormValues = {
   city: string;
   bio: string;
   visibility: "public" | "private";
+  social: Partial<Record<"website_url" | "instagram_url" | "tiktok_url" | "youtube_url" | "facebook_url", string | null>>;
 };
 
 const initial: ProfileFormState = { status: "idle" };
@@ -35,7 +37,7 @@ export function ProfileForm({ values }: { values: ProfileFormValues }) {
   const formRef = useRef<HTMLFormElement>(null);
   // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
   const fieldOf: Record<string, string> = { usernameInvalid: "username", usernameTaken: "username", displayNameTooLong: "display_name", cityTooLong: "city", bioTooLong: "bio", countryInvalid: "country" };
-  const errField = state.status === "error" ? fieldOf[state.error] : undefined;
+  const errField = state.status === "error" ? (state.field ?? fieldOf[state.error]) : undefined;
   const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
   const errorFor = (name: string) => (errField === name ? errMessage : undefined);
   useScrollToError(state, errField, formRef);
@@ -107,6 +109,7 @@ export function ProfileForm({ values }: { values: ProfileFormValues }) {
         defaultValue={values.bio}
         hint={t("bioHint", { max: LIMITS.bio })}
       />
+      <SocialFields values={values.social} errorField={errField} errorMessage={errMessage} />
       <ChoiceCards
         legend={t("visibilityLabel")}
         name="visibility"

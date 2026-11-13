@@ -53,6 +53,13 @@ async function Content({ params }: { params: PageProps<"/[locale]/c/[slug]/edit"
             focus: crew.focus ?? "",
             description: crew.description ?? "",
             join_policy: crew.join_policy,
+            social: {
+              website_url: crew.website_url,
+              instagram_url: crew.instagram_url,
+              tiktok_url: crew.tiktok_url,
+              youtube_url: crew.youtube_url,
+              facebook_url: crew.facebook_url,
+            },
           }}
         />
       </section>

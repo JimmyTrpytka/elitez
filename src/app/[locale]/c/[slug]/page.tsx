@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { ShareButton } from "@/components/share-button";
+import { SocialLinks } from "@/components/social/social-links";
 import { TurboIcon } from "@/components/social/turbo-icon";
 import { BadgeMedal, RARITY_COLOR } from "@/components/social/badge-medal";
 import { ScrollToHash } from "@/components/scroll-to-hash";
@@ -95,6 +96,7 @@ async function CrewDetail({ params, searchParams }: PageProps<"/[locale]/c/[slug
               <DisplayHeading as="h1" size="lg" className="text-white">
                 {crew.name}
               </DisplayHeading>
+              <SocialLinks links={crew} className="mt-4" />
             </div>
           </div>
           <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
@@ -247,8 +249,14 @@ async function CrewDetail({ params, searchParams }: PageProps<"/[locale]/c/[slug
                       </span>
                     </span>
                   </Link>
-                  {isManager && m.role === "member" ? (
-                    <CrewMemberAdmin crewId={crew.id} userId={m.userId} status="active" />
+                  {isManager && m.role !== "founder" && (m.role === "member" || crew.stats.myRole === "founder") ? (
+                    <CrewMemberAdmin
+                      crewId={crew.id}
+                      userId={m.userId}
+                      status="active"
+                      role={m.role}
+                      canSetRole={crew.stats.myRole === "founder"}
+                    />
                   ) : null}
                 </li>
               ))}

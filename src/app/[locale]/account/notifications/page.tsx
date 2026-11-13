@@ -152,7 +152,8 @@ async function NotificationsList() {
       case "crew_join_request":
       case "crew_member_approved":
       case "crew_organizer_request":
-      case "crew_organizer_approved": {
+      case "crew_organizer_approved":
+      case "crew_admin_added": {
         const v = {
           crew: p.crew_name ?? "",
           name: p.display_name ?? (p.username ? `@${p.username}` : ""),
@@ -182,6 +183,13 @@ async function NotificationsList() {
                 : t("openCrew"),
         };
       }
+      case "organizer_member_added":
+        return {
+          title: t("types.organizer_member_added.title", { organizer: p.organizer_name ?? "" }),
+          text: t("types.organizer_member_added.text", { organizer: p.organizer_name ?? "" }),
+          href: "/organizer",
+          linkLabel: t("openOrganizer"),
+        };
       default:
         return {
           title: t(`types.${n.type}.title`, vars),
