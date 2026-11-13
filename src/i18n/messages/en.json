@@ -625,10 +625,20 @@
       "notAllowed": "You are not allowed to edit this event.",
       "generic": "Saving failed. Please try again.",
       "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start).",
-      "socialInvalid": "This doesn't look like a link or @name."
+      "socialInvalid": "This doesn't look like a link or @name.",
+      "mediaCapacityInvalid": "Enter the number of media spots (1–500) or choose Unlimited."
     },
     "closesHint": "Optional. Without a deadline people can register until the event starts.",
-    "opensHint": "Without a date nobody can register yet."
+    "opensHint": "Without a date nobody can register yet.",
+    "mediaTitle": "Media (photographers and videographers)",
+    "mediaEnabledLabel": "We accept media",
+    "mediaEnabledHint": "Creators (photographers, videographers, reels makers) can apply as media. You approve the requests and approved media are shown on the event page.",
+    "mediaLimitLegend": "Media spots",
+    "mediaLimit": {
+      "unlimited": "Unlimited",
+      "limited": "Limited"
+    },
+    "mediaCapacityLabel": "How many media you'll accept"
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -890,6 +900,14 @@
       "crew_admin_added": {
         "title": "You're a crew admin",
         "text": "In the crew “{crew}” you can now approve members, edit the crew and manage its meets."
+      },
+      "media_approved": {
+        "title": "Media accreditation approved!",
+        "text": "You're approved as media for {event}. You'll be shown on the event page."
+      },
+      "media_rejected": {
+        "title": "Accreditation not accepted",
+        "text": "Your media accreditation request for {event} wasn't accepted this time."
       }
     },
     "openVehicle": "View car",
@@ -910,7 +928,8 @@
     "openCrew": "View crew",
     "openCrewReview": "Review crews",
     "crewReason": "Reason: {reason}",
-    "openOrganizer": "Go to Organizer"
+    "openOrganizer": "Go to Organizer",
+    "organizerMessage": "Message from the organizer: {message}"
   },
   "Broadcast": {
     "title": "Messages to participants",
@@ -1624,5 +1643,80 @@
       "notAllowed": "You're not allowed to do that.",
       "generic": "Something went wrong, please try again."
     }
+  },
+  "Media": {
+    "title": "Media",
+    "intro": "Shooting and filming for us:",
+    "introEmpty": "Do you shoot photos, film or make reels? Apply as media.",
+    "capacity": "Media spots: {count}.",
+    "skills": {
+      "photo": "Photo",
+      "video": "Video",
+      "drone": "Drone"
+    },
+    "notCreatorHint": "Photographer or videographer? Turn on “I'm a Creator” in your profile and you can apply as media.",
+    "becomeCreator": "Edit profile",
+    "guestHint": "Photographers and videographers can apply as media.",
+    "login": "Log in",
+    "cta": "Apply as media",
+    "ctaText": "Want to shoot or film at this event? Send the organizer an accreditation request.",
+    "formTitle": "Media application",
+    "formIntro": "The organizer will see your profile and portfolio. Your contact is only used to arrange things for the event.",
+    "skillsLabel": "What will you do?",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "messageLabel": "Who you shoot / film for (optional)",
+    "messageHint": "E.g. your Instagram, a magazine, a YouTube channel, what you offer the organizer.",
+    "consent": "I agree that the organizer can see my contact and profile for the accreditation.",
+    "submit": "Send request",
+    "myRequest": "My accreditation",
+    "status": {
+      "pending": "Awaiting approval",
+      "approved": "Approved",
+      "rejected": "Not accepted",
+      "cancelled": "Cancelled"
+    },
+    "statusText": {
+      "pending": "The organizer hasn't reviewed your request yet. We'll let you know.",
+      "approved": "You're approved as media – your profile is shown on the event page.",
+      "rejected": "It didn't work out this time.",
+      "cancelled": "The request is cancelled."
+    },
+    "organizerMessage": "Message from the organizer",
+    "cancel": "Cancel accreditation",
+    "cancelQuestion": "Really cancel?",
+    "cancelYes": "Yes, cancel",
+    "myTitle": "Media accreditations",
+    "organizerTitle": "Media",
+    "organizerDisabled": "You don't accept media for this event.",
+    "organizerEnable": "Turn on in event settings →",
+    "organizerEmpty": "No requests yet.",
+    "organizerUnlimited": "Approved: {approved} (no limit)",
+    "organizerLimited": "Approved: {approved} of {capacity}",
+    "approve": "Approve",
+    "reject": "Reject",
+    "backToPending": "Back to review",
+    "decisionPlaceholder": "Message to the applicant (optional)",
+    "yourMessage": "Your message"
+  },
+  "MediaErrors": {
+    "not_signed_in": "Please log in first.",
+    "not_creator": "Only Creators can apply as media – turn it on in your profile settings.",
+    "username_required": "Set a username in your profile first.",
+    "event_unavailable": "This event isn't available right now.",
+    "media_disabled": "The organizer doesn't accept media for this event.",
+    "invite_only": "This event is invite only.",
+    "crew_only": "This event is for crew members only.",
+    "registration_closed": "The event has already started.",
+    "consent_required": "Please confirm your consent.",
+    "contact_invalid": "Please check your phone and email.",
+    "already_registered": "You've already sent a request.",
+    "not_allowed": "You're not allowed to do that.",
+    "not_cancellable": "This request can't be cancelled any more.",
+    "event_started": "The event has already started.",
+    "cancelled": "The request was cancelled.",
+    "message_too_long": "The message is too long.",
+    "media_full": "Media spots are full. Raise the limit in event settings or move someone back to review.",
+    "generic": "Something went wrong, please try again."
   }
 }

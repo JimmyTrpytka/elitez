@@ -13,6 +13,8 @@ import { EventStatusPanel } from "@/components/organizer/event-status-panel";
 import { buttonClasses } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { textLinkClass } from "@/components/auth/auth-shell";
+import { listEventMediaRequests, mediaStatus } from "@/lib/data/media";
+import { OrganizerMediaList } from "@/components/media/organizer-media-list";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Organizer");
@@ -46,6 +48,8 @@ async function ManageEvent({
   if (!organizer) notFound();
   const event = await getMyEvent(organizer.id, id);
   if (!event) notFound();
+  const [tMedia, mediaRows] = await Promise.all([getTranslations("Media"), listEventMediaRequests(event.id)]);
+  const mediaApproved = mediaRows.filter((r) => r.status === "approved").length;
 
   const facts: Array<[string, string]> = [
     [t("factDates"), formatEventDates(event.starts_at, event.ends_at, locale, event.timezone)],
@@ -136,6 +140,38 @@ async function ManageEvent({
               {t("printList")}
             </Link>
           </div>
+        </Card>
+        <Card>
+          <h2 className="mb-1 text-lg font-semibold">{tMedia("organizerTitle")}</h2>
+          <p className="mb-4 text-sm text-ink-soft">
+            {event.media_enabled
+              ? event.media_capacity
+                ? tMedia("organizerLimited", { approved: mediaApproved, capacity: event.media_capacity })
+                : tMedia("organizerUnlimited", { approved: mediaApproved })
+              : tMedia("organizerDisabled")}
+          </p>
+          {mediaRows.length ? (
+            <OrganizerMediaList
+              items={mediaRows.map((r) => ({
+                id: r.id,
+                status: mediaStatus(r.status),
+                name: r.profile?.display_name || r.profile?.username || "—",
+                username: r.profile?.username ?? null,
+                avatarUrl: r.profile?.avatarUrl ?? null,
+                skills: r.skills,
+                phone: r.contact_phone,
+                email: r.contact_email,
+                message: r.message,
+                decisionMessage: r.decision_message,
+              }))}
+            />
+          ) : event.media_enabled ? (
+            <p className="text-sm text-subtle">{tMedia("organizerEmpty")}</p>
+          ) : (
+            <Link href={`/organizer/events/${event.id}/edit`} className={textLinkClass}>
+              {tMedia("organizerEnable")}
+            </Link>
+          )}
         </Card>
         <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("summaryTitle")}</h2>

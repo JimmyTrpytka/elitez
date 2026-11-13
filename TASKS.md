@@ -195,7 +195,7 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 - [x] Sociální sítě a web u eventu
 - [x] Smazání omylem založeného pořadatele (jen bez eventů)
 - [x] CREATOR část 1 – typ účtu Creator, cover fotka pro všechny, portfolio (12 + Archiv tvorby, fotky + video odkazem) – SPEC 5.1h
-- [ ] CREATOR část 2 – registrace na sraz jako MEDIA
+- [x] CREATOR část 2 – registrace na sraz jako MEDIA (limit míst volitelný, schválená média veřejně na eventu) – SPEC 5.1h
 - [ ] CREATOR část 3 – turba na fotkách portfolia, označení auta/eventu u fotky
 - [ ] Galerie fotek u eventu (navazuje na CREATOR – fotky médií u eventu)
 - [ ] Více pořadatelů jednoho eventu (žádost o spolupořádání, hlavní pořadatel potvrzuje)

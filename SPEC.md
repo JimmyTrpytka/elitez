@@ -178,7 +178,8 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - Na profilu vždy **12 prací** (připíchnuté, pak nejnovější), ostatní v **Archivu tvorby** (`/u/<jméno>/archive`). Nejvýš 300 prací, 12 připíchnutých. Viditelnost = viditelnost profilu.
 - **Úvodní (cover) fotka** pro všechny profily.
 - Při nahrání fotek potvrzení „bez čitelné SPZ“ (stejně jako u aut).
-- Další části: registrace na sraz jako **MEDIA** (pořadatel zapne „přijímáme média“, schvaluje zvlášť), turba na fotkách z portfolia, označení auta/eventu u fotky (fotky médií u eventu = galerie eventu).
+- **Média na eventu (část 2, rozhodnuto 13. 11. 2026):** pořadatel u eventu zapne „Přijímáme média“ a zvolí **neomezený, nebo omezený počet** míst. Creator pošle žádost bez auta (zaměření, kontakt, pro koho fotí, souhlas) – až do začátku eventu, nezávisle na registraci aut. Pořadatel schvaluje / zamítá (se zprávou); limit hlídá databáze. Žadatel dostane upozornění v aplikaci. **Schválená média jsou veřejně vidět** na stránce eventu (jen veřejné profily, bez kontaktů) s odkazem na portfolio. Eventy na pozvánky média nepřijímají, „jen pro crew“ jen od členů.
+- Další části: turba na fotkách z portfolia, označení auta/eventu u fotky (fotky médií u eventu = galerie eventu).
 
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).

@@ -14,6 +14,7 @@ import { getEventBySlug } from "@/lib/data/events";
 import { listMyOrganizers } from "@/lib/organizer/current";
 import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
+import { MediaSection } from "@/components/media/media-section";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { DisplayHeading } from "@/components/brand";
@@ -203,6 +204,10 @@ async function EventDetail({
 
         <Suspense fallback={<div className="mb-12 h-32 rounded-card bg-night-soft" aria-hidden />}>
           <RegistrationBox event={event} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <MediaSection event={event} />
         </Suspense>
 
         <TextBlock title={t("program")} text={texts.program} />

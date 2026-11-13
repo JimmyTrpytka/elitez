@@ -10,6 +10,7 @@ import { RegistrationStatusBadge } from "@/components/registrations/status-badge
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
 import { textLinkClass } from "@/components/auth/auth-shell";
+import { MyMediaRequests } from "@/components/media/my-media-requests";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("MyRegistrations");
@@ -34,6 +35,7 @@ export default async function MyRegistrationsPage({
     >
       <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
         <MyRegistrationsList searchParams={searchParams} />
+        <MyMediaRequests />
       </Suspense>
     </PageShell>
   );

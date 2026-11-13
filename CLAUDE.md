@@ -157,6 +157,12 @@ Vlastník projektu **není programátor**. Proto:
 - Videa: `src/lib/portfolio/video.ts` (`parseVideoUrl`, `videoEmbed`, testy) – YouTube (nocookie), Instagram, TikTok, Vimeo; krátké odkazy vm.tiktok.com jen ven. Přehrávač až po klepnutí (`PortfolioGallery`).
 - Data `listPortfolio(owner, "featured" | "archive" | "all")` (`src/lib/data/portfolio.ts`), prvních 12 = profil. Nahrávání více velikostí: `uploadVariants` (`src/lib/images/upload-variants.ts`).
 
+## Technické poznámky (CREATOR – část 2, média na eventu)
+- `events.media_enabled`, `events.media_capacity` (null = bez limitu). Formulář: `MediaFields` (`media_enabled`, `media_limit`, `media_capacity`).
+- Tabulka `event_media_requests` (stav pending/approved/rejected/cancelled). Aplikace NEZAPISUJE přímo – funkce `request_media` (jen Creator s username), `cancel_media_request`, `decide_media_request` (pořadatel; limit → chyba `media_full`, zámek eventu). Chyby → `MediaErrors` v překladech.
+- Veřejný seznam schválených: `event_media_list` (jen veřejné profily, bez kontaktů, jen u eventu, který čtenář smí vidět). Upozornění `media_approved` / `media_rejected` (jen v aplikaci, ne e-mail).
+- UI: `src/components/media/` – `MediaSection` (detail eventu), `MediaRequestBox`, `OrganizerMediaList` (karta Média v `/organizer/events/[id]`), `MyMediaRequests` (Moje registrace). Data `src/lib/data/media.ts`, akce `src/lib/media/actions.ts`.
+
 ## Technické poznámky (rychlost)
 - Podepisování souborů je v `src/lib/storage-sign.ts` (`signFiles`, jen server); `src/lib/storage.ts` má jen cesty a názvy úložišť (importují ho i klientské komponenty).
 - `signFiles` podepíše nejdřív jako nepřihlášený návštěvník a takový (veřejný) odkaz znovu používá 30 min → prohlížeč fotky nestahuje znovu. Soukromé soubory podepíše klient uživatele, bez mezipaměti. Platnost odkazů 90 min.
