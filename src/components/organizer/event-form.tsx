@@ -13,6 +13,7 @@ import { Field } from "@/components/ui/field";
 import { SelectField } from "@/components/ui/select";
 import { TextareaField } from "@/components/ui/textarea";
 import { MapPicker } from "@/components/organizer/map-picker";
+import { SocialFields } from "@/components/social/social-fields";
 import { countryOptions } from "@/lib/countries";
 import { saveEvent, type EventFormState } from "@/lib/organizer/actions";
 import { Constants } from "@/lib/supabase/database.types";
@@ -40,6 +41,7 @@ export type EventFormValues = {
   verified_head_start_hours: number;
   registration_opens_at: string;
   registration_closes_at: string;
+  social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
 };
 
 const initial: EventFormState = { status: "idle" };
@@ -74,7 +76,7 @@ export function EventForm({
   const formRef = useRef<HTMLFormElement>(null);
   // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
   const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country" };
-  const errField = state.status === "error" ? fieldOf[state.error] : undefined;
+  const errField = state.status === "error" ? (state.field ?? fieldOf[state.error]) : undefined;
   const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
   const errorFor = (name: string) => (errField === name ? errMessage : undefined);
   useScrollToError(state, errField, formRef);
@@ -192,6 +194,7 @@ export function EventForm({
           defaultValue={values.selection_criteria}
           hint={t("selectionHint")}
         />
+        <SocialFields values={values.social} errorField={errField} errorMessage={errMessage} />
       </Section>
 
       <Section title={t("registrationTitle")}>

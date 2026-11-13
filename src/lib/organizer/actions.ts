@@ -14,6 +14,7 @@ import { DEFAULT_EVENT_TZ, zonedLocalToUtc } from "@/lib/dates";
 import { EVENT_IMAGES_BUCKET, eventImagePath } from "@/lib/storage";
 import { eventSlug, isValidSlug } from "@/lib/slug";
 import { emptyToNull, parseIntInRange } from "@/lib/validation";
+import { parseSocialFields } from "@/lib/social-links";
 
 const UUID = /^[0-9a-f-]{36}$/i;
 const SIZES = ["sm", "md", "lg"] as const;
@@ -161,10 +162,13 @@ export type EventErrorKey =
   | "locationInvalid"
   | "countryInvalid"
   | "tooLong"
+  | "socialInvalid"
   | "notAllowed"
   | "generic";
 
-export type EventFormState = { status: "idle" } | { status: "error"; error: EventErrorKey };
+export type EventFormState =
+  | { status: "idle" }
+  | { status: "error"; error: EventErrorKey; field?: string };
 
 function optionalDate(value: string): string | null | undefined {
   if (!value.trim()) return null;
@@ -230,6 +234,8 @@ export async function saveEvent(
   if (Object.values(longTexts).some((v) => (v?.length ?? 0) > 5000))
     return { status: "error", error: "tooLong" };
   if (seasonId && !UUID.test(seasonId)) return { status: "error", error: "notAllowed" };
+  const social = parseSocialFields(formData);
+  if (!social.ok) return { status: "error", error: "socialInvalid", field: social.field };
 
   const ctx = await requireOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
@@ -259,6 +265,7 @@ export async function saveEvent(
     registration_opens_at: opensAt,
     registration_closes_at: closesAt,
     ...longTexts,
+    ...social.values,
   };
 
   let eventId = id;

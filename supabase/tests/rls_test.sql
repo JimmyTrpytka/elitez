@@ -1485,6 +1485,43 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Smazání pořadatele (jen vlastník/admin a jen bez eventů)
+-- =====================================================================
+-- Bob má z dřívějška vlastního pořadatele (c…0b) bez eventů
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.delete_organizer('00000000-0000-4000-c000-00000000000a');
+    raise exception 'FAIL: cizí uživatel smazal pořadatele';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  perform public.delete_organizer('00000000-0000-4000-c000-00000000000b');
+end $$;
+reset role;
+
+do $$ begin
+  if exists (select 1 from public.organizers where id = '00000000-0000-4000-c000-00000000000b') then
+    raise exception 'FAIL: vlastník nesmazal svého pořadatele bez eventů';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.delete_organizer('00000000-0000-4000-c000-00000000000a');
+    raise exception 'FAIL: smazal se pořadatel, který má eventy';
+  exception when raise_exception then
+    if sqlerrm <> 'has_events' then raise; end if;
+  end;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

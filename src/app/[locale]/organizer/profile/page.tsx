@@ -10,6 +10,7 @@ import { PageShell } from "@/components/page-shell";
 import { OrganizerProfileForm } from "@/components/organizer/organizer-profile-form";
 import { OrganizerLogoUpload } from "@/components/organizer/organizer-logo-upload";
 import { CoOrganizers } from "@/components/organizer/co-organizers";
+import { DeleteOrganizer } from "@/components/organizer/delete-organizer";
 import { getCurrentUser } from "@/lib/auth/user";
 import { AVATARS_BUCKET } from "@/lib/storage";
 import { textLinkClass } from "@/components/auth/auth-shell";
@@ -53,6 +54,14 @@ async function Content() {
         supabaseForMembers.rpc("is_organizer_owner", { p_organizer_id: organizer.id }),
       ])
     : [{ data: [] }, { data: false }];
+  // Smazat jde jen pořadatele bez eventů (i konceptů) a jen vlastníkovi
+  const { count: eventCount } = supabaseForMembers
+    ? await supabaseForMembers
+        .from("events")
+        .select("id", { count: "exact", head: true })
+        .eq("organizer_id", organizer.id)
+    : { count: null };
+  const canDelete = Boolean(canManage) && eventCount === 0;
   const avatarPaths = (memberRows ?? []).map((m) => m.avatar_path).filter((x): x is string => Boolean(x));
   const avatarUrls = supabaseForMembers ? await signFiles(supabaseForMembers, AVATARS_BUCKET, avatarPaths) : new Map<string, string>();
   const coMembers = (memberRows ?? []).map((m) => ({
@@ -95,6 +104,12 @@ async function Content() {
           }}
         />
       </section>
+      {canDelete ? (
+        <section className="border-t border-line pt-8">
+          <h2 className="mb-3 text-lg font-semibold text-ink">{t("deleteTitle")}</h2>
+          <DeleteOrganizer name={organizer.name} />
+        </section>
+      ) : null}
     </div>
   );
 }

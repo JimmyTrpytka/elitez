@@ -188,6 +188,17 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
 **Stav (13. 11. 2026):** část 1 hotová na localhost – úkoly 1–4 (crew, schvalování, stránky, žebříčky a odznaky), přepínač Verified pro admina. Část 2 hotová na localhost – úkol 5: crew jako pořadatel (žádost a schválení, přepínač pořadatele, srazy jen pro členy crew, upozornění členům, sekce Srazy na stránce crew).
 
+## Připomínky testerů – 2. kolo (13. 11. 2026)
+
+- [x] Smazání snu na mobilu (potvrzení přímo na stránce místo okna prohlížeče)
+- [x] Přihlášený nevidí „Přidat se ke klubu“ v patičce, registrace ho pošle do účtu
+- [x] Sociální sítě a web u eventu
+- [x] Smazání omylem založeného pořadatele (jen bez eventů)
+- [ ] CREATOR – portfolio (12 + archiv), cover fotka pro všechny, registrace na sraz jako MEDIA (rozhodnuto: creator smí mít i garáž, video jen odkazem, přepne si kdokoli)
+- [ ] Galerie fotek u eventu (navazuje na CREATOR – fotky médií u eventu)
+- [ ] Více pořadatelů jednoho eventu (žádost o spolupořádání, hlavní pořadatel potvrzuje)
+- [ ] Souhlas s použitím fotek pro propagaci ELITEZ (čeká na rozhodnutí: povinný / dobrovolný; znění ověřit u právníka)
+
 ---
 
 ## Milník 6 – Verified (členství v klubu)

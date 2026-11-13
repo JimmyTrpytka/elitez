@@ -499,7 +499,9 @@ export type Database = {
           created_at: string
           description: string | null
           ends_at: string
+          facebook_url: string | null
           id: string
+          instagram_url: string | null
           lat: number | null
           lng: number | null
           organizer_id: string
@@ -514,6 +516,7 @@ export type Database = {
           slug: string
           starts_at: string
           status: Database["public"]["Enums"]["event_status"]
+          tiktok_url: string | null
           timezone: string
           title: string
           updated_at: string
@@ -521,6 +524,8 @@ export type Database = {
           venue_name: string | null
           verified_head_start_hours: number
           verified_priority: boolean
+          website_url: string | null
+          youtube_url: string | null
         }
         Insert: {
           access?: Database["public"]["Enums"]["event_access"]
@@ -532,7 +537,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at: string
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           lat?: number | null
           lng?: number | null
           organizer_id: string
@@ -547,6 +554,7 @@ export type Database = {
           slug: string
           starts_at: string
           status?: Database["public"]["Enums"]["event_status"]
+          tiktok_url?: string | null
           timezone?: string
           title: string
           updated_at?: string
@@ -554,6 +562,8 @@ export type Database = {
           venue_name?: string | null
           verified_head_start_hours?: number
           verified_priority?: boolean
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Update: {
           access?: Database["public"]["Enums"]["event_access"]
@@ -565,7 +575,9 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string
+          facebook_url?: string | null
           id?: string
+          instagram_url?: string | null
           lat?: number | null
           lng?: number | null
           organizer_id?: string
@@ -580,6 +592,7 @@ export type Database = {
           slug?: string
           starts_at?: string
           status?: Database["public"]["Enums"]["event_status"]
+          tiktok_url?: string | null
           timezone?: string
           title?: string
           updated_at?: string
@@ -587,6 +600,8 @@ export type Database = {
           venue_name?: string | null
           verified_head_start_hours?: number
           verified_priority?: boolean
+          website_url?: string | null
+          youtube_url?: string | null
         }
         Relationships: [
           {
@@ -1615,6 +1630,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      delete_organizer: { Args: { p_organizer_id: string }; Returns: undefined }
       enqueue_user_message: {
         Args: {
           p_event_id: string

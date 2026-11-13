@@ -1,6 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
 import { parseSocialFields } from "@/lib/social-links";
@@ -144,4 +148,37 @@ export async function removeCoOrganizer(userId: string): Promise<CoOrganizerResu
   if (error) return coError(error.message);
   revalidatePath("/", "layout");
   return { ok: true };
+}
+
+/**
+ * Smaže právě spravovaného pořadatele (omylem založený). Databáze to dovolí
+ * jen vlastníkovi/adminovi a jen pořadateli bez eventů.
+ */
+export async function deleteOrganizer(
+  localeValue: string,
+): Promise<{ ok: false; error: "hasEvents" | "notAllowed" | "generic" }> {
+  const supabase = await createClient();
+  const id = await getCurrentOrganizerId();
+  if (!supabase || !id) return { ok: false, error: "notAllowed" };
+  const { data: org } = await supabase
+    .from("organizers")
+    .select("id, logo_key, logo_format")
+    .eq("id", id)
+    .maybeSingle();
+  const { error } = await supabase.rpc("delete_organizer", { p_organizer_id: id });
+  if (error) {
+    if (error.message === "has_events") return { ok: false, error: "hasEvents" };
+    if (error.message === "not_allowed") return { ok: false, error: "notAllowed" };
+    return { ok: false, error: "generic" };
+  }
+  // Logo už pravidla úložiště smazat nedovolí (pořadatel neexistuje) → serverovým klíčem
+  if (org?.logo_key && org.logo_format) {
+    const admin = createAdminClient();
+    await admin?.storage
+      .from(ORGANIZER_LOGOS_BUCKET)
+      .remove((["sm", "md"] as const).map((s) => organizerLogoPath(org.id, org.logo_key!, s, org.logo_format!)));
+  }
+  revalidatePath("/", "layout");
+  const locale = hasLocale(routing.locales, localeValue) ? localeValue : routing.defaultLocale;
+  redirect(`/${locale}/account`);
 }
