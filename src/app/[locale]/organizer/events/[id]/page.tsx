@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { formatDateTime, formatEventDates } from "@/lib/dates";
 import { getMyEvent, getMyOrganizer } from "@/lib/data/events";
 import { PageShell } from "@/components/page-shell";
+import { SavedNotice } from "@/components/ui/saved-notice";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { EventCoverUploader } from "@/components/organizer/event-cover-uploader";
 import { EventStatusPanel } from "@/components/organizer/event-status-panel";
@@ -100,6 +101,7 @@ async function ManageEvent({
         </>
       }
     >
+      <SavedNotice />
       <div className="flex flex-col gap-6">
         <Card>
           <h2 className="mb-4 text-lg font-semibold">{t("statusTitle")}</h2>

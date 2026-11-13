@@ -5,6 +5,7 @@ import { useActionState, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
 import { useScrollToError } from "@/components/ui/use-scroll-to-error";
+import { StickyActions } from "@/components/ui/sticky-actions";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { Field } from "@/components/ui/field";
@@ -123,9 +124,11 @@ export function ProfileForm({ values }: { values: ProfileFormValues }) {
           },
         ]}
       />
-      <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-        {pending ? tCommon("saving") : tCommon("save")}
-      </Button>
+      <StickyActions note={state.status === "success" && !pending ? `${t("saved")} ✓` : undefined}>
+        <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
+          {pending ? tCommon("saving") : tCommon("save")}
+        </Button>
+      </StickyActions>
     </form>
   );
 }

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
+import { StickyActions } from "@/components/ui/sticky-actions";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { Field } from "@/components/ui/field";
@@ -37,9 +38,11 @@ export function CrewEditForm({
           { value: "open", title: t("policyOpen"), description: t("policyOpenText") },
         ]}
       />
-      <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-        {pending ? tCommon("saving") : tCommon("save")}
-      </Button>
+      <StickyActions note={state.status === "saved" && !pending ? `${t("saved")} ✓` : undefined}>
+        <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
+          {pending ? tCommon("saving") : tCommon("save")}
+        </Button>
+      </StickyActions>
     </form>
   );
 }

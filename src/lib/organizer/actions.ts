@@ -283,7 +283,7 @@ export async function saveEvent(
   }
 
   refresh();
-  redirect(`/${locale}/organizer/events/${eventId}`);
+  redirect(`/${locale}/organizer/events/${eventId}?saved=1`);
 }
 
 // ---------------------------------------------------------------------

@@ -17,9 +17,32 @@ export type ResizedImage = {
   contentType: "image/webp" | "image/jpeg";
 };
 
+/** Soubor se nepodařilo přečíst jako obrázek (např. HEIC v Chrome). */
+export class ImageDecodeError extends Error {
+  constructor(public readonly file: File) {
+    super("image_decode_failed");
+  }
+}
+
 export async function loadImage(file: File): Promise<ImageBitmap> {
-  // Prohlížeč sám otočí fotku podle EXIF orientace
-  return createImageBitmap(file, { imageOrientation: "from-image" });
+  // 1) Rychlá cesta – prohlížeč sám otočí fotku podle EXIF orientace
+  try {
+    return await createImageBitmap(file, { imageOrientation: "from-image" });
+  } catch {
+    // starší prohlížeče neznají volbu imageOrientation nebo formát
+  }
+  // 2) Záloha přes <img> (otočení podle EXIF dělají moderní prohlížeče samy)
+  const url = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    return await createImageBitmap(img);
+  } catch {
+    throw new ImageDecodeError(file);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 function toBlob(

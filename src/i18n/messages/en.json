@@ -164,7 +164,9 @@
     "visibilityPrivate": "Private",
     "date": "Date",
     "time": "Time",
-    "turbos": "{count, plural, one {# turbo} other {# turbos}}"
+    "turbos": "{count, plural, one {# turbo} other {# turbos}}",
+    "clearDate": "Clear date",
+    "savedNotice": "Your changes are saved ✓"
   },
   "Account": {
     "finishProfileTitle": "Finish your profile.",
@@ -597,7 +599,9 @@
       "notAllowed": "You are not allowed to edit this event.",
       "generic": "Saving failed. Please try again.",
       "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start)."
-    }
+    },
+    "closesHint": "Optional. Without a deadline people can register until the event starts.",
+    "opensHint": "Without a date nobody can register yet."
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -1451,5 +1455,13 @@
     "organizerRequested": "Asks to host meets",
     "organizerEnable": "Allow hosting",
     "organizerDisable": "Remove hosting"
+  },
+  "Upload": {
+    "heic": "The photo is in HEIC format (from iPhone or Mac), which this browser can't open. Save it as JPG, or upload it via Safari or straight from your iPhone.",
+    "format": "This file couldn't be opened as an image. Try a JPG or PNG photo.",
+    "size": "The file is too large (max 40 MB). Try a smaller photo.",
+    "network": "The connection dropped. Check your internet and try again.",
+    "permission": "The upload wasn't allowed. Try signing out and back in.",
+    "server": "Something went wrong on our side. Please try again in a moment – if it keeps happening, send us feedback."
   }
 }

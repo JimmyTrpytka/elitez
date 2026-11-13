@@ -7,6 +7,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { setCrewImage } from "@/lib/crews/actions";
 import { loadImage, resizeImage, supportsWebpEncoding } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { CREW_IMAGES_BUCKET, crewImagePath, type PhotoSize } from "@/lib/storage";
 
@@ -33,23 +34,33 @@ export function CrewImageUpload({
   url: string | null;
 }) {
   const t = useTranslations("Crews");
+  const tUpload = useTranslations("Upload");
   const tPhotos = useTranslations("Photos");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<UploadErrorKind | null>(null);
   const [plate, setPlate] = useState(kind === "logo");
 
   async function onFile(file: File) {
-    setError(false);
+    setError(null);
     setBusy(true);
     const supabase = createBrowserSupabase();
     const key = crypto.randomUUID();
     const uploaded: string[] = [];
-    const bitmap = await loadImage(file).catch(() => null);
+    const pre = precheckImage(file);
+    let bitmap: ImageBitmap | null = null;
+    let decodeError: UploadErrorKind | null = pre;
+    if (!pre) {
+      try {
+        bitmap = await loadImage(file);
+      } catch (e) {
+        decodeError = classifyUploadError(e, file);
+      }
+    }
     if (!bitmap) {
       setBusy(false);
-      setError(true);
+      setError(decodeError ?? "format");
       return;
     }
     try {
@@ -68,9 +79,9 @@ export function CrewImageUpload({
       const res = await setCrewImage({ crewId, kind, key, format });
       if (!res.ok) throw new Error("save");
       router.refresh();
-    } catch {
+    } catch (e) {
       if (uploaded.length) await supabase.storage.from(CREW_IMAGES_BUCKET).remove(uploaded);
-      setError(true);
+      setError(classifyUploadError(e, file));
     } finally {
       bitmap.close();
       setBusy(false);
@@ -88,7 +99,7 @@ export function CrewImageUpload({
           className={kind === "logo" ? "h-24 w-24 rounded-full bg-white object-contain" : "aspect-[21/9] w-full max-w-xl rounded-card object-cover"}
         />
       ) : null}
-      {error ? <Alert tone="error">{t("imageFailed")}</Alert> : null}
+      {error ? <Alert tone="error">{tUpload(error)}</Alert> : null}
       {kind === "cover" ? (
         <label className="flex items-start gap-3 text-sm text-ink">
           <input type="checkbox" checked={plate} onChange={(e) => setPlate(e.target.checked)} className="mt-0.5 h-5 w-5 accent-ink" />

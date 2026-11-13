@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { removeOrganizerLogo, setOrganizerLogo } from "@/lib/organizer/profile-actions";
 import { loadImage, resizeImage, supportsWebpEncoding } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath, type PhotoSize } from "@/lib/storage";
 
@@ -27,22 +28,32 @@ export function OrganizerLogoUpload({
   logoUrl: string | null;
 }) {
   const t = useTranslations("OrganizerProfile");
+  const tUpload = useTranslations("Upload");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<UploadErrorKind | null>(null);
   const [pending, startTransition] = useTransition();
 
   async function onFile(file: File) {
-    setError(false);
+    setError(null);
     setUploading(true);
     const supabase = createBrowserSupabase();
     const key = crypto.randomUUID();
     const uploaded: string[] = [];
-    const bitmap = await loadImage(file).catch(() => null);
+    const pre = precheckImage(file);
+    let bitmap: ImageBitmap | null = null;
+    let decodeError: UploadErrorKind | null = pre;
+    if (!pre) {
+      try {
+        bitmap = await loadImage(file);
+      } catch (e) {
+        decodeError = classifyUploadError(e, file);
+      }
+    }
     if (!bitmap) {
       setUploading(false);
-      setError(true);
+      setError(decodeError ?? "format");
       return;
     }
     try {
@@ -61,9 +72,9 @@ export function OrganizerLogoUpload({
       const res = await setOrganizerLogo({ logoKey: key, format });
       if (!res.ok) throw new Error("save");
       router.refresh();
-    } catch {
+    } catch (e) {
       if (uploaded.length) await supabase.storage.from(ORGANIZER_LOGOS_BUCKET).remove(uploaded);
-      setError(true);
+      setError(classifyUploadError(e, file));
     } finally {
       bitmap.close();
       setUploading(false);
@@ -75,7 +86,7 @@ export function OrganizerLogoUpload({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
       <OrganizerLogo url={logoUrl} name={name} size={96} />
       <div className="flex flex-col gap-3">
-        {error ? <Alert tone="error">{t("logoFailed")}</Alert> : null}
+        {error ? <Alert tone="error">{tUpload(error)}</Alert> : null}
         <p className="text-sm text-ink-soft">{t("logoHint")}</p>
         <div className="flex flex-wrap gap-2">
           <input

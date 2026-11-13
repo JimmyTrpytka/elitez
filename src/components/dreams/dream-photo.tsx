@@ -7,6 +7,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { deleteDream, removeDreamPhoto, setDreamPhoto } from "@/lib/dreams/actions";
 import { loadImage, resizeImage, supportsWebpEncoding } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { DREAM_PHOTOS_BUCKET, dreamPhotoPath, type PhotoSize } from "@/lib/storage";
 
@@ -30,6 +31,7 @@ export function DreamPhoto({
 }) {
   const t = useTranslations("Dreams");
   const tPhotos = useTranslations("Photos");
+  const tUpload = useTranslations("Upload");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [plateConfirmed, setPlateConfirmed] = useState(false);
@@ -44,10 +46,19 @@ export function DreamPhoto({
     const supabase = createBrowserSupabase();
     const key = crypto.randomUUID();
     const uploaded: string[] = [];
-    const bitmap = await loadImage(file).catch(() => null);
+    const pre = precheckImage(file);
+    let bitmap: ImageBitmap | null = null;
+    let decodeError: UploadErrorKind | null = pre;
+    if (!pre) {
+      try {
+        bitmap = await loadImage(file);
+      } catch (e) {
+        decodeError = classifyUploadError(e, file);
+      }
+    }
     if (!bitmap) {
       setUploading(false);
-      setError(t("photoFailed"));
+      setError(tUpload(decodeError ?? "format"));
       return;
     }
     try {
@@ -66,9 +77,9 @@ export function DreamPhoto({
       const result = await setDreamPhoto({ dreamId, photoKey: key, format });
       if (!result.ok) throw new Error(result.error);
       router.refresh();
-    } catch {
+    } catch (e) {
       if (uploaded.length) await supabase.storage.from(DREAM_PHOTOS_BUCKET).remove(uploaded);
-      setError(t("photoFailed"));
+      setError(tUpload(classifyUploadError(e, file)));
     } finally {
       bitmap.close();
       setUploading(false);

@@ -5,6 +5,7 @@ import { useActionState, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Alert } from "@/components/ui/alert";
 import { useScrollToError } from "@/components/ui/use-scroll-to-error";
+import { StickyActions } from "@/components/ui/sticky-actions";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { DateTimeField } from "@/components/ui/date-time-field";
@@ -223,6 +224,7 @@ export function EventForm({
             name="registration_opens_at"
             defaultValue={values.registration_opens_at}
             defaultTime="10:00"
+            hint={t("opensHint")}
           />
           <DateTimeField
             label={t("closesLabel")}
@@ -230,6 +232,7 @@ export function EventForm({
             error={errorFor("registration_closes_at")}
             defaultValue={values.registration_closes_at}
             defaultTime="23:59"
+            hint={t("closesHint")}
           />
         </div>
         <SelectField
@@ -258,11 +261,11 @@ export function EventForm({
         </label>
       </Section>
 
-      <div className="sticky bottom-0 -mx-4 border-t border-line bg-surface/95 px-4 py-4 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
+      <StickyActions>
         <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
           {pending ? tCommon("saving") : values.id ? tCommon("save") : t("createSubmit")}
         </Button>
-      </div>
+      </StickyActions>
     </form>
   );
 }

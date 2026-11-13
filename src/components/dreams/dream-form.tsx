@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
 import { useScrollToError } from "@/components/ui/use-scroll-to-error";
 import { Alert } from "@/components/ui/alert";
+import { StickyActions } from "@/components/ui/sticky-actions";
 import { Button } from "@/components/ui/button";
 import { ChoiceCards } from "@/components/ui/choice-cards";
 import { Field } from "@/components/ui/field";
@@ -126,9 +127,11 @@ export function DreamForm({ values }: { values: DreamFormValues }) {
         ]}
       />
 
-      <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-        {pending ? tCommon("saving") : values.id ? tCommon("save") : t("createSubmit")}
-      </Button>
+      <StickyActions>
+        <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
+          {pending ? tCommon("saving") : values.id ? tCommon("save") : t("createSubmit")}
+        </Button>
+      </StickyActions>
     </form>
   );
 }

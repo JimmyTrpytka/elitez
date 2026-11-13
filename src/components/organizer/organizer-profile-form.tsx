@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useKeepValuesSubmit } from "@/components/ui/use-keep-values-submit";
 import { useScrollToError } from "@/components/ui/use-scroll-to-error";
 import { Alert } from "@/components/ui/alert";
+import { StickyActions } from "@/components/ui/sticky-actions";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { TextareaField } from "@/components/ui/textarea";
@@ -73,9 +74,11 @@ export function OrganizerProfileForm({ values, siteUrl }: { values: OrganizerPro
         </span>
       </label>
 
-      <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
-        {pending ? tCommon("saving") : tCommon("save")}
-      </Button>
+      <StickyActions note={state.status === "saved" && !pending ? `${t("saved")} ✓` : undefined}>
+        <Button type="submit" size="lg" disabled={pending} className="w-full sm:w-auto">
+          {pending ? tCommon("saving") : tCommon("save")}
+        </Button>
+      </StickyActions>
     </form>
   );
 }

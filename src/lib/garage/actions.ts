@@ -155,7 +155,7 @@ export async function saveVehicle(
   }
 
   refreshGarage();
-  redirect(`/${locale}/garage/${vehicleId}`);
+  redirect(`/${locale}/garage/${vehicleId}?saved=1`);
 }
 
 // ---------------------------------------------------------------------

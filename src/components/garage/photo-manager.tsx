@@ -13,6 +13,7 @@ import {
 } from "@/lib/garage/actions";
 import type { PhotoView } from "@/lib/data/vehicles";
 import { loadImage, resizeImage, supportsWebpEncoding } from "@/lib/images/resize";
+import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import { VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath, type PhotoSize } from "@/lib/storage";
 import { LIMITS } from "@/lib/validation";
@@ -34,6 +35,7 @@ export function PhotoManager({
   title: string;
 }) {
   const t = useTranslations("Photos");
+  const tUpload = useTranslations("Upload");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [plateConfirmed, setPlateConfirmed] = useState(false);
@@ -91,18 +93,23 @@ export function PhotoManager({
     const useJpeg = !supportsWebpEncoding();
     setProgress({ done: 0, total: files.length });
     let failed = 0;
+    let reason: UploadErrorKind | null = null;
     for (const [i, file] of files.entries()) {
       try {
+        const pre = precheckImage(file);
+        if (pre) throw Object.assign(new Error(pre), { precheck: pre });
         await uploadOne(file, useJpeg);
       } catch (e) {
         failed += 1;
         if (e instanceof Error && e.message === "photoLimit") break;
+        const pre = (e as { precheck?: UploadErrorKind }).precheck;
+        reason ??= pre ?? classifyUploadError(e, file);
       }
       setProgress({ done: i + 1, total: files.length });
     }
     setProgress(null);
     if (inputRef.current) inputRef.current.value = "";
-    if (failed) setError(t("uploadFailed", { count: failed }));
+    if (failed) setError(`${t("uploadFailed", { count: failed })}${reason ? ` ${tUpload(reason)}` : ""}`);
     if (list.length > files.length) setError(t("limitReached", { max: LIMITS.photosPerVehicle }));
     router.refresh();
   }
