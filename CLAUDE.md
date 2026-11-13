@@ -168,4 +168,5 @@ Vlastník projektu **není programátor**. Proto:
 - `signFiles` podepíše nejdřív jako nepřihlášený návštěvník a takový (veřejný) odkaz znovu používá 30 min → prohlížeč fotky nestahuje znovu. Soukromé soubory podepíše klient uživatele, bez mezipaměti. Platnost odkazů 90 min.
 - Malé náhledy brát ve velikosti `sm` (žebříček, mřížka portfolia). Úvodní fotka přes `next/image` (AVIF/WebP podle displeje).
 - Místo „Načítám…“ na veřejných stránkách `SkeletonGrid` / `SkeletonDetail` (`src/components/ui/skeleton.tsx`).
+- Event na mobilu: přilepená lišta `StickyRegisterBar` (jen když je box `#registrace` pod obrazovkou).
 - Tlačítko „Přeložit“: `needsTranslation` u nejistého jazyka a krátkého textu (méně než 5 slov) vrací false; u auta se posuzují všechny texty dohromady.

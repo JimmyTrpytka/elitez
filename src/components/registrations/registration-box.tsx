@@ -9,6 +9,7 @@ import {
 import { registrationWindow } from "@/lib/registration-window";
 import { RegistrationStatusBadge } from "./status-badge";
 import { buttonClasses } from "@/components/ui/button";
+import { StickyRegisterBar } from "./sticky-register-bar";
 
 /** Box „Registrace“ na detailu eventu – podle stavu eventu a uživatele. */
 export async function RegistrationBox({ event }: { event: EventView }) {
@@ -74,8 +75,31 @@ export async function RegistrationBox({ event }: { event: EventView }) {
       headline = t("closed");
   }
 
+  // Na mobilu je box až pod popisem → přilepená lišta s tlačítkem (jen když se dá přihlásit a ještě nejsi)
+  const stickyAction =
+    win.kind === "open" && !mine.length ? (
+      ctx ? (
+        <Link href={`/e/${event.slug}/register`} className={buttonClasses("primary", "md")}>
+          {t("stickyRegister")}
+        </Link>
+      ) : (
+        <Link
+          href={{ pathname: "/login", query: { next: `/${locale}/e/${event.slug}/register` } }}
+          className={buttonClasses("primary", "md")}
+        >
+          {t("stickyRegister")}
+        </Link>
+      )
+    ) : null;
+
   return (
-    <div className="mb-12 flex flex-col gap-4 rounded-card bg-night-soft p-6 ring-1 ring-accent/30 sm:p-8">
+    <>
+    {stickyAction ? (
+      <StickyRegisterBar targetId="registrace" title={headline} detail={detail}>
+        {stickyAction}
+      </StickyRegisterBar>
+    ) : null}
+    <div id="registrace" className="mb-12 flex scroll-mt-24 flex-col gap-4 rounded-card bg-night-soft p-6 ring-1 ring-accent/30 sm:p-8">
       <div>
         <p className="font-display text-3xl font-extrabold text-white uppercase">{headline}</p>
         {detail ? <p className="mt-1 text-sm text-night-subtle">{detail}</p> : null}
@@ -107,5 +131,6 @@ export async function RegistrationBox({ event }: { event: EventView }) {
         ) : null}
       </div>
     </div>
+    </>
   );
 }
