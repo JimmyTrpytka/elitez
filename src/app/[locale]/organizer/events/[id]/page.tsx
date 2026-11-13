@@ -18,6 +18,8 @@ import { OrganizerMediaList } from "@/components/media/organizer-media-list";
 import { listEventCohosts } from "@/lib/data/cohosts";
 import { listPublicOrganizers } from "@/lib/data/organizers";
 import { HostCohostPanel } from "@/components/cohosts/host-cohost-panel";
+import { listEventGallery } from "@/lib/data/gallery";
+import { EventGalleryManager } from "@/components/gallery/event-gallery-manager";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Organizer");
@@ -51,9 +53,11 @@ async function ManageEvent({
   if (!organizer) notFound();
   const event = await getMyEvent(organizer.id, id);
   if (!event) notFound();
-  const [tMedia, tCohosts, mediaRows, cohosts, allOrganizers] = await Promise.all([
+  const [tMedia, tCohosts, tGallery, gallery, mediaRows, cohosts, allOrganizers] = await Promise.all([
     getTranslations("Media"),
     getTranslations("Cohosts"),
+    getTranslations("Gallery"),
+    listEventGallery(event.id),
     listEventMediaRequests(event.id),
     listEventCohosts(event.id),
     listPublicOrganizers(),
@@ -149,6 +153,10 @@ async function ManageEvent({
               {t("printList")}
             </Link>
           </div>
+        </Card>
+        <Card>
+          <h2 className="mb-1 text-lg font-semibold">{tGallery("managerTitle")}</h2>
+          <EventGalleryManager eventId={event.id} organizer={gallery.organizer} media={gallery.media} />
         </Card>
         <Card>
           <h2 className="mb-1 text-lg font-semibold">{tCohosts("hostTitle")}</h2>

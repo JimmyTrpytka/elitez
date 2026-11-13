@@ -923,6 +923,10 @@
       "cohost_accepted": {
         "title": "Co-hosting confirmed",
         "text": "{event}: {organizer} × {cohost} – the event now shows up for both organizers."
+      },
+      "vehicle_tagged": {
+        "title": "Your {vehicle} in a photo!",
+        "text": "{who} tagged your {vehicle} in a photo in their portfolio. You'll find it on the car page under Photos by creators."
       }
     },
     "openVehicle": "View car",
@@ -1660,8 +1664,20 @@
       "portfolioLimit": "A portfolio can hold at most 300 pieces. Please delete some older ones.",
       "pinLimit": "You can pin at most 12 pieces.",
       "notAllowed": "You're not allowed to do that.",
-      "generic": "Something went wrong, please try again."
-    }
+      "generic": "Something went wrong, please try again.",
+      "notEventMedia": "You can only tag events where you're approved as media.",
+      "vehicleUnavailable": "This car can't be tagged (it isn't public)."
+    },
+    "tagsAdd": "Tag event / car",
+    "tagsEdit": "Edit tags",
+    "tagEventLabel": "Event (where you shot as media)",
+    "tagNone": "No event",
+    "tagEventHint": "You can only tag events where the organizer approved you as media.",
+    "tagVehicleLabel": "Car in the photo",
+    "tagOwnerLabel": "Owner's username",
+    "tagFind": "Find cars",
+    "tagNoVehicles": "This member has no public cars (or doesn't exist).",
+    "tagRemove": "Remove"
   },
   "Media": {
     "title": "Media",
@@ -1790,5 +1806,29 @@
     "already_requested": "A request or invitation is already waiting.",
     "not_pending": "This request is no longer current.",
     "generic": "Something went wrong, please try again."
+  },
+  "Gallery": {
+    "title": "Gallery",
+    "count": "{count, plural, one {# photo} other {# photos}} from the event",
+    "managerTitle": "Gallery",
+    "managerIntro": "Upload photos from the event – they'll show on the event page. Photos and videos from approved media are added automatically (when they tag the event); you can hide any of them.",
+    "addPhotos": "Upload photos",
+    "uploadingProgress": "Uploading {done} / {total}…",
+    "organizerPhotos": "Your photos ({count})",
+    "mediaWorks": "From media ({count})",
+    "delete": "Delete",
+    "deleteYes": "Really delete",
+    "hide": "Hide",
+    "show": "Show again",
+    "vehicleTitle": "Photos by creators",
+    "vehicleIntro": "Club photographers and videographers who captured this car.",
+    "ownerUntagHint": "Don't want a photo on your car page? You can remove the tag (the photo stays in the author's portfolio).",
+    "untag": "Remove tag",
+    "untagYes": "Yes, remove",
+    "errors": {
+      "notAllowed": "You're not allowed to do that.",
+      "galleryLimit": "A gallery can have at most 300 photos.",
+      "generic": "Something went wrong, please try again."
+    }
   }
 }

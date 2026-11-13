@@ -96,3 +96,16 @@ export function portfolioPath(
 ): string {
   return `${userId}/portfolio/${itemId}/${key}-${size}.${format}`;
 }
+
+export const EVENT_GALLERY_BUCKET = "event-gallery";
+
+/** Fotka v galerii eventu (nahraná pořadatelem): `{event_id}/{photo_id}/{key}-{velikost}.{format}`. */
+export function eventGalleryPath(
+  eventId: string,
+  photoId: string,
+  key: string,
+  size: PhotoSize,
+  format: string,
+): string {
+  return `${eventId}/${photoId}/${key}-${size}.${format}`;
+}

@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link, redirect } from "@/i18n/navigation";
 import { getMyProfile } from "@/lib/data/profiles";
 import { listPortfolio } from "@/lib/data/portfolio";
+import { listMyMediaRequests } from "@/lib/data/media";
 import { PageShell } from "@/components/page-shell";
 import { PortfolioManager } from "@/components/portfolio/portfolio-manager";
 import { buttonClasses } from "@/components/ui/button";
@@ -48,7 +49,10 @@ async function Content() {
     );
   }
 
-  const { items } = await listPortfolio(profile.id, "all");
+  const [{ items }, mediaRequests] = await Promise.all([listPortfolio(profile.id, "all"), listMyMediaRequests()]);
+  const mediaEvents = mediaRequests
+    .filter((r) => r.status === "approved" && r.event)
+    .map((r) => ({ id: r.event_id, title: r.event!.title }));
   return (
     <div className="flex flex-col gap-8">
       {profile.username ? (
@@ -58,7 +62,7 @@ async function Content() {
           </Link>
         </p>
       ) : null}
-      <PortfolioManager userId={profile.id} items={items} />
+      <PortfolioManager userId={profile.id} items={items} mediaEvents={mediaEvents} />
     </div>
   );
 }

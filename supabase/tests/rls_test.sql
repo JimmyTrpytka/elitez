@@ -1903,6 +1903,137 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Galerie eventu a označení aut / eventů u prací v portfoliu
+-- =====================================================================
+insert into public.vehicles (id, owner_id, category, make, model, visibility)
+values ('00000000-0000-4000-b000-0000000000f1', '00000000-0000-4000-a000-000000000b0b', 'tuning', 'BMW', 'E30', 'public');
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+
+-- Carol (Creator) zatím akreditaci nemá → eventem označit nejde
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    insert into public.portfolio_items (kind, photo_key, photo_format, event_id)
+    values ('photo', gen_random_uuid(), 'webp', '00000000-0000-4000-e000-000000000071');
+    raise exception 'FAIL: práce označená eventem bez akreditace';
+  exception when raise_exception then
+    if sqlerrm <> 'not_event_media' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Alice schválí Carol jako média
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.decide_media_request(
+  (select id from public.event_media_requests where user_id = '00000000-0000-4000-a000-0000000ca201'
+     and event_id = '00000000-0000-4000-e000-000000000070'), 'approved');
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  insert into public.portfolio_items (id, kind, photo_key, photo_format, event_id, vehicle_id)
+  values ('00000000-0000-4000-f000-0000000000a1', 'photo', gen_random_uuid(), 'webp',
+          '00000000-0000-4000-e000-000000000070', '00000000-0000-4000-b000-0000000000f1');
+  begin
+    update public.portfolio_items set vehicle_id = '00000000-0000-4000-b000-00000000000b'
+    where id = '00000000-0000-4000-f000-0000000000a1';
+    raise exception 'FAIL: označeno soukromé auto';
+  exception when raise_exception then
+    if sqlerrm <> 'vehicle_unavailable' then raise; end if;
+  end;
+  begin
+    update public.portfolio_items set hidden_in_event = true where id = '00000000-0000-4000-f000-0000000000a1';
+    raise exception 'FAIL: creator skryl práci v galerii sám (smí jen pořadatel)';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and type = 'vehicle_tagged') then
+    raise exception 'FAIL: majitel auta nedostal upozornění na označení';
+  end if;
+end $$;
+
+-- Návštěvník vidí práci v galerii i u auta
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select count(*) from public.event_media_works('00000000-0000-4000-e000-000000000070')) <> 1 then
+    raise exception 'FAIL: práce médií není v galerii eventu';
+  end if;
+  if (select count(*) from public.vehicle_creator_works('00000000-0000-4000-b000-0000000000f1')) <> 1 then
+    raise exception 'FAIL: fotka od creatora není u auta';
+  end if;
+end $$;
+reset role;
+
+-- Pořadatel (Alice) práci skryje a nahraje vlastní fotku; Bob do galerie cizího eventu nesmí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.set_event_photo_hidden('00000000-0000-4000-f000-0000000000a1', true);
+insert into public.event_photos (event_id, photo_key, photo_format)
+values ('00000000-0000-4000-e000-000000000070', gen_random_uuid(), 'webp');
+insert into storage.objects (bucket_id, name)
+values ('event-gallery', '00000000-0000-4000-e000-000000000070/x/k-sm.webp');
+do $$ begin
+  if not (select hidden from public.event_media_works('00000000-0000-4000-e000-000000000070') limit 1) then
+    raise exception 'FAIL: pořadatel nevidí skrytou práci';
+  end if;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    insert into public.event_photos (event_id, photo_key, photo_format)
+    values ('00000000-0000-4000-e000-000000000070', gen_random_uuid(), 'webp');
+    raise exception 'FAIL: cizí uživatel nahrál fotku do galerie eventu';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    insert into storage.objects (bucket_id, name)
+    values ('event-gallery', '00000000-0000-4000-e000-000000000070/y/k-sm.webp');
+    raise exception 'FAIL: cizí uživatel nahrál soubor do galerie eventu';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.set_event_photo_hidden('00000000-0000-4000-f000-0000000000a1', false);
+    raise exception 'FAIL: cizí uživatel změnil skrytí v galerii';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  -- majitel auta označení odebere
+  perform public.untag_vehicle_photo('00000000-0000-4000-f000-0000000000a1');
+end $$;
+reset role;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.event_media_works('00000000-0000-4000-e000-000000000070')) then
+    raise exception 'FAIL: skrytá práce je v galerii vidět';
+  end if;
+  if exists (select 1 from public.vehicle_creator_works('00000000-0000-4000-b000-0000000000f1')) then
+    raise exception 'FAIL: odebrané označení je dál u auta';
+  end if;
+  if (select count(*) from public.event_photos where event_id = '00000000-0000-4000-e000-000000000070') <> 1 then
+    raise exception 'FAIL: fotka pořadatele není v galerii vidět';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

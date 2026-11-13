@@ -179,7 +179,9 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Úvodní (cover) fotka** pro všechny profily.
 - Při nahrání fotek potvrzení „bez čitelné SPZ“ (stejně jako u aut).
 - **Média na eventu (část 2, rozhodnuto 13. 11. 2026):** pořadatel u eventu zapne „Přijímáme média“ a zvolí **neomezený, nebo omezený počet** míst. Creator pošle žádost bez auta (zaměření, kontakt, pro koho fotí, souhlas) – až do začátku eventu, nezávisle na registraci aut. Pořadatel schvaluje / zamítá (se zprávou); limit hlídá databáze. Žadatel dostane upozornění v aplikaci. **Schválená média jsou veřejně vidět** na stránce eventu (jen veřejné profily, bez kontaktů) s odkazem na portfolio. Eventy na pozvánky média nepřijímají, „jen pro crew“ jen od členů.
-- Další části: turba na fotkách z portfolia, označení auta/eventu u fotky (fotky médií u eventu = galerie eventu).
+- **Galerie eventu (část 3a, rozhodnuto 13. 11. 2026):** fotky nahrává pořadatel přímo; Creator schválený jako média u eventu označí práci z portfolia eventem a ta se v galerii ukáže hned (s jeho jménem). Pořadatel může kteroukoli práci médií skrýt. Galerie se ukazuje jen u eventu, který čtenář smí vidět, a jen práce z veřejných profilů.
+- **Označení auta (část 3a):** Creator u práce označí veřejné auto člena → práce se hned ukáže u auta („Fotky od creatorů“), majitel dostane upozornění a označení může kdykoli odebrat (fotka zůstane v portfoliu).
+- Další část: turba na fotkách z portfolia (3b).
 
 ### 5.1i Souhlas s propagací (rozhodnuto 13. 11. 2026)
 - **Povinný** souhlas: „Souhlasím s využitím fotografií a obsahu zveřejněného na mém profilu pro prezentační a propagační účely ELITEZ CLUB, včetně sdílení na sociálních sítích.“

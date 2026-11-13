@@ -186,6 +186,15 @@ async function NotificationsList() {
                 : t("openCrew"),
         };
       }
+      case "vehicle_tagged": {
+        const who = p.username ? (p.display_name ?? `@${p.username}`) : t("someone", { count: 1 });
+        return {
+          title: t("types.vehicle_tagged.title", { vehicle: p.vehicle ?? "" }),
+          text: t("types.vehicle_tagged.text", { who, vehicle: p.vehicle ?? "" }),
+          href: p.vehicle_id ? `/v/${p.vehicle_id}` : null,
+          linkLabel: t("openVehicle"),
+        };
+      }
       case "cohost_request":
       case "cohost_invite":
       case "cohost_accepted": {

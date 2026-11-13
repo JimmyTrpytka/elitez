@@ -19,6 +19,12 @@ export type PortfolioItemView = {
   fullUrl: string | null;
   hasOwnThumb: boolean;
   video: (VideoEmbed & { vertical: boolean }) | null;
+  /** Autor (galerie eventu, fotky u auta) */
+  credit?: { username: string; name: string } | null;
+  /** Skryto pořadatelem v galerii eventu (vidí jen pořadatel) */
+  hidden?: boolean;
+  /** Označení (správa portfolia) */
+  tags?: { eventId: string | null; eventTitle: string | null; vehicleId: string | null; vehicleName: string | null };
 };
 
 type Part = "featured" | "archive" | "all";
@@ -35,7 +41,7 @@ export async function listPortfolio(
   if (!supabase) return { items: [], total: 0, archiveCount: 0 };
   const { data } = await supabase
     .from("portfolio_items")
-    .select("*")
+    .select("*, event:events(title), vehicle:vehicles(make, model)")
     .eq("owner_id", ownerId)
     .order("pinned", { ascending: false })
     .order("created_at", { ascending: false })
@@ -74,6 +80,12 @@ export async function listPortfolio(
       fullUrl: lg ? (urls.get(lg) ?? null) : null,
       hasOwnThumb: Boolean(ownThumb),
       video: embed ? { ...embed, vertical: isVerticalVideo(embed.provider, embed.url) } : null,
+      tags: {
+        eventId: r.event_id,
+        eventTitle: r.event?.title ?? null,
+        vehicleId: r.vehicle_id,
+        vehicleName: r.vehicle ? `${r.vehicle.make} ${r.vehicle.model}` : null,
+      },
     };
   });
   return { items, total: rows.length, archiveCount: Math.max(0, rows.length - PORTFOLIO_FEATURED) };
