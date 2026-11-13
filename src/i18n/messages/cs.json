@@ -109,7 +109,8 @@
     "loading": "Načítám…",
     "submitting": "Odesílám…",
     "privacyNote": "Registrací bereš na vědomí",
-    "privacyLink": "zásady ochrany osobních údajů"
+    "privacyLink": "zásady ochrany osobních údajů",
+    "promoLabel": "Souhlasím s využitím fotografií a obsahu zveřejněného na mém profilu pro prezentační a propagační účely ELITEZ CLUB, včetně sdílení na sociálních sítích."
   },
   "Errors": {
     "invalidCredentials": "Nesprávný e-mail nebo heslo.",
@@ -123,7 +124,8 @@
     "notSignedIn": "Platnost odkazu vypršela nebo nejsi přihlášen(a).",
     "linkInvalid": "Odkaz je neplatný nebo vypršel. Zkus to prosím znovu.",
     "notConfigured": "Aplikace zatím není připojená k databázi (chybí nastavení Supabase).",
-    "generic": "Něco se pokazilo. Zkus to prosím znovu."
+    "generic": "Něco se pokazilo. Zkus to prosím znovu.",
+    "promoRequired": "Bez tohoto souhlasu se do klubu registrovat nejde."
   },
   "NotFound": {
     "title": "Stránka nenalezena",
@@ -1083,6 +1085,10 @@
       "age": {
         "title": "Věk",
         "body": "Účet si může založit jen osoba starší 16 let."
+      },
+      "promo": {
+        "title": "Využití fotek a obsahu pro propagaci klubu",
+        "body": "Při registraci (a stávající členové jednorázově) dáváš souhlas s využitím fotografií a obsahu zveřejněného na tvém profilu pro prezentační a propagační účely ELITEZ CLUB, včetně sdílení na sociálních sítích. Týká se to jen obsahu, který je na webu veřejně vidět (veřejný profil, veřejná auta, portfolio). Soukromý obsah nepoužíváme. Kdy a s jakou verzí textu jsi souhlasil(a), si ukládáme. Souhlas je podmínkou členství – pokud s dalším využitím nesouhlasíš, napiš nám a účet zrušíme; obsah, který už byl sdílený, odstraníme z kanálů klubu, kde to jde."
       }
     },
     "updated": "Platné od 11. 11. 2026 (zkušební provoz)."
@@ -1718,5 +1724,15 @@
     "message_too_long": "Zpráva je moc dlouhá.",
     "media_full": "Místa pro média jsou plná. Zvyš limit v úpravě eventu, nebo někoho vrať k posouzení.",
     "generic": "Něco se nepovedlo, zkus to prosím znovu."
+  },
+  "PromoConsent": {
+    "title": "Ještě jeden souhlas",
+    "intro": "ELITEZ CLUB sdílí fotky aut a obsah členů na webu a sociálních sítích klubu. Abychom mohli pokračovat, potřebujeme od tebe jednorázový souhlas.",
+    "label": "Souhlasím s využitím fotografií a obsahu zveřejněného na mém profilu pro prezentační a propagační účely ELITEZ CLUB, včetně sdílení na sociálních sítích.",
+    "more": "Podrobnosti najdeš v",
+    "privacyLink": "Ochraně osobních údajů",
+    "accept": "Souhlasím a pokračovat",
+    "logout": "Odhlásit se",
+    "failed": "Souhlas se nepodařilo uložit, zkus to prosím znovu."
   }
 }

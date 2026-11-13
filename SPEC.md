@@ -181,6 +181,12 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Média na eventu (část 2, rozhodnuto 13. 11. 2026):** pořadatel u eventu zapne „Přijímáme média“ a zvolí **neomezený, nebo omezený počet** míst. Creator pošle žádost bez auta (zaměření, kontakt, pro koho fotí, souhlas) – až do začátku eventu, nezávisle na registraci aut. Pořadatel schvaluje / zamítá (se zprávou); limit hlídá databáze. Žadatel dostane upozornění v aplikaci. **Schválená média jsou veřejně vidět** na stránce eventu (jen veřejné profily, bez kontaktů) s odkazem na portfolio. Eventy na pozvánky média nepřijímají, „jen pro crew“ jen od členů.
 - Další části: turba na fotkách z portfolia, označení auta/eventu u fotky (fotky médií u eventu = galerie eventu).
 
+### 5.1i Souhlas s propagací (rozhodnuto 13. 11. 2026)
+- **Povinný** souhlas: „Souhlasím s využitím fotografií a obsahu zveřejněného na mém profilu pro prezentační a propagační účely ELITEZ CLUB, včetně sdílení na sociálních sítích.“
+- Nový člen ho dává při registraci (bez něj se registrovat nejde), stávající člen jednorázově v okně po přihlášení (jinak se jen odhlásí).
+- Ukládá se čas a verze textu (`promo_consent_at`, `promo_consent_version`). Při změně znění se zvýší verze a členové souhlasí znovu.
+- Týká se jen veřejně viditelného obsahu. Odvolání souhlasu = žádost o zrušení účtu. Znění doporučeno nechat zkontrolovat právníkem.
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.

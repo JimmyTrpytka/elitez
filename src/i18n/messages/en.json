@@ -109,7 +109,8 @@
     "loading": "Loading…",
     "submitting": "Sending…",
     "privacyNote": "By signing up you acknowledge the",
-    "privacyLink": "privacy policy"
+    "privacyLink": "privacy policy",
+    "promoLabel": "I agree to the use of photos and content published on my profile for presentation and promotional purposes of ELITEZ CLUB, including sharing on social media."
   },
   "Errors": {
     "invalidCredentials": "Incorrect email or password.",
@@ -123,7 +124,8 @@
     "notSignedIn": "The link has expired or you are not signed in.",
     "linkInvalid": "The link is invalid or has expired. Please try again.",
     "notConfigured": "The app isn't connected to the database yet (Supabase settings are missing).",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "promoRequired": "You can't join the club without this consent."
   },
   "NotFound": {
     "title": "Page not found",
@@ -1083,6 +1085,10 @@
       "age": {
         "title": "Age",
         "body": "Only people aged 16 or over can create an account."
+      },
+      "promo": {
+        "title": "Use of photos and content to promote the club",
+        "body": "When signing up (and existing members once), you agree to the use of photos and content published on your profile for presentation and promotional purposes of ELITEZ CLUB, including sharing on social media. This only covers content that is publicly visible on the website (public profile, public cars, portfolio). We never use private content. We store when you agreed and to which version of the text. The consent is a condition of membership – if you no longer agree, write to us and we'll delete your account; content already shared will be removed from the club's channels where possible."
       }
     },
     "updated": "Effective from 11 Nov 2026 (test phase)."
@@ -1718,5 +1724,15 @@
     "message_too_long": "The message is too long.",
     "media_full": "Media spots are full. Raise the limit in event settings or move someone back to review.",
     "generic": "Something went wrong, please try again."
+  },
+  "PromoConsent": {
+    "title": "One more consent",
+    "intro": "ELITEZ CLUB shares members' car photos and content on the website and the club's social media. To continue, we need a one-time consent from you.",
+    "label": "I agree to the use of photos and content published on my profile for presentation and promotional purposes of ELITEZ CLUB, including sharing on social media.",
+    "more": "Details are in the",
+    "privacyLink": "Privacy policy",
+    "accept": "I agree, continue",
+    "logout": "Log out",
+    "failed": "Couldn't save your consent, please try again."
   }
 }
