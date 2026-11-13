@@ -1781,6 +1781,128 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Spolupořádání eventu (hlavní Alice c…0a, spolupořadatel = crew-pořadatel)
+-- =====================================================================
+select set_config('rls.cohost_slug',
+  (select slug from public.organizers where id = current_setting('rls.crew_org')::uuid), true);
+
+-- Bob (správce crew) žádá o spolupořádání eventu Alice
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if public.request_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid) <> 'pending' then
+    raise exception 'FAIL: žádost o spolupořádání nečeká na potvrzení';
+  end if;
+  begin
+    perform public.decide_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid, true);
+    raise exception 'FAIL: žadatel si sám potvrdil spolupořádání';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    insert into public.event_cohosts (event_id, organizer_id, status, invited_by_host)
+    values ('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid, 'accepted', false);
+    raise exception 'FAIL: spolupořádání jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+-- Cizí člověk žádat za cizího pořadatele nemůže
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000d0e01","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.request_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid);
+    raise exception 'FAIL: cizí uživatel žádal za cizího pořadatele';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Nepotvrzené spolupořádání návštěvník nevidí
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.event_cohosts where event_id = '00000000-0000-4000-e000-000000000070') then
+    raise exception 'FAIL: nepotvrzené spolupořádání je veřejně vidět';
+  end if;
+end $$;
+reset role;
+
+-- Alice (hlavní pořadatel) potvrdí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+select public.decide_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid, true);
+do $$ begin
+  begin
+    perform public.invite_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.cohost_slug'));
+    raise exception 'FAIL: dvojí spolupořádání';
+  exception when raise_exception then
+    if sqlerrm <> 'already_cohost' then raise; end if;
+  end;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications where type = 'cohost_request'
+                 and user_id = '00000000-0000-4000-a000-00000000a11c') then
+    raise exception 'FAIL: hlavní pořadatel nedostal žádost o spolupořádání';
+  end if;
+  if not exists (select 1 from public.notifications where type = 'cohost_accepted'
+                 and user_id = '00000000-0000-4000-a000-000000000b0b') then
+    raise exception 'FAIL: spolupořadatel nedostal potvrzení';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select count(*) from public.event_cohosts
+      where event_id = '00000000-0000-4000-e000-000000000070' and status = 'accepted') <> 1 then
+    raise exception 'FAIL: potvrzené spolupořádání není vidět';
+  end if;
+end $$;
+reset role;
+
+-- Bob spolupořádání ukončí; Alice pak pozve a Bobova „žádost“ pozvánku přijme
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+select public.remove_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid);
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if public.invite_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.cohost_slug')) <> 'pending' then
+    raise exception 'FAIL: pozvánka nečeká na potvrzení';
+  end if;
+  begin
+    perform public.decide_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid, true);
+    raise exception 'FAIL: hlavní pořadatel potvrdil vlastní pozvánku';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if public.request_event_cohost('00000000-0000-4000-e000-000000000070', current_setting('rls.crew_org')::uuid) <> 'accepted' then
+    raise exception 'FAIL: žádost nepřijala čekající pozvánku';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

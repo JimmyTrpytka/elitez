@@ -479,7 +479,8 @@
     "autoTranslated": "Automaticky přeloženo{lang, select, cs {} en { z angličtiny} other {}}.",
     "showOriginal": "Zobrazit originál",
     "showingOriginal": "Zobrazuješ původní text.",
-    "showTranslation": "Zobrazit překlad"
+    "showTranslation": "Zobrazit překlad",
+    "organizedByMany": "Pořádají:"
   },
   "Organizer": {
     "title": "Pořadatel",
@@ -910,6 +911,18 @@
       "media_rejected": {
         "title": "Akreditace nepřijata",
         "text": "Žádost o akreditaci médií na {event} tentokrát nebyla přijata."
+      },
+      "cohost_request": {
+        "title": "Žádost o spolupořádání",
+        "text": "{cohost} chce spolupořádat {event}. Potvrď nebo odmítni ve správě eventu."
+      },
+      "cohost_invite": {
+        "title": "Pozvánka ke spolupořádání",
+        "text": "{organizer} zve {cohost} ke spolupořádání {event}. Přijmi nebo odmítni v sekci Pořadatel."
+      },
+      "cohost_accepted": {
+        "title": "Spolupořádání potvrzeno",
+        "text": "{event}: {organizer} × {cohost} – event je teď vidět u obou pořadatelů."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1734,5 +1747,48 @@
     "accept": "Souhlasím a pokračovat",
     "logout": "Odhlásit se",
     "failed": "Souhlas se nepodařilo uložit, zkus to prosím znovu."
+  },
+  "Cohosts": {
+    "hostTitle": "Spolupořadatelé eventu",
+    "hostIntro": "Další pořadatel nebo crew se u eventu ukáže jako spolupořadatel: event bude i na jeho profilu a jeho sledující dostanou upozornění. Spravovat event a přihlášky budeš dál jen ty.",
+    "hostStatus": {
+      "incoming": "Žádá o spolupořádání – potvrď nebo odmítni",
+      "outgoing": "Pozvánka odeslána, čeká na přijetí",
+      "accepted": "Spolupořádá",
+      "none": ""
+    },
+    "inviteLabel": "Pozvat pořadatele nebo crew",
+    "invitePlaceholder": "Vyber pořadatele…",
+    "invite": "Pozvat",
+    "invitedPending": "Pozvánka odeslána. Spolupořádání začne, až ji přijme.",
+    "invitedAccepted": "Hotovo – žádost tohoto pořadatele už čekala, spolupořádání je potvrzené.",
+    "notEligible": "Spolupořadatele jde přidat jen u zveřejněného eventu s přístupem pro všechny nebo pro Verified.",
+    "boxTitle": "Spolupořádáte tento event?",
+    "boxStatus": {
+      "none": "zatím nespolupořádá",
+      "incoming": "pozvánka čeká na tvé přijetí",
+      "outgoing": "žádost odeslána, čeká na potvrzení hlavním pořadatelem",
+      "accepted": "spolupořádá"
+    },
+    "request": "Požádat o spolupořádání",
+    "requestAs": "Požádat o spolupořádání za {name}",
+    "accept": "Přijmout",
+    "decline": "Odmítnout",
+    "withdraw": "Zrušit",
+    "end": "Ukončit spolupořádání",
+    "endQuestion": "Opravdu ukončit?",
+    "endYes": "Ano, ukončit",
+    "dashboardTitle": "Spolupořádání"
+  },
+  "CohostErrors": {
+    "not_allowed": "Na tohle nemáš oprávnění.",
+    "event_unavailable": "Spolupořádat jde jen zveřejněný event pro všechny nebo pro Verified.",
+    "own_event": "Tohle je tvůj vlastní event.",
+    "organizer_unavailable": "Takového pořadatele jsme nenašli.",
+    "cohost_limit": "Event může mít nejvýš 10 spolupořadatelů.",
+    "already_cohost": "Tento pořadatel už event spolupořádá.",
+    "already_requested": "Žádost nebo pozvánka už čeká na potvrzení.",
+    "not_pending": "Tahle žádost už není aktuální.",
+    "generic": "Něco se nepovedlo, zkus to prosím znovu."
   }
 }

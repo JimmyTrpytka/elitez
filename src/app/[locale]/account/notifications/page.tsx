@@ -36,6 +36,8 @@ export default async function NotificationsPage() {
 
 type Payload = {
   message?: string | null;
+  event_id?: string;
+  cohost_name?: string;
   event_title?: string;
   event_slug?: string;
   vehicle?: string;
@@ -182,6 +184,25 @@ async function NotificationsList() {
               : n.type === "crew_organizer_approved"
                 ? t("openOrganizer")
                 : t("openCrew"),
+        };
+      }
+      case "cohost_request":
+      case "cohost_invite":
+      case "cohost_accepted": {
+        const v = { event: p.event_title ?? "", organizer: p.organizer_name ?? "", cohost: p.cohost_name ?? "" };
+        return {
+          title: t(`types.${n.type}.title`, v),
+          text: t(`types.${n.type}.text`, v),
+          href:
+            n.type === "cohost_request" && p.event_id
+              ? `/organizer/events/${p.event_id}`
+              : n.type === "cohost_invite"
+                ? "/organizer#spoluporadani"
+                : p.event_slug
+                  ? `/e/${p.event_slug}`
+                  : null,
+          linkLabel: n.type === "cohost_accepted" ? t("openEvent") : t("openOrganizer"),
+          eventTitle: p.event_title,
         };
       }
       case "media_approved":
