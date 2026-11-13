@@ -240,3 +240,12 @@ export async function getCarOfTheWeek(): Promise<CarOfTheWeek | null> {
     turbos: r.turbos,
   };
 }
+
+/** Turba prací v portfoliu: { [id]: { given, count } } (jen viditelné profily). */
+export async function getPortfolioTurbos(itemIds: string[]): Promise<Record<string, { given: boolean; count: number }>> {
+  if (!itemIds.length) return {};
+  const supabase = await createClient();
+  if (!supabase) return {};
+  const { data } = await supabase.rpc("portfolio_turbo_stats", { p_item_ids: itemIds });
+  return Object.fromEntries((data ?? []).map((r) => [r.item_id, { given: r.mine, count: r.turbos }]));
+}

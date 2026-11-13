@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toggleTurbo } from "@/lib/social/actions";
+import { TurboButton, type TurboMode, type TurboState } from "@/components/social/turbo-button";
+import { TurboIcon } from "@/components/social/turbo-icon";
 import { useTranslations } from "next-intl";
 import { Lightbox, type LightboxPhoto } from "@/components/lightbox";
 import { CloseIcon } from "@/components/icons";
@@ -13,8 +16,59 @@ import { VideoProviderIcon } from "./video-provider-icon";
  * Portfolio na profilu (tmavé): fotky otevře prohlížeč, videa se přehrají
  * až po klepnutí (do té doby se nic od YouTube/Instagramu nenačítá).
  */
-export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; alt: string }) {
+export type PortfolioTurbo = {
+  /** active = přihlášený, guest = návštěvník, own = celé portfolio je moje */
+  mode: TurboMode;
+  /** Přihlášený – u jeho vlastních prací se turbo jen ukazuje */
+  viewerId: string | null;
+  initial: Record<string, TurboState>;
+};
+
+export function PortfolioGallery({
+  items,
+  alt,
+  turbo,
+}: {
+  items: PortfolioItemView[];
+  alt: string;
+  /** Turba u prací (bez = bez tlačítek) */
+  turbo?: PortfolioTurbo;
+}) {
   const t = useTranslations("Portfolio");
+  const [turbos, setTurbos] = useState<Record<string, TurboState>>(turbo?.initial ?? {});
+  const [burst, setBurst] = useState<{ id: string; n: number } | null>(null);
+  const byId = new Map(items.map((i) => [i.id, i]));
+  const modeFor = (item: PortfolioItemView | undefined): TurboMode | null => {
+    if (!turbo || !item?.turboable) return null;
+    if (turbo.viewerId && item.ownerId === turbo.viewerId) return "own";
+    return turbo.mode;
+  };
+  const stateOf = (id: string) => turbos[id] ?? { given: false, count: 0 };
+  const setState = (id: string) => (s: TurboState) => setTurbos((prev) => ({ ...prev, [id]: s }));
+  const turboButton = (item: PortfolioItemView, variant: "overlay" | "dark", size: "sm" | "md") => {
+    const mode = modeFor(item);
+    return mode ? (
+      <TurboButton
+        target={{ portfolioItemId: item.id }}
+        mode={mode}
+        variant={variant}
+        size={size}
+        state={stateOf(item.id)}
+        onState={setState(item.id)}
+      />
+    ) : null;
+  };
+  // Dvojklik na fotku v prohlížeči = turbo (nikdy ho neodebere)
+  const giveTurbo = (id: string) => {
+    if (modeFor(byId.get(id)) !== "active") return;
+    setBurst((b) => ({ id, n: (b?.n ?? 0) + 1 }));
+    const current = stateOf(id);
+    if (current.given) return;
+    setTurbos((prev) => ({ ...prev, [id]: { given: true, count: current.count + 1 } }));
+    void toggleTurbo({ portfolioItemId: id }).then((res) => {
+      setTurbos((prev) => ({ ...prev, [id]: res.ok ? { given: res.given, count: res.total } : current }));
+    });
+  };
   const photos: LightboxPhoto[] = items
     .filter((i) => i.kind === "photo")
     .map((i) => ({ id: i.id, thumb: i.thumbUrl, full: i.fullUrl }));
@@ -25,7 +79,8 @@ export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; a
     <>
       <ul className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
         {items.map((item) => (
-          <li key={item.id} className="group relative">
+          <li key={item.id} className="group">
+            <div className="relative">
             <button
               type="button"
               onClick={() => {
@@ -34,7 +89,7 @@ export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; a
                 else if (item.video) window.open(item.video.url, "_blank", "noopener,noreferrer");
               }}
               aria-label={item.caption ?? (item.kind === "video" ? t("playVideo") : t("openPhoto"))}
-              className="block w-full overflow-hidden rounded-control bg-night-soft focus-visible:outline-offset-4"
+              className="relative block w-full overflow-hidden rounded-control bg-night-soft focus-visible:outline-offset-4"
             >
               {item.thumbUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -69,6 +124,10 @@ export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; a
                 </span>
               ) : null}
             </button>
+            {modeFor(item) ? (
+              <div className="absolute right-2 bottom-2">{turboButton(item, "overlay", "sm")}</div>
+            ) : null}
+            </div>
             {item.caption ? (
               <p className="mt-1.5 line-clamp-2 text-sm text-night-subtle">{item.caption}</p>
             ) : null}
@@ -90,14 +149,40 @@ export function PortfolioGallery({ items, alt }: { items: PortfolioItemView[]; a
           onIndex={setPhotoIndex}
           onClose={() => setPhotoIndex(null)}
           alt={alt}
+          extra={(photo) => {
+            const item = byId.get(photo.id);
+            return item ? turboButton(item, "overlay", "md") : null;
+          }}
+          onDoubleTap={(photo) => giveTurbo(photo.id)}
+          overlayFor={(photo) =>
+            burst?.id === photo.id ? (
+              <span
+                key={burst.n}
+                aria-hidden
+                className="turbo-burst pointer-events-none absolute inset-0 z-10 flex items-center justify-center text-accent"
+              >
+                <TurboIcon className="h-28 w-28 drop-shadow-[0_0_30px_rgb(255_214_10/0.8)] sm:h-36 sm:w-36" filled />
+              </span>
+            ) : null
+          }
         />
       ) : null}
-      {video?.video?.embedUrl ? <VideoModal item={video} onClose={() => setVideo(null)} /> : null}
+      {video?.video?.embedUrl ? (
+        <VideoModal item={video} onClose={() => setVideo(null)} extra={turboButton(video, "overlay", "md")} />
+      ) : null}
     </>
   );
 }
 
-function VideoModal({ item, onClose }: { item: PortfolioItemView; onClose: () => void }) {
+function VideoModal({
+  item,
+  onClose,
+  extra,
+}: {
+  item: PortfolioItemView;
+  onClose: () => void;
+  extra?: React.ReactNode;
+}) {
   const t = useTranslations("Portfolio");
   const tLightbox = useTranslations("Lightbox");
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -129,6 +214,8 @@ function VideoModal({ item, onClose }: { item: PortfolioItemView; onClose: () =>
           <VideoProviderIcon provider={video.provider} className="h-4 w-4" />
           {t("openOn", { provider: t(`providers.${video.provider}`) })}
         </a>
+        <div className="flex items-center gap-2">
+        {extra}
         <button
           ref={closeRef}
           type="button"
@@ -138,6 +225,7 @@ function VideoModal({ item, onClose }: { item: PortfolioItemView; onClose: () =>
         >
           <CloseIcon className="h-6 w-6" />
         </button>
+        </div>
       </div>
       <div
         className="flex flex-1 items-center justify-center px-2 pb-6"

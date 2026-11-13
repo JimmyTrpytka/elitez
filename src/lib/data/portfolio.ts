@@ -19,6 +19,10 @@ export type PortfolioItemView = {
   fullUrl: string | null;
   hasOwnThumb: boolean;
   video: (VideoEmbed & { vertical: boolean }) | null;
+  /** Majitel práce (turbo: vlastní práci turbo dát nejde) */
+  ownerId?: string;
+  /** Jde dát turbo? (práce v portfoliu ano, fotky pořadatele ne) */
+  turboable?: boolean;
   /** Autor (galerie eventu, fotky u auta) */
   credit?: { username: string; name: string } | null;
   /** Skryto pořadatelem v galerii eventu (vidí jen pořadatel) */
@@ -80,6 +84,8 @@ export async function listPortfolio(
       fullUrl: lg ? (urls.get(lg) ?? null) : null,
       hasOwnThumb: Boolean(ownThumb),
       video: embed ? { ...embed, vertical: isVerticalVideo(embed.provider, embed.url) } : null,
+      ownerId: r.owner_id,
+      turboable: true,
       tags: {
         eventId: r.event_id,
         eventTitle: r.event?.title ?? null,

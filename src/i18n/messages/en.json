@@ -948,7 +948,10 @@
     "openCrewReview": "Review crews",
     "crewReason": "Reason: {reason}",
     "openOrganizer": "Go to Organizer",
-    "organizerMessage": "Message from the organizer: {message}"
+    "organizerMessage": "Message from the organizer: {message}",
+    "turboPortfolioTitle": "A turbo for your work!",
+    "turboPortfolioText": "{who} gave your portfolio work a turbo.",
+    "openPortfolio": "View portfolio"
   },
   "Broadcast": {
     "title": "Messages to participants",

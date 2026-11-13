@@ -2034,6 +2034,90 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Turba na pracích v portfoliu (Bob = Creator s veřejným profilem)
+-- =====================================================================
+select set_config('rls.work_id',
+  (select id::text from public.portfolio_items where owner_id = '00000000-0000-4000-a000-000000000b0b' limit 1), true);
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r record;
+begin
+  select * into r from public.toggle_turbo(p_portfolio_item_id => current_setting('rls.work_id')::uuid);
+  if not r.given or r.total <> 1 then raise exception 'FAIL: turbo práci v portfoliu se nedalo'; end if;
+  begin
+    perform public.toggle_turbo(p_photo_id => gen_random_uuid(), p_portfolio_item_id => current_setting('rls.work_id')::uuid);
+    raise exception 'FAIL: turbo na dva cíle najednou';
+  exception when raise_exception then
+    if sqlerrm <> 'invalid_target' then raise; end if;
+  end;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and type = 'turbo_received'
+                   and payload ->> 'target' = 'portfolio') then
+    raise exception 'FAIL: creator nedostal upozornění na turbo práce';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select turbos from public.portfolio_turbo_stats(array[current_setting('rls.work_id')::uuid])) <> 1 then
+    raise exception 'FAIL: počet turb práce nesedí';
+  end if;
+end $$;
+reset role;
+
+-- Vlastní práci turbo nedá; soukromý profil turbo nedostane
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.toggle_turbo(p_portfolio_item_id => current_setting('rls.work_id')::uuid);
+    raise exception 'FAIL: turbo vlastní práci';
+  exception when raise_exception then
+    if sqlerrm <> 'own_content' then raise; end if;
+  end;
+end $$;
+reset role;
+
+update public.profiles set visibility = 'private' where id = '00000000-0000-4000-a000-000000000b0b';
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r record;
+begin
+  begin
+    perform public.toggle_turbo(p_portfolio_item_id => current_setting('rls.work_id')::uuid);
+    raise exception 'FAIL: turbo práci soukromého profilu';
+  exception when raise_exception then
+    if sqlerrm <> 'not_found' then raise; end if;
+  end;
+end $$;
+reset role;
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+
+-- Druhé klepnutí turbo odebere
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r record;
+begin
+  select * into r from public.toggle_turbo(p_portfolio_item_id => current_setting('rls.work_id')::uuid);
+  if r.given or r.total <> 0 then raise exception 'FAIL: turbo práce nejde odebrat'; end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

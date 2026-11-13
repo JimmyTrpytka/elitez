@@ -30,15 +30,16 @@ export type TurboResult =
   | { ok: true; given: boolean; total: number }
   | { ok: false; error: SocialError };
 
-/** Dá / odebere turbo fotce nebo garáži. Vše kontroluje databáze (toggle_turbo). */
+/** Dá / odebere turbo fotce, garáži nebo práci v portfoliu. Vše kontroluje databáze (toggle_turbo). */
 export async function toggleTurbo(
-  target: { photoId: string } | { profileId: string },
+  target: { photoId: string } | { profileId: string } | { portfolioItemId: string },
 ): Promise<TurboResult> {
   const supabase = await createClient();
   if (!supabase) return { ok: false, error: "unknown" };
   const { data, error } = await supabase.rpc("toggle_turbo", {
     p_photo_id: "photoId" in target ? target.photoId : undefined,
     p_profile_id: "profileId" in target ? target.profileId : undefined,
+    p_portfolio_item_id: "portfolioItemId" in target ? target.portfolioItemId : undefined,
   });
   const row = data?.[0];
   if (error || !row) return { ok: false, error: toError(error?.message) };
