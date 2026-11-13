@@ -35,6 +35,7 @@ export default async function NotificationsPage() {
 }
 
 type Payload = {
+  message?: string | null;
   event_title?: string;
   event_slug?: string;
   vehicle?: string;
@@ -181,6 +182,18 @@ async function NotificationsList() {
               : n.type === "crew_organizer_approved"
                 ? t("openOrganizer")
                 : t("openCrew"),
+        };
+      }
+      case "media_approved":
+      case "media_rejected": {
+        const v = { event: p.event_title ?? "" };
+        const text = t(`types.${n.type}.text`, v);
+        return {
+          title: t(`types.${n.type}.title`, v),
+          text: p.message ? `${text} ${t("organizerMessage", { message: p.message })}` : text,
+          href: p.event_slug ? `/e/${p.event_slug}` : "/account/registrations",
+          linkLabel: t("openEvent"),
+          eventTitle: p.event_title,
         };
       }
       case "organizer_member_added":

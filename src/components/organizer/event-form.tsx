@@ -14,6 +14,7 @@ import { SelectField } from "@/components/ui/select";
 import { TextareaField } from "@/components/ui/textarea";
 import { MapPicker } from "@/components/organizer/map-picker";
 import { SocialFields } from "@/components/social/social-fields";
+import { MediaFields } from "@/components/organizer/media-fields";
 import { countryOptions } from "@/lib/countries";
 import { saveEvent, type EventFormState } from "@/lib/organizer/actions";
 import { Constants } from "@/lib/supabase/database.types";
@@ -41,6 +42,8 @@ export type EventFormValues = {
   verified_head_start_hours: number;
   registration_opens_at: string;
   registration_closes_at: string;
+  media_enabled: boolean;
+  media_capacity: string;
   social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
 };
 
@@ -75,7 +78,7 @@ export function EventForm({
   const submit = useKeepValuesSubmit(action);
   const formRef = useRef<HTMLFormElement>(null);
   // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
-  const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country" };
+  const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country", mediaCapacityInvalid: "media_capacity" };
   const errField = state.status === "error" ? (state.field ?? fieldOf[state.error]) : undefined;
   const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
   const errorFor = (name: string) => (errField === name ? errMessage : undefined);
@@ -262,6 +265,14 @@ export function EventForm({
             <span className="block text-ink-soft">{t("priorityHint")}</span>
           </span>
         </label>
+      </Section>
+
+      <Section title={t("mediaTitle")}>
+        <MediaFields
+          enabled={values.media_enabled}
+          capacity={values.media_capacity}
+          error={errorFor("media_capacity")}
+        />
       </Section>
 
       <StickyActions>

@@ -1593,10 +1593,11 @@ update public.profiles set visibility = 'public' where id = '00000000-0000-4000-
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
 set local role anon;
 do $$ begin
-  if (select count(*) from public.portfolio_items) <> 13 then
+  if (select count(*) from public.portfolio_items where owner_id = '00000000-0000-4000-a000-000000000b0b') <> 13 then
     raise exception 'FAIL: návštěvník nevidí portfolio veřejného profilu';
   end if;
-  if not exists (select 1 from storage.objects where bucket_id = 'profile-media') then
+  if not exists (select 1 from storage.objects where bucket_id = 'profile-media'
+                 and name like '00000000-0000-4000-a000-000000000b0b/%') then
     raise exception 'FAIL: návštěvník nevidí cover veřejného profilu';
   end if;
 end $$;
@@ -1606,15 +1607,150 @@ update public.profiles set visibility = 'private' where id = '00000000-0000-4000
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
 set local role anon;
 do $$ begin
-  if exists (select 1 from public.portfolio_items) then
+  if exists (select 1 from public.portfolio_items where owner_id = '00000000-0000-4000-a000-000000000b0b') then
     raise exception 'FAIL: portfolio soukromého profilu je vidět';
   end if;
-  if exists (select 1 from storage.objects where bucket_id = 'profile-media') then
+  if exists (select 1 from storage.objects where bucket_id = 'profile-media'
+             and name like '00000000-0000-4000-a000-000000000b0b/%') then
     raise exception 'FAIL: cover soukromého profilu je vidět';
   end if;
 end $$;
 reset role;
 update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+
+-- =====================================================================
+-- CREATOR část 2: média na eventu
+-- =====================================================================
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, media_enabled, media_capacity)
+values
+  ('00000000-0000-4000-e000-000000000070', '00000000-0000-4000-c000-00000000000a',
+   'rls-media', 'Média', now() + interval '20 days', now() + interval '21 days', 'published', 'public', true, 1),
+  ('00000000-0000-4000-e000-000000000071', '00000000-0000-4000-c000-00000000000a',
+   'rls-bez-medii', 'Bez médií', now() + interval '20 days', now() + interval '21 days', 'published', 'public', false, null);
+update public.profiles set is_creator = true, username = coalesce(username, 'rls_carol')
+where id = '00000000-0000-4000-a000-0000000ca201';
+
+-- Bob (Creator) se hlásí jako média
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  perform public.request_media('00000000-0000-4000-e000-000000000070', '+420777111222', 'bob@example.invalid', 'Pro magazín', array['photo', 'hacker'], true);
+  if (select skills from public.event_media_requests where user_id = auth.uid()) <> array['photo'] then
+    raise exception 'FAIL: neplatné zaměření prošlo do žádosti';
+  end if;
+  begin
+    perform public.request_media('00000000-0000-4000-e000-000000000070', '+420777111222', 'bob@example.invalid', null, null, true);
+    raise exception 'FAIL: dvojí žádost médií';
+  exception when raise_exception then
+    if sqlerrm <> 'already_registered' then raise; end if;
+  end;
+  begin
+    perform public.request_media('00000000-0000-4000-e000-000000000071', '+420777111222', 'bob@example.invalid', null, null, true);
+    raise exception 'FAIL: žádost na event bez médií';
+  exception when raise_exception then
+    if sqlerrm <> 'media_disabled' then raise; end if;
+  end;
+  begin
+    insert into public.event_media_requests (event_id, user_id, contact_phone, contact_email)
+    values ('00000000-0000-4000-e000-000000000070', auth.uid(), '12345', 'a@b.c');
+    raise exception 'FAIL: žádost médií jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.decide_media_request((select id from public.event_media_requests where user_id = auth.uid()), 'approved');
+    raise exception 'FAIL: žadatel si sám schválil akreditaci';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Návštěvník zatím nikoho nevidí (čeká na schválení)
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.event_media_list('00000000-0000-4000-e000-000000000070')) then
+    raise exception 'FAIL: neschválená média jsou veřejně vidět';
+  end if;
+end $$;
+reset role;
+
+-- Carol (Creator) se hlásí taky
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  perform public.request_media('00000000-0000-4000-e000-000000000070', '+420777333444', 'carol@example.invalid', null, array['video'], true);
+end $$;
+reset role;
+
+-- Pořadatel (Alice) schválí Boba; na Carol už limit nestačí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if (select count(*) from public.event_media_requests
+      where event_id = '00000000-0000-4000-e000-000000000070') <> 2 then
+    raise exception 'FAIL: pořadatel nevidí žádosti médií';
+  end if;
+  perform public.decide_media_request(
+    (select id from public.event_media_requests where user_id = '00000000-0000-4000-a000-000000000b0b'
+       and event_id = '00000000-0000-4000-e000-000000000070'), 'approved', 'Vítej!');
+  begin
+    perform public.decide_media_request(
+      (select id from public.event_media_requests where user_id = '00000000-0000-4000-a000-0000000ca201'
+         and event_id = '00000000-0000-4000-e000-000000000070'), 'approved');
+    raise exception 'FAIL: překročen limit míst pro média';
+  exception when raise_exception then
+    if sqlerrm <> 'media_full' then raise; end if;
+  end;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and type = 'media_approved') then
+    raise exception 'FAIL: schválená média nedostala upozornění';
+  end if;
+end $$;
+
+-- Veřejný profil Boba je teď vidět v seznamu médií (bez kontaktů)
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select count(*) from public.event_media_list('00000000-0000-4000-e000-000000000070')) <> 1 then
+    raise exception 'FAIL: schválená média nejsou vidět na eventu';
+  end if;
+  begin
+    perform 1 from public.event_media_requests;
+    raise exception 'FAIL: návštěvník čte žádosti médií (kontakty)';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+-- Bob cizí žádost (Carol) nevidí; akreditaci zruší → zmizí ze seznamu
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if (select count(*) from public.event_media_requests
+      where event_id = '00000000-0000-4000-e000-000000000070') <> 1 then
+    raise exception 'FAIL: žadatel vidí cizí žádost médií';
+  end if;
+end $$;
+select public.cancel_media_request(
+  (select id from public.event_media_requests where user_id = auth.uid()
+     and event_id = '00000000-0000-4000-e000-000000000070'));
+reset role;
+do $$ begin
+  if exists (select 1 from public.event_media_list('00000000-0000-4000-e000-000000000070')) then
+    raise exception 'FAIL: zrušená média jsou dál vidět';
+  end if;
+end $$;
 
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
