@@ -24,6 +24,8 @@ import { getProfileShare, shareMetadata } from "@/lib/data/share";
 import { ShareButton } from "@/components/share-button";
 import { listDreamsOfOwner } from "@/lib/data/dreams";
 import { DreamCard } from "@/components/dreams/dream-card";
+import { listPortfolio } from "@/lib/data/portfolio";
+import { PortfolioGallery } from "@/components/portfolio/portfolio-gallery";
 import { Link } from "@/i18n/navigation";
 import { buttonClasses } from "@/components/ui/button";
 import { TurboToggle } from "@/components/social/turbo-button";
@@ -73,7 +75,7 @@ async function PublicProfile({
   if (!profile) notFound();
 
   const isOwner = user?.id === profile.id;
-  const [vehicles, stats, givers, badges, catalog, dreams, crews] = await Promise.all([
+  const [vehicles, stats, givers, badges, catalog, dreams, crews, portfolio] = await Promise.all([
     listVisibleVehiclesOfOwner(profile.id),
     getProfileSocialStats(profile.id),
     listTurboGivers({ profileId: profile.id }),
@@ -81,6 +83,7 @@ async function PublicProfile({
     isOwner ? listBadgeCatalog() : Promise.resolve([]),
     listDreamsOfOwner(profile.id),
     listProfileCrews(profile.id),
+    profile.is_creator ? listPortfolio(profile.id, "featured") : Promise.resolve(null),
   ]);
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
@@ -90,6 +93,9 @@ async function PublicProfile({
   // Fanoušek = zatím bez auta (počítají se auta, která návštěvník vidí; majitel i svá soukromá)
   const isFan = vehicles.filter((v) => v.status === "current").length === 0;
   const shownDreams = dreams.filter((d) => d.visibility === "public");
+  const creator = profile.is_creator;
+  // Creator bez aut prázdnou garáž neukazuje
+  const showGarage = !creator || shown.length > 0;
   const mode = isOwner ? "own" : user ? "active" : "guest";
   // Turba a sledování jen u veřejného profilu
   const social = profile.visibility === "public";
@@ -100,8 +106,21 @@ async function PublicProfile({
 
   return (
     <div className="flex-1 bg-night text-night-text">
-      <header className="glow-accent border-b border-white/10">
-        <div className="mx-auto w-full max-w-6xl px-4 pt-14 pb-12 sm:px-6 sm:pt-20">
+      <header className="glow-accent relative overflow-hidden border-b border-white/10">
+        {profile.coverUrl ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={profile.coverUrl} alt="" className="absolute inset-0 h-full w-full object-cover opacity-70" />
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-night via-night/80 to-night/20" />
+          </>
+        ) : null}
+        <div
+          className={
+            profile.coverUrl
+              ? "relative mx-auto w-full max-w-6xl px-4 pt-40 pb-12 sm:px-6 sm:pt-64"
+              : "relative mx-auto w-full max-w-6xl px-4 pt-14 pb-12 sm:px-6 sm:pt-20"
+          }
+        >
           {isOwner && profile.visibility === "private" ? (
             <div className="mb-6">
               <Alert tone="info">{t("ownerPrivateNotice")}</Alert>
@@ -124,13 +143,28 @@ async function PublicProfile({
                   {name}
                 </DisplayHeading>
                 {profile.verified_at ? <Badge>Verified</Badge> : null}
-                <span
-                  className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
-                  title={isFan ? t("fanHint") : undefined}
-                >
-                  {isFan ? t("fan") : t("owner")}
-                </span>
+                {creator ? (
+                  <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold tracking-wide text-ink uppercase">
+                    {t("creator")}
+                  </span>
+                ) : null}
+                {!creator || !isFan ? (
+                  <span
+                    className="rounded-full border border-white/20 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+                    title={isFan ? t("fanHint") : undefined}
+                  >
+                    {isFan ? t("fan") : t("owner")}
+                  </span>
+                ) : null}
               </div>
+              {creator && profile.creator_skills.length ? (
+                <p className="mt-2 text-sm font-semibold tracking-[0.15em] text-white/70 uppercase">
+                  {profile.creator_skills
+                    .map((k) => (k === "photo" || k === "video" || k === "drone" ? t(`skills.${k}`) : null))
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+              ) : null}
               {crews.length ? (
                 <div className="mt-3 flex flex-wrap gap-2">
                   {crews.map((c) => (
@@ -211,6 +245,35 @@ async function PublicProfile({
       </header>
 
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        {creator && portfolio && (portfolio.items.length || isOwner) ? (
+          <section id="portfolio" className="mb-16 scroll-mt-24">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <h2 className="font-display text-4xl font-extrabold text-white uppercase">{t("portfolioTitle")}</h2>
+              {isOwner ? (
+                <Link href="/portfolio" className={buttonClasses("outlineDark")}>
+                  {t("portfolioManage")}
+                </Link>
+              ) : null}
+            </div>
+            {portfolio.items.length ? (
+              <PortfolioGallery items={portfolio.items} alt={name} />
+            ) : (
+              <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("portfolioEmptyOwner")}</p>
+            )}
+            {portfolio.archiveCount > 0 ? (
+              <p className="mt-6">
+                <Link
+                  href={`/u/${profile.username}/archive`}
+                  className="font-semibold text-white underline decoration-accent decoration-2 underline-offset-4"
+                >
+                  {t("archiveLink", { count: portfolio.archiveCount })} →
+                </Link>
+              </p>
+            ) : null}
+          </section>
+        ) : null}
+
+        {showGarage ? (
         <section>
           <h2 className="mb-6 font-display text-4xl font-extrabold text-white uppercase">
             {t("garageTitle")}
@@ -231,6 +294,7 @@ async function PublicProfile({
             <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("garageEmpty")}</p>
           )}
         </section>
+        ) : null}
 
         {former.length ? (
           <section className="mt-16">

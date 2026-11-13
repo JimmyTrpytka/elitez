@@ -1522,6 +1522,100 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- CREATOR: portfolio, cover, úložiště profile-media
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  -- bez přepnutí na Creator nic přidat nejde
+  begin
+    insert into public.portfolio_items (kind, photo_key, photo_format)
+    values ('photo', gen_random_uuid(), 'webp');
+    raise exception 'FAIL: portfolio bez typu Creator';
+  exception when insufficient_privilege then null;
+  end;
+  update public.profiles set is_creator = true, creator_skills = array['photo', 'video'],
+    cover_key = gen_random_uuid(), cover_format = 'webp'
+  where id = auth.uid();
+  insert into public.portfolio_items (kind, photo_key, photo_format, pinned)
+  select 'photo', gen_random_uuid(), 'webp', true from generate_series(1, 12);
+  insert into public.portfolio_items (kind, video_url, video_provider)
+  values ('video', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'youtube');
+  begin
+    insert into public.portfolio_items (kind, photo_key, photo_format, pinned)
+    values ('photo', gen_random_uuid(), 'webp', true);
+    raise exception 'FAIL: připíchnuto víc než 12 prací';
+  exception when raise_exception then
+    if sqlerrm <> 'pin_limit' then raise; end if;
+  end;
+  begin
+    update public.portfolio_items set video_url = 'https://evil.example/x' where kind = 'video';
+    raise exception 'FAIL: odkaz videa jde přepsat';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    update public.profiles set creator_skills = array['hacker'] where id = auth.uid();
+    raise exception 'FAIL: neplatné zaměření creatora';
+  exception when check_violation then null;
+  end;
+  begin
+    insert into storage.objects (bucket_id, name)
+    values ('profile-media', '00000000-0000-4000-a000-00000000a11c/cover/x-sm.webp');
+    raise exception 'FAIL: nahrání do cizí složky profile-media';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+insert into storage.objects (bucket_id, name)
+values ('profile-media', '00000000-0000-4000-a000-000000000b0b/cover/k-sm.webp');
+reset role;
+
+-- Cizí uživatel portfolio nezmění ani nesmaže
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000ca201","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  update public.portfolio_items set caption = 'hack' where owner_id = '00000000-0000-4000-a000-000000000b0b';
+  delete from public.portfolio_items where owner_id = '00000000-0000-4000-a000-000000000b0b';
+end $$;
+reset role;
+
+do $$ begin
+  if (select count(*) from public.portfolio_items
+      where owner_id = '00000000-0000-4000-a000-000000000b0b' and caption is null) <> 13 then
+    raise exception 'FAIL: cizí uživatel změnil/smazal portfolio';
+  end if;
+end $$;
+
+-- Návštěvník vidí portfolio i soubory veřejného profilu, soukromého ne
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select count(*) from public.portfolio_items) <> 13 then
+    raise exception 'FAIL: návštěvník nevidí portfolio veřejného profilu';
+  end if;
+  if not exists (select 1 from storage.objects where bucket_id = 'profile-media') then
+    raise exception 'FAIL: návštěvník nevidí cover veřejného profilu';
+  end if;
+end $$;
+reset role;
+
+update public.profiles set visibility = 'private' where id = '00000000-0000-4000-a000-000000000b0b';
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if exists (select 1 from public.portfolio_items) then
+    raise exception 'FAIL: portfolio soukromého profilu je vidět';
+  end if;
+  if exists (select 1 from storage.objects where bucket_id = 'profile-media') then
+    raise exception 'FAIL: cover soukromého profilu je vidět';
+  end if;
+end $$;
+reset role;
+update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

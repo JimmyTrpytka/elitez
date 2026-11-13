@@ -951,17 +951,74 @@ export type Database = {
           },
         ]
       }
+      portfolio_items: {
+        Row: {
+          caption: string | null
+          created_at: string
+          height: number | null
+          id: string
+          kind: string
+          owner_id: string
+          photo_format: string | null
+          photo_key: string | null
+          pinned: boolean
+          video_provider: string | null
+          video_url: string | null
+          width: number | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind: string
+          owner_id?: string
+          photo_format?: string | null
+          photo_key?: string | null
+          pinned?: boolean
+          video_provider?: string | null
+          video_url?: string | null
+          width?: number | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          height?: number | null
+          id?: string
+          kind?: string
+          owner_id?: string
+          photo_format?: string | null
+          photo_key?: string | null
+          pinned?: boolean
+          video_provider?: string | null
+          video_url?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_items_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_path: string | null
           bio: string | null
           city: string | null
           country: string | null
+          cover_format: string | null
+          cover_key: string | null
           created_at: string
+          creator_skills: string[]
           display_name: string | null
           facebook_url: string | null
           id: string
           instagram_url: string | null
+          is_creator: boolean
           locale: string
           role: string
           tiktok_url: string | null
@@ -977,11 +1034,15 @@ export type Database = {
           bio?: string | null
           city?: string | null
           country?: string | null
+          cover_format?: string | null
+          cover_key?: string | null
           created_at?: string
+          creator_skills?: string[]
           display_name?: string | null
           facebook_url?: string | null
           id: string
           instagram_url?: string | null
+          is_creator?: boolean
           locale?: string
           role?: string
           tiktok_url?: string | null
@@ -997,11 +1058,15 @@ export type Database = {
           bio?: string | null
           city?: string | null
           country?: string | null
+          cover_format?: string | null
+          cover_key?: string | null
           created_at?: string
+          creator_skills?: string[]
           display_name?: string | null
           facebook_url?: string | null
           id?: string
           instagram_url?: string | null
+          is_creator?: boolean
           locale?: string
           role?: string
           tiktok_url?: string | null

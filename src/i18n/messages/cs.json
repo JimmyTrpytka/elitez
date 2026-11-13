@@ -204,7 +204,9 @@
     "crewsMeta": "🏠 {name}{count, plural, one {} other { a další}}",
     "crewsNone": "Zatím v žádné crew",
     "adminCrews": "Crew ke schválení",
-    "adminCrewsPending": "{count, plural, one {# čeká} few {# čekají} many {# čeká} other {# čeká}} na schválení"
+    "adminCrewsPending": "{count, plural, one {# čeká} few {# čekají} many {# čeká} other {# čeká}} na schválení",
+    "portfolio": "Portfolio",
+    "portfolioMeta": "Fotky a videa na profilu"
   },
   "Profile": {
     "editTitle": "Upravit profil",
@@ -236,7 +238,8 @@
       "notSignedIn": "Nejsi přihlášen(a). Přihlas se prosím znovu.",
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
       "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno."
-    }
+    },
+    "coverTitle": "Úvodní fotka"
   },
   "Garage": {
     "title": "Moje garáž",
@@ -395,7 +398,21 @@
     "dreamsTitle": "Garáž snů",
     "dreamsSubtitle": "Auta, o kterých sní, plánuje je nebo je hledá.",
     "dreamsManage": "Spravovat Garáž snů",
-    "dreamsEmptyOwner": "Zatím tu nic není. Přidej auto, o kterém sníš."
+    "dreamsEmptyOwner": "Zatím tu nic není. Přidej auto, o kterém sníš.",
+    "creator": "Creator",
+    "skills": {
+      "photo": "Foto",
+      "video": "Video",
+      "drone": "Dron"
+    },
+    "portfolioTitle": "Portfolio",
+    "portfolioManage": "Spravovat portfolio",
+    "portfolioEmptyOwner": "Zatím tu nic není. Nahraj své nejlepší fotky nebo přidej video odkazem.",
+    "archiveLink": "Archiv tvorby ({count, plural, one {# práce} few {# práce} other {# prací}})",
+    "archiveTitle": "Archiv tvorby",
+    "archiveText": "Starší práce, které už se nevešly mezi 12 hlavních na profilu.",
+    "archiveBack": "Zpět na profil {name}",
+    "archiveEmpty": "Archiv je zatím prázdný."
   },
   "PublicVehicle": {
     "metaTitle": "Vozidlo",
@@ -1539,5 +1556,73 @@
       "facebook": "jmeno nebo odkaz"
     },
     "invalid": "Tohle nevypadá jako odkaz ani @jméno."
+  },
+  "Creator": {
+    "legend": "Creator",
+    "toggle": "Jsem Creator – fotograf, kameraman nebo tvůrce reels",
+    "toggleHint": "Na profilu se ti objeví štítek Creator a Portfolio. Garáž ti zůstane, pokud máš auto.",
+    "skillsLabel": "Co tvoříš?",
+    "skills": {
+      "photo": "Foto",
+      "video": "Video / reels",
+      "drone": "Dron"
+    },
+    "coverHint": "Velká fotka v hlavičce tvého profilu. Nejlépe na šířku.",
+    "coverAdd": "Nahrát úvodní fotku",
+    "coverReplace": "Vyměnit úvodní fotku",
+    "coverRemove": "Odebrat",
+    "uploading": "Nahrávám…",
+    "saveFailed": "Fotku se nepodařilo uložit, zkus to prosím znovu."
+  },
+  "Portfolio": {
+    "manageTitle": "Moje portfolio",
+    "backToAccount": "← Můj účet",
+    "viewOnProfile": "Zobrazit na profilu",
+    "notCreatorTitle": "Portfolio je pro Creatory",
+    "notCreatorText": "Fotíš, natáčíš nebo děláš reels? V úpravě profilu zaškrtni „Jsem Creator“ a můžeš si sem nahrát své práce.",
+    "becomeCreator": "Upravit profil",
+    "addPhotosTitle": "Přidat fotky",
+    "addPhotosHint": "Můžeš vybrat víc fotek najednou (až 30). Zmenší se přímo v telefonu, originál se nikam neposílá.",
+    "addPhotos": "Vybrat fotky",
+    "uploadingProgress": "Nahrávám {done} / {total}…",
+    "uploadFailedSome": "{count, plural, one {Jednu fotku} few {# fotky} other {# fotek}} se nepodařilo nahrát:",
+    "addVideoTitle": "Přidat video",
+    "addVideoHint": "Videa k nám nenahráváš – stačí vložit odkaz z YouTube, Instagramu (reels), TikToku nebo Vimea. Přehraje se přímo na profilu.",
+    "videoUrlLabel": "Odkaz na video",
+    "captionLabel": "Popisek (nepovinný)",
+    "captionPlaceholder": "Popisek…",
+    "addVideo": "Přidat video",
+    "worksTitle": "Moje práce",
+    "worksHint": "Na profilu je vidět {count} prací: nejdřív připíchnuté, pak nejnovější. Ostatní jsou v Archivu tvorby.",
+    "empty": "Zatím tu nic není.",
+    "badgeProfile": "Na profilu",
+    "badgeArchive": "V archivu",
+    "pinned": "Připíchnuto",
+    "pin": "Připíchnout",
+    "unpin": "Odepnout",
+    "thumbAdd": "Nahrát náhled",
+    "thumbReplace": "Vyměnit náhled",
+    "uploading": "Nahrávám…",
+    "delete": "Smazat",
+    "deleteQuestion": "Smazat?",
+    "deleteYes": "Ano, smazat",
+    "playVideo": "Přehrát video",
+    "openPhoto": "Otevřít fotku",
+    "openOn": "Otevřít na {provider}",
+    "providers": {
+      "youtube": "YouTube",
+      "instagram": "Instagram",
+      "tiktok": "TikTok",
+      "vimeo": "Vimeo"
+    },
+    "errors": {
+      "notCreator": "Nejdřív si v profilu zapni „Jsem Creator“.",
+      "videoInvalid": "Tenhle odkaz neznáme. Vlož odkaz na konkrétní video z YouTube, Instagramu, TikToku nebo Vimea.",
+      "captionTooLong": "Popisek může mít nejvýš 300 znaků.",
+      "portfolioLimit": "Portfolio může mít nejvýš 300 prací. Smaž prosím nějaké starší.",
+      "pinLimit": "Připíchnout jde nejvýš 12 prací.",
+      "notAllowed": "Na tohle nemáš oprávnění.",
+      "generic": "Něco se nepovedlo, zkus to prosím znovu."
+    }
   }
 }

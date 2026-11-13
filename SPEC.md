@@ -171,6 +171,15 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Chat a diskuze:** zatím ne.
 - **Crew jako pořadatel:** pořadatel může být člověk, nebo crew. Zakladatel požádá „Chci pořádat srazy“, admin schválí; zakladatel pak zakládá eventy za crew ve stávající sekci Pořadatel (registrace, schvalování, e-maily, export beze změny). U eventu „Pořádá: <crew>“, na stránce crew záložka Srazy. Nový přístup eventu **jen pro členy crew**. Členové dostávají upozornění na srazy své crew automaticky.
 
+### 5.1h CREATOR – fotografové a tvůrci videí (rozhodnuto 13. 11. 2026)
+- Typ účtu **Creator** (fotograf, kameraman, tvůrce reels, dron). Zapne si ho **kdokoli sám** v úpravě profilu a zvolí zaměření (foto / video / dron). Štítek Creator na profilu; s autem navíc Driver.
+- Creator **smí mít i garáž** (nepovinná). Creator bez aut prázdnou garáž na profilu neukazuje.
+- **Portfolio:** fotky (zmenšené v prohlížeči, soukromé úložiště) a **videa jen odkazem** (YouTube, Instagram, TikTok, Vimeo) – videa k nám nenahráváme kvůli nákladům. Přehrávač se načte až po klepnutí.
+- Na profilu vždy **12 prací** (připíchnuté, pak nejnovější), ostatní v **Archivu tvorby** (`/u/<jméno>/archive`). Nejvýš 300 prací, 12 připíchnutých. Viditelnost = viditelnost profilu.
+- **Úvodní (cover) fotka** pro všechny profily.
+- Při nahrání fotek potvrzení „bez čitelné SPZ“ (stejně jako u aut).
+- Další části: registrace na sraz jako **MEDIA** (pořadatel zapne „přijímáme média“, schvaluje zvlášť), turba na fotkách z portfolia, označení auta/eventu u fotky (fotky médií u eventu = galerie eventu).
+
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
 Důvod: riziko výpadku v den akce. Pozdější ticketing bude zapnutelná funkce, ne závislost.
