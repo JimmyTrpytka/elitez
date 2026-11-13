@@ -8,6 +8,7 @@ import { PageShell } from "@/components/page-shell";
 import { PortfolioManager } from "@/components/portfolio/portfolio-manager";
 import { buttonClasses } from "@/components/ui/button";
 import { textLinkClass } from "@/components/auth/auth-shell";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Portfolio");
@@ -25,7 +26,7 @@ export default async function PortfolioPage() {
         </Link>
       }
     >
-      <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
+      <Suspense fallback={<SkeletonGrid label={tAuth("loading")} />}>
         <Content />
       </Suspense>
     </PageShell>

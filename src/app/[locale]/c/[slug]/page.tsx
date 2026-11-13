@@ -22,6 +22,7 @@ import { CrewOrganizerRequest } from "@/components/crews/crew-organizer-request"
 import { EventCard } from "@/components/events/event-card";
 import { listPublicEvents } from "@/lib/data/events";
 import { createClient } from "@/lib/supabase/server";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/c/[slug]">): Promise<Metadata> {
   const [{ slug }, t] = await Promise.all([params, getTranslations("Crews")]);
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/c/[slug]
 export default async function CrewPage(props: PageProps<"/[locale]/c/[slug]">) {
   const tAuth = await getTranslations("Auth");
   return (
-    <Suspense fallback={<p className="mx-auto max-w-6xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}>
+    <Suspense fallback={<SkeletonDetail label={tAuth("loading")} avatar />}>
       <CrewDetail {...props} />
     </Suspense>
   );

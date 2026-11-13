@@ -11,6 +11,7 @@ import { GarageTabs } from "@/components/garage/garage-tabs";
 import { VehicleCard, VehicleGrid } from "@/components/garage/vehicle-card";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Garage");
@@ -21,7 +22,7 @@ export default async function GaragePage() {
   const [t, tAuth] = await Promise.all([getTranslations("Garage"), getTranslations("Auth")]);
   return (
     <PageShell width="lg" title={t("title")}>
-      <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
+      <Suspense fallback={<SkeletonGrid label={tAuth("loading")} />}>
         <GarageContent />
       </Suspense>
     </PageShell>

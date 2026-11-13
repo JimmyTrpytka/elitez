@@ -1,12 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
-import {
-  DREAM_PHOTOS_BUCKET,
-  VEHICLE_PHOTOS_BUCKET,
-  dreamPhotoPath,
-  signFiles,
-  vehiclePhotoPath,
-} from "@/lib/storage";
+import { DREAM_PHOTOS_BUCKET, VEHICLE_PHOTOS_BUCKET, dreamPhotoPath, vehiclePhotoPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type DreamStatus = Enums<"dream_status">;
 

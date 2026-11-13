@@ -1,6 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, PROFILE_MEDIA_BUCKET, profileCoverPath, signFiles } from "@/lib/storage";
+import { AVATARS_BUCKET, PROFILE_MEDIA_BUCKET, profileCoverPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type Profile = Tables<"profiles">;
 export type ProfileView = Profile & { avatarUrl: string | null; coverUrl: string | null };

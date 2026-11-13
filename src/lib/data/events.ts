@@ -1,7 +1,8 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
 import { getCurrentOrganizerId } from "@/lib/organizer/current";
-import { EVENT_IMAGES_BUCKET, eventImagePath, signFiles, type PhotoSize } from "@/lib/storage";
+import { EVENT_IMAGES_BUCKET, eventImagePath, type PhotoSize } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type Organizer = Tables<"organizers">;
 export type Season = Tables<"seasons">;

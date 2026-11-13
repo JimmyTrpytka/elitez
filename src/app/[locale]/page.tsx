@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/user";
@@ -21,10 +22,15 @@ export default async function HomePage() {
     <>
       {/* 1) Úvod přes celou obrazovku */}
       <DarkSection className="-mt-px overflow-hidden" glow>
-        <div
+        {/* next/image: telefon dostane menší WebP/AVIF místo 0,5 MB JPEGu */}
+        <Image
+          src={HERO_IMAGE}
+          alt=""
           aria-hidden
-          className="absolute inset-0 bg-cover bg-center opacity-80"
-          style={{ backgroundImage: `url(${HERO_IMAGE})` }}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center opacity-80"
         />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-night via-night/70 to-night/30" />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-night/80 via-transparent to-transparent" />

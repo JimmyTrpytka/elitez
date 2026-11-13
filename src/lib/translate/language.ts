@@ -4,8 +4,9 @@
  */
 export type GuessedLanguage = "cs" | "en" | "unknown";
 
-const CZECH_CHARS = /[ěščřžůťďňĚŠČŘŽŮŤĎŇ]/;
-const CZECH_WORDS = new Set(["je", "a", "na", "se", "v", "pro", "ze", "do", "jsme", "bude", "nebo", "auto", "sraz", "jako", "které", "ale", "už", "jen", "tak", "co"]);
+// Písmena typická pro češtinu (ý je i ve slovenštině – tu čeští čtenáři přečtou)
+const CZECH_CHARS = /[ěščřžůťďňýĚŠČŘŽŮŤĎŇÝ]/;
+const CZECH_WORDS = new Set(["je", "a", "na", "se", "v", "ve", "s", "z", "k", "o", "u", "za", "od", "po", "pro", "ze", "do", "jsme", "jsem", "bude", "byl", "nebo", "auto", "auta", "sraz", "jako", "které", "který", "ale", "už", "jen", "tak", "co", "kde", "bez", "při", "mám", "máme"]);
 const ENGLISH_WORDS = new Set(["the", "and", "is", "for", "with", "to", "of", "on", "we", "will", "be", "our", "car", "meet", "this", "are", "you", "it", "at", "from"]);
 
 export function guessLanguage(text: string): GuessedLanguage {
@@ -23,8 +24,18 @@ export function guessLanguage(text: string): GuessedLanguage {
   return "unknown";
 }
 
+/** Krátké texty (jména, názvy, hesla s emoji) nepřekládáme – není co. */
+function isTooShort(text: string): boolean {
+  const words = text.match(/\p{L}{2,}/gu) ?? [];
+  return words.length < 5;
+}
+
 /** Má smysl text překládat do daného jazyka? */
 export function needsTranslation(text: string, target: "cs" | "en"): boolean {
   if (!text.trim()) return false;
-  return guessLanguage(text) !== target;
+  const guess = guessLanguage(text);
+  if (guess === target) return false;
+  // Nejistý odhad u krátkého textu → tlačítko „Přeložit“ neukazovat
+  if (guess === "unknown" && isTooShort(text)) return false;
+  return true;
 }

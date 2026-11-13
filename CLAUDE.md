@@ -156,3 +156,10 @@ Vlastník projektu **není programátor**. Proto:
 - Úložiště `profile-media` (soukromé): `{user_id}/cover/…` a `{user_id}/portfolio/{item_id}/{key}-{size}.{format}`; čtení = profil je vidět.
 - Videa: `src/lib/portfolio/video.ts` (`parseVideoUrl`, `videoEmbed`, testy) – YouTube (nocookie), Instagram, TikTok, Vimeo; krátké odkazy vm.tiktok.com jen ven. Přehrávač až po klepnutí (`PortfolioGallery`).
 - Data `listPortfolio(owner, "featured" | "archive" | "all")` (`src/lib/data/portfolio.ts`), prvních 12 = profil. Nahrávání více velikostí: `uploadVariants` (`src/lib/images/upload-variants.ts`).
+
+## Technické poznámky (rychlost)
+- Podepisování souborů je v `src/lib/storage-sign.ts` (`signFiles`, jen server); `src/lib/storage.ts` má jen cesty a názvy úložišť (importují ho i klientské komponenty).
+- `signFiles` podepíše nejdřív jako nepřihlášený návštěvník a takový (veřejný) odkaz znovu používá 30 min → prohlížeč fotky nestahuje znovu. Soukromé soubory podepíše klient uživatele, bez mezipaměti. Platnost odkazů 90 min.
+- Malé náhledy brát ve velikosti `sm` (žebříček, mřížka portfolia). Úvodní fotka přes `next/image` (AVIF/WebP podle displeje).
+- Místo „Načítám…“ na veřejných stránkách `SkeletonGrid` / `SkeletonDetail` (`src/components/ui/skeleton.tsx`).
+- Tlačítko „Přeložit“: `needsTranslation` u nejistého jazyka a krátkého textu (méně než 5 slov) vrací false; u auta se posuzují všechny texty dohromady.

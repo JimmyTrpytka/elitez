@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { AVATARS_BUCKET, signFiles } from "@/lib/storage";
+import { AVATARS_BUCKET } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type MemberCard = {
   id: string;

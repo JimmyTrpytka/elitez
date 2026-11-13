@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
 import { createPublicClient } from "@/lib/supabase/server";
-import {
-  AVATARS_BUCKET,
-  EVENT_IMAGES_BUCKET,
-  ORGANIZER_LOGOS_BUCKET,
-  organizerLogoPath,
-  VEHICLE_PHOTOS_BUCKET,
-  eventImagePath,
-  signFiles,
-  vehiclePhotoPath,
-} from "@/lib/storage";
+import { AVATARS_BUCKET, EVENT_IMAGES_BUCKET, ORGANIZER_LOGOS_BUCKET, organizerLogoPath, VEHICLE_PHOTOS_BUCKET, eventImagePath, vehiclePhotoPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 /**
  * Náhledy odkazů (WhatsApp, Messenger, Facebook…): název, popis a velká fotka.

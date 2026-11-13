@@ -1,6 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, CREW_IMAGES_BUCKET, crewImagePath, signFiles, type PhotoSize } from "@/lib/storage";
+import { AVATARS_BUCKET, CREW_IMAGES_BUCKET, crewImagePath, type PhotoSize } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type Crew = Tables<"crews">;
 export type CrewRole = Enums<"crew_role">;

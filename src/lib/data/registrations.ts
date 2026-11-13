@@ -1,11 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
-import {
-  AVATARS_BUCKET,
-  VEHICLE_PHOTOS_BUCKET,
-  signFiles,
-  vehiclePhotoPath,
-} from "@/lib/storage";
+import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type Registration = Tables<"event_registrations">;
 export type RegistrationStatus = Enums<"registration_status">;
