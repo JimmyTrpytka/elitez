@@ -948,7 +948,10 @@
     "openCrewReview": "Schválit crew",
     "crewReason": "Důvod: {reason}",
     "openOrganizer": "Do sekce Pořadatel",
-    "organizerMessage": "Zpráva od pořadatele: {message}"
+    "organizerMessage": "Zpráva od pořadatele: {message}",
+    "turboPortfolioTitle": "Turbo pro tvou práci!",
+    "turboPortfolioText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvé práci v portfoliu.",
+    "openPortfolio": "Zobrazit portfolio"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",

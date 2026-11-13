@@ -197,7 +197,7 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 - [x] CREATOR část 1 – typ účtu Creator, cover fotka pro všechny, portfolio (12 + Archiv tvorby, fotky + video odkazem) – SPEC 5.1h
 - [x] CREATOR část 2 – registrace na sraz jako MEDIA (limit míst volitelný, schválená média veřejně na eventu) – SPEC 5.1h
 - [x] CREATOR část 3a – galerie eventu (pořadatel + schválená média, skrytí) a označení auta / eventu u práce v portfoliu – SPEC 5.1h
-- [ ] CREATOR část 3b – turba na fotkách portfolia
+- [x] CREATOR část 3b – turba na pracích v portfoliu (portfolio, archiv, galerie eventu, fotky u auta; série, odznaky, souhrnné upozornění)
 - [x] Galerie fotek u eventu (CREATOR část 3a)
 - [x] Více pořadatelů jednoho eventu – spolupořádání (žádost i pozvánka, druhá strana potvrzuje; spolupořadatel se jen ukazuje) – SPEC 5.1j
 - [x] Povinný souhlas s použitím fotek a obsahu pro propagaci ELITEZ (registrace + jednorázově stávající členové; znění doporučeno ověřit u právníka)

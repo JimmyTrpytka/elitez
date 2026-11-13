@@ -45,7 +45,7 @@ type Payload = {
   body?: string;
   name?: string;
   // turba
-  target?: "vehicle" | "garage";
+  target?: "vehicle" | "garage" | "portfolio";
   vehicle_id?: string;
   givers?: string[];
   count?: number;
@@ -108,6 +108,14 @@ async function NotificationsList() {
           ? `${names.join(", ")}${others > 0 ? ` ${t("andOthers", { count: others })}` : ""}`
           : t("someone", { count });
         const vehicle = p.vehicle ?? "";
+        if (p.target === "portfolio") {
+          return {
+            title: t("turboPortfolioTitle"),
+            text: t("turboPortfolioText", { who, count }),
+            href: `${myGarage}#portfolio`,
+            linkLabel: t("openPortfolio"),
+          };
+        }
         return p.target === "vehicle" && p.vehicle_id
           ? {
               title: t("turboVehicleTitle", { vehicle }),

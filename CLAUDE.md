@@ -180,3 +180,8 @@ Vlastník projektu **není programátor**. Proto:
 - Fotky pořadatele: tabulka `event_photos` (RLS: zápis/mazání jen pořadatel eventu, čtení kdo vidí event, limit 300), úložiště `event-gallery` `{event_id}/{photo_id}/{key}-{size}.{format}`.
 - Čtení: `event_media_works` (práce médií v galerii, skryté vidí jen pořadatel; pomocná `event_is_visible`), `vehicle_creator_works`. Data `src/lib/data/gallery.ts`, akce `src/lib/gallery/actions.ts`, UI `src/components/gallery/` + `TagEditor` v portfoliu. `PortfolioGallery` umí autora (`credit`).
 - POZOR: `event_cohosts` (primární klíč event_id + organizer_id) je pro Supabase spojovací tabulka events↔organizers → vnoření `organizers(...)` z `events` je nejednoznačné a dotaz SKONČÍ CHYBOU (zmizely všechny eventy z webu). Vždy psát `organizers!events_organizer_id_fkey(...)`. Totéž hlídej u každé nové tabulky se složeným klíčem ze dvou cizích klíčů.
+
+## Technické poznámky (CREATOR 3b – turba na portfoliu)
+- `turbos.portfolio_item_id` (třetí typ cíle; `turbos_one_target`). `toggle_turbo(p_photo_id, p_profile_id, p_portfolio_item_id)` – právě jeden cíl. Upozornění klíč `portfolio` (`target: "portfolio"`). Počty `portfolio_turbo_stats` / `getPortfolioTurbos`.
+- Statistiky garáže a žebříček garáží filtrují `profile_id is not null or vehicle public` → turba portfolia se tam nepočítají (záměr); odznaky a žebříček fanoušků ano.
+- `PortfolioGallery` prop `turbo` (mode, viewerId, initial); u práce `turboable` a `ownerId` (vlastní práce = jen počet).

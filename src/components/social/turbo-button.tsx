@@ -7,7 +7,7 @@ import { toggleTurbo, type SocialError } from "@/lib/social/actions";
 import { cn } from "@/lib/cn";
 import { TurboIcon, formatCount } from "./turbo-icon";
 
-export type TurboTarget = { photoId: string } | { profileId: string };
+export type TurboTarget = { photoId: string } | { profileId: string } | { portfolioItemId: string };
 export type TurboState = { given: boolean; count: number };
 /** active = může dát turbo, guest = nepřihlášený, own = vlastní obsah */
 export type TurboMode = "active" | "guest" | "own";

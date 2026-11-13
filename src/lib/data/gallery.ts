@@ -53,6 +53,8 @@ async function worksToViews(supabase: TypedSupabaseClient, rows: WorkRow[]): Pro
       video: embed ? { ...embed, vertical: isVerticalVideo(embed.provider, embed.url) } : null,
       credit: r.username ? { username: r.username, name: r.display_name || r.username } : null,
       hidden: r.hidden ?? false,
+      ownerId: r.owner_id,
+      turboable: true,
     };
   });
 }

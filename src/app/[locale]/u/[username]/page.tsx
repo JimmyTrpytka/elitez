@@ -15,6 +15,7 @@ import {
   listBadgeCatalog,
   listTurboGivers,
   listUserBadges,
+  getPortfolioTurbos,
 } from "@/lib/data/social";
 import { HallOfFame } from "@/components/social/hall-of-fame";
 import { SocialLinks } from "@/components/social/social-links";
@@ -89,7 +90,10 @@ async function PublicProfile({
   const shown = vehicles.filter((v) => v.visibility === "public");
   const current = shown.filter((v) => v.status === "current");
   const former = shown.filter((v) => v.status === "former");
-  const vehicleSocial = await getVehicleSocial(shown.map((v) => v.id));
+  const [vehicleSocial, portfolioTurbos] = await Promise.all([
+    getVehicleSocial(shown.map((v) => v.id)),
+    getPortfolioTurbos(portfolio?.items.map((i) => i.id) ?? []),
+  ]);
   // Fanoušek = zatím bez auta (počítají se auta, která návštěvník vidí; majitel i svá soukromá)
   const isFan = vehicles.filter((v) => v.status === "current").length === 0;
   const shownDreams = dreams.filter((d) => d.visibility === "public");
@@ -256,7 +260,11 @@ async function PublicProfile({
               ) : null}
             </div>
             {portfolio.items.length ? (
-              <PortfolioGallery items={portfolio.items} alt={name} />
+              <PortfolioGallery
+                items={portfolio.items}
+                alt={name}
+                turbo={social ? { mode, viewerId: user?.id ?? null, initial: portfolioTurbos } : undefined}
+              />
             ) : (
               <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("portfolioEmptyOwner")}</p>
             )}

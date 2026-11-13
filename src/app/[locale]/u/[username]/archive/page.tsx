@@ -6,6 +6,8 @@ import { Link } from "@/i18n/navigation";
 import { getProfileByUsername } from "@/lib/data/profiles";
 import { listPortfolio } from "@/lib/data/portfolio";
 import { PortfolioGallery } from "@/components/portfolio/portfolio-gallery";
+import { getCurrentUser } from "@/lib/auth/user";
+import { getPortfolioTurbos } from "@/lib/data/social";
 import { DisplayHeading, Eyebrow } from "@/components/brand";
 
 export async function generateMetadata({
@@ -32,7 +34,9 @@ async function Archive({ params }: { params: PageProps<"/[locale]/u/[username]/a
     getProfileByUsername(decodeURIComponent(username)),
   ]);
   if (!profile || !profile.is_creator) notFound();
-  const { items } = await listPortfolio(profile.id, "archive");
+  const [{ items }, user] = await Promise.all([listPortfolio(profile.id, "archive"), getCurrentUser()]);
+  const turbos = await getPortfolioTurbos(items.map((i) => i.id));
+  const mode = user?.id === profile.id ? "own" : user ? "active" : "guest";
   const name = profile.display_name ?? profile.username ?? "";
 
   return (
@@ -52,7 +56,11 @@ async function Archive({ params }: { params: PageProps<"/[locale]/u/[username]/a
         </DisplayHeading>
         <p className="mb-10 max-w-2xl text-night-subtle">{t("archiveText")}</p>
         {items.length ? (
-          <PortfolioGallery items={items} alt={name} />
+          <PortfolioGallery
+            items={items}
+            alt={name}
+            turbo={profile.visibility === "public" ? { mode, viewerId: user?.id ?? null, initial: turbos } : undefined}
+          />
         ) : (
           <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("archiveEmpty")}</p>
         )}

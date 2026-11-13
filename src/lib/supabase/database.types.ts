@@ -1378,6 +1378,7 @@ export type Database = {
           giver_id: string
           id: string
           photo_id: string | null
+          portfolio_item_id: string | null
           profile_id: string | null
           receiver_id: string
           vehicle_id: string | null
@@ -1387,6 +1388,7 @@ export type Database = {
           giver_id: string
           id?: string
           photo_id?: string | null
+          portfolio_item_id?: string | null
           profile_id?: string | null
           receiver_id: string
           vehicle_id?: string | null
@@ -1396,6 +1398,7 @@ export type Database = {
           giver_id?: string
           id?: string
           photo_id?: string | null
+          portfolio_item_id?: string | null
           profile_id?: string | null
           receiver_id?: string
           vehicle_id?: string | null
@@ -1413,6 +1416,13 @@ export type Database = {
             columns: ["photo_id"]
             isOneToOne: false
             referencedRelation: "vehicle_photos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turbos_portfolio_item_id_fkey"
+            columns: ["portfolio_item_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_items"
             referencedColumns: ["id"]
           },
           {
@@ -2152,6 +2162,14 @@ export type Database = {
           turbos: number
         }[]
       }
+      portfolio_turbo_stats: {
+        Args: { p_item_ids: string[] }
+        Returns: {
+          item_id: string
+          mine: boolean
+          turbos: number
+        }[]
+      }
       prague_today: { Args: never; Returns: string }
       profile_crews: {
         Args: { p_profile_id: string }
@@ -2391,7 +2409,11 @@ export type Database = {
         }[]
       }
       toggle_turbo: {
-        Args: { p_photo_id?: string; p_profile_id?: string }
+        Args: {
+          p_photo_id?: string
+          p_portfolio_item_id?: string
+          p_profile_id?: string
+        }
         Returns: {
           given: boolean
           total: number
