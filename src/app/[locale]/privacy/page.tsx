@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("title") };
 }
 
-const SECTIONS = ["data", "purpose", "visibility", "storage", "photos", "beta", "rights", "cookies", "age"] as const;
+const SECTIONS = ["data", "purpose", "visibility", "storage", "photos", "promo", "beta", "rights", "cookies", "age"] as const;
 
 /** Ochrana osobních údajů – verze pro zkušební provoz (plné texty v Milníku 8). */
 export default async function PrivacyPage() {

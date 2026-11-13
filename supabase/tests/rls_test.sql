@@ -1752,6 +1752,35 @@ do $$ begin
   end if;
 end $$;
 
+-- =====================================================================
+-- Povinný souhlas s propagací (registrace + jednorázové potvrzení)
+-- =====================================================================
+insert into auth.users (id, email, aud, role, instance_id, raw_user_meta_data)
+values ('00000000-0000-4000-a000-0000000d0e01', 'rls-test-promo@example.invalid', 'authenticated', 'authenticated',
+        '00000000-0000-0000-0000-000000000000', '{"locale":"cs","promo_consent_version":"2026-11-13"}');
+do $$ begin
+  if not exists (select 1 from public.profiles where id = '00000000-0000-4000-a000-0000000d0e01'
+                 and promo_consent_at is not null and promo_consent_version = '2026-11-13') then
+    raise exception 'FAIL: souhlas z registrace se neuložil';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    update public.profiles set promo_consent_at = now() where id = auth.uid();
+    raise exception 'FAIL: souhlas jde zapsat přímo';
+  exception when insufficient_privilege then null;
+  end;
+  perform public.accept_promo_consent('2026-11-13');
+  if not exists (select 1 from public.profiles where id = auth.uid() and promo_consent_version = '2026-11-13') then
+    raise exception 'FAIL: potvrzení souhlasu se neuložilo';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

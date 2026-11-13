@@ -199,7 +199,7 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 - [ ] CREATOR část 3 – turba na fotkách portfolia, označení auta/eventu u fotky
 - [ ] Galerie fotek u eventu (navazuje na CREATOR – fotky médií u eventu)
 - [ ] Více pořadatelů jednoho eventu (žádost o spolupořádání, hlavní pořadatel potvrzuje)
-- [ ] Souhlas s použitím fotek pro propagaci ELITEZ (čeká na rozhodnutí: povinný / dobrovolný; znění ověřit u právníka)
+- [x] Povinný souhlas s použitím fotek a obsahu pro propagaci ELITEZ (registrace + jednorázově stávající členové; znění doporučeno ověřit u právníka)
 
 ---
 

@@ -1,6 +1,7 @@
 "use server";
 
 import type { AuthError } from "@supabase/supabase-js";
+import { PROMO_CONSENT_VERSION } from "@/lib/consent";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { hasLocale } from "next-intl";
@@ -19,6 +20,7 @@ export type AuthErrorKey =
   | "weakPassword"
   | "samePassword"
   | "ageRequired"
+  | "promoRequired"
   | "rateLimited"
   | "notSignedIn"
   | "notConfigured"
@@ -117,6 +119,9 @@ export async function signUp(
   if (formData.get("age") !== "on") {
     return { status: "error", error: "ageRequired", email };
   }
+  if (formData.get("promo") !== "on") {
+    return { status: "error", error: "promoRequired", email };
+  }
 
   const supabase = await createClient();
   if (!supabase) return { status: "error", error: "notConfigured", email };
@@ -127,7 +132,7 @@ export async function signUp(
     password,
     options: {
       emailRedirectTo: `${origin}/auth/confirm?next=/${locale}/account`,
-      data: { locale, age_confirmed_at: new Date().toISOString() },
+      data: { locale, age_confirmed_at: new Date().toISOString(), promo_consent_version: PROMO_CONSENT_VERSION },
     },
   });
   if (error) return { status: "error", error: mapAuthError(error), email };

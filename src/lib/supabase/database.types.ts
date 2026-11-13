@@ -1096,6 +1096,8 @@ export type Database = {
           instagram_url: string | null
           is_creator: boolean
           locale: string
+          promo_consent_at: string | null
+          promo_consent_version: string | null
           role: string
           tiktok_url: string | null
           updated_at: string
@@ -1120,6 +1122,8 @@ export type Database = {
           instagram_url?: string | null
           is_creator?: boolean
           locale?: string
+          promo_consent_at?: string | null
+          promo_consent_version?: string | null
           role?: string
           tiktok_url?: string | null
           updated_at?: string
@@ -1144,6 +1148,8 @@ export type Database = {
           instagram_url?: string | null
           is_creator?: boolean
           locale?: string
+          promo_consent_at?: string | null
+          promo_consent_version?: string | null
           role?: string
           tiktok_url?: string | null
           updated_at?: string
@@ -1510,6 +1516,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_promo_consent: { Args: { p_version: string }; Returns: undefined }
       add_organizer_member: {
         Args: { p_organizer_id: string; p_username: string }
         Returns: undefined

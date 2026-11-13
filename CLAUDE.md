@@ -162,3 +162,8 @@ Vlastník projektu **není programátor**. Proto:
 - Tabulka `event_media_requests` (stav pending/approved/rejected/cancelled). Aplikace NEZAPISUJE přímo – funkce `request_media` (jen Creator s username), `cancel_media_request`, `decide_media_request` (pořadatel; limit → chyba `media_full`, zámek eventu). Chyby → `MediaErrors` v překladech.
 - Veřejný seznam schválených: `event_media_list` (jen veřejné profily, bez kontaktů, jen u eventu, který čtenář smí vidět). Upozornění `media_approved` / `media_rejected` (jen v aplikaci, ne e-mail).
 - UI: `src/components/media/` – `MediaSection` (detail eventu), `MediaRequestBox`, `OrganizerMediaList` (karta Média v `/organizer/events/[id]`), `MyMediaRequests` (Moje registrace). Data `src/lib/data/media.ts`, akce `src/lib/media/actions.ts`.
+
+## Technické poznámky (povinný souhlas s propagací)
+- `profiles.promo_consent_at` / `promo_consent_version` – uživatel je nemůže měnit přímo. Registrace posílá `promo_consent_version` v údajích (trigger `handle_new_user` ho zapíše), stávající člen přes `accept_promo_consent`.
+- Verze textu: `PROMO_CONSENT_VERSION` v `src/lib/consent.ts` – při změně znění zvyš verzi → všichni souhlasí znovu.
+- Okno pro stávající členy: `PromoConsentGate` v `src/app/[locale]/layout.tsx` (na `/privacy` se nezobrazí, jde se odhlásit).

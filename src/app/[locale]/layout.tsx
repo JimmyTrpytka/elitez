@@ -8,6 +8,7 @@ import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PromoConsentGate } from "@/components/consent/promo-consent-gate";
 import { BetaBanner, BetaBannerFallback } from "@/components/beta-banner";
 import { SITE } from "@/lib/site-config";
 import { Suspense } from "react";
@@ -75,6 +76,9 @@ export default async function LocaleLayout({
           <SiteHeader />
           <main className="flex flex-1 flex-col">{children}</main>
           <SiteFooter />
+          <Suspense fallback={null}>
+            <PromoConsentGate />
+          </Suspense>
         </NextIntlClientProvider>
       </body>
     </html>

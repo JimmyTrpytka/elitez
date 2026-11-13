@@ -29,6 +29,7 @@ const FIELD_OF: Partial<Record<AuthErrorKey, string>> = {
   weakPassword: "password",
   samePassword: "password",
   ageRequired: "age",
+  promoRequired: "promo",
 };
 
 /** Společné zpracování chyby: pole, text a posun k ní. */
@@ -143,6 +144,20 @@ export function RegisterForm() {
           <span>{t("ageLabel")}</span>
         </label>
         <FieldMessage id="age-message" error={errorFor("age")} />
+      </div>
+      <div className="flex flex-col gap-1.5" data-field="promo">
+        <label className="flex items-start gap-3 text-sm text-ink">
+          <input
+            type="checkbox"
+            name="promo"
+            required
+            aria-invalid={errorFor("promo") ? true : undefined}
+            aria-describedby={errorFor("promo") ? "promo-message" : undefined}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
+          />
+          <span>{t("promoLabel")}</span>
+        </label>
+        <FieldMessage id="promo-message" error={errorFor("promo")} />
       </div>
       <p className="text-xs text-subtle">
         {t("privacyNote")}{" "}
