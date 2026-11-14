@@ -1833,5 +1833,95 @@
       "galleryLimit": "A gallery can have at most 300 photos.",
       "generic": "Something went wrong, please try again."
     }
+  },
+  "Welcome": {
+    "metaTitle": "Invitation to ELITEZ CLUB – cars, meets, crews",
+    "metaDescription": "A new club for people who love cars. Garage, meets, crews and turbos. Join the first testers and get the Beta tester badge.",
+    "heroBadge": "Invitation · closed testing",
+    "heroTitleA": "Your car.",
+    "heroTitleB": "Your crew.",
+    "heroTitleC": "Your scene.",
+    "heroText": "ELITEZ is a new club for everyone who loves cars – tuning, youngtimers, American muscle, classics and bikes. Show off your garage, go to meets and collect turbos and badges.",
+    "heroExplore": "What's inside",
+    "ctaJoin": "Join the club",
+    "ctaContinue": "Continue to the club",
+    "trust": {
+      "free": "Free",
+      "fast": "Sign up in 30 seconds",
+      "noAds": "No ads"
+    },
+    "carsEyebrow": "Already in members' garages",
+    "carsTitle": "Already rolling in the club",
+    "featuresEyebrow": "What's inside",
+    "featuresTitleA": "One club.",
+    "featuresTitleB": "The whole scene.",
+    "features": {
+      "garage": {
+        "title": "Garage",
+        "text": "Show your cars and the projects you're proud of – even the ones you've sold. Photos, mods, the story."
+      },
+      "events": {
+        "title": "Meets",
+        "text": "All meets in one place. Apply with one tap, the organizer approves you and lets you know."
+      },
+      "crew": {
+        "title": "Crew",
+        "text": "Start a crew or join yours. Your own page, members, meets just for you."
+      },
+      "creator": {
+        "title": "Creator",
+        "text": "Shoot photos or video? Portfolio, media accreditation for meets and your shots on members' cars."
+      }
+    },
+    "eventsEyebrow": "Upcoming meets",
+    "eventsTitleA": "Where we",
+    "eventsTitleB": "meet",
+    "eventsAll": "All meets",
+    "turboEyebrow": "Turbo",
+    "turboTitleA": "Like a car?",
+    "turboTitleB": "Give it a turbo.",
+    "turboText": "A turbo is the club's “like”. Collect them for your garage, give them to others, keep your daily streak 🔥 and climb the leaderboards.",
+    "turboDemoHint": "Try it – tap!",
+    "turboDemoDone": "Exactly. In the club it counts for real.",
+    "missionEyebrow": "Your test mission",
+    "missionTitleA": "Six steps",
+    "missionTitleB": "into the club",
+    "missionText": "Help us try everything ELITEZ can do. Each step takes a couple of minutes.",
+    "missions": {
+      "profile": {
+        "title": "Set up your profile",
+        "text": "Nickname, photo and a few words about you."
+      },
+      "car": {
+        "title": "Add a car to your garage",
+        "text": "Just one – and a few photos."
+      },
+      "turbo": {
+        "title": "Give your first turbos",
+        "text": "Find cars you like."
+      },
+      "event": {
+        "title": "Apply for a meet",
+        "text": "Pick one of the upcoming events."
+      },
+      "crew": {
+        "title": "Find your crew",
+        "text": "Or start your own."
+      },
+      "feedback": {
+        "title": "Tell us what you think",
+        "text": "Every note helps."
+      }
+    },
+    "badgeEyebrow": "First members only",
+    "badgeTitleA": "The",
+    "badgeTitleB": "Beta tester badge",
+    "badgeText": "Everyone who joins during testing gets the legendary Beta tester badge in their Hall of Fame. Nobody can get it after launch.",
+    "feedbackTitle": "You're testing with us",
+    "feedbackText": "This is a test version – things may break and we're still polishing a lot. Found a bug or have an idea? Write to us, we read everything.",
+    "feedbackCta": "Send feedback",
+    "finalTitleA": "We're starting.",
+    "finalTitleB": "Are you in?",
+    "finalText": "Signing up is free and takes half a minute. Then it's garage, meets and turbos."
   }
 }
