@@ -204,6 +204,14 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
 ---
 
+## Pozvánka pro testery (14. 11. 2026)
+
+- [x] Landing page `/invite` (www.elitezclub.eu/invite → podle jazyka /cs/invite, /en/invite): úvod, auta členů, co tě čeká, srazy, ukázka turba, testovací mise, odznak Beta tester, výzva k registraci
+- [x] Odznak **Beta tester** (legendární) – dostane každý, kdo se přidá během testování (i stávající členové)
+- [ ] Při ostrém spuštění: vypnout odznak (`update public.badges set active = false where code = 'beta_tester'`) a z pozvánky odebrat sekci o testování
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.

@@ -152,3 +152,19 @@ body {
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
+
+/* Landing /invite: nekonečný pás fotek aut */
+.marquee-track {
+  width: max-content;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee 45s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}

@@ -7,14 +7,16 @@ export function DarkSection({
   className,
   glow = true,
   as: Tag = "section",
+  id,
 }: {
   children: ReactNode;
   className?: string;
   glow?: boolean;
   as?: "section" | "div" | "header";
+  id?: string;
 }) {
   return (
-    <Tag className={cn("relative bg-night text-night-text", glow && "glow-accent", className)}>
+    <Tag id={id} className={cn("relative bg-night text-night-text", glow && "glow-accent", className)}>
       {children}
     </Tag>
   );

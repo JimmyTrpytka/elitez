@@ -1833,5 +1833,95 @@
       "galleryLimit": "Galerie může mít nejvýš 300 fotek.",
       "generic": "Něco se nepovedlo, zkus to prosím znovu."
     }
+  },
+  "Welcome": {
+    "metaTitle": "Pozvánka do ELITEZ CLUB – auta, srazy, crew",
+    "metaDescription": "Nový klub pro lidi, které baví auta. Garáž, srazy, crew a turba. Přidej se mezi první testery a získej odznak Beta tester.",
+    "heroBadge": "Pozvánka · uzavřené testování",
+    "heroTitleA": "Tvoje auto.",
+    "heroTitleB": "Tvoje crew.",
+    "heroTitleC": "Tvoje scéna.",
+    "heroText": "ELITEZ je nový klub pro všechny, které baví auta – tuning, youngtimery, americké káry, veterány i motorky. Ukaž svou garáž, jezdi na srazy a sbírej turba a odznaky.",
+    "heroExplore": "Co tě čeká",
+    "ctaJoin": "Přidat se do klubu",
+    "ctaContinue": "Pokračovat do klubu",
+    "trust": {
+      "free": "Zdarma",
+      "fast": "Registrace za 30 vteřin",
+      "noAds": "Žádné reklamy"
+    },
+    "carsEyebrow": "Už teď v garážích členů",
+    "carsTitle": "Tohle už jezdí v klubu",
+    "featuresEyebrow": "Co tě čeká",
+    "featuresTitleA": "Jeden klub.",
+    "featuresTitleB": "Celá scéna.",
+    "features": {
+      "garage": {
+        "title": "Garáž",
+        "text": "Ukaž svoje auta i projekty, na které jsi hrdý – i ta, co už jsi prodal. Fotky, úpravy, příběh."
+      },
+      "events": {
+        "title": "Srazy",
+        "text": "Přehled srazů na jednom místě. Přihláška jedním klepnutím, pořadatel tě schválí a dá vědět."
+      },
+      "crew": {
+        "title": "Crew",
+        "text": "Založ partu nebo se přidej k té svojí. Vlastní stránka, členové, společné srazy jen pro vás."
+      },
+      "creator": {
+        "title": "Creator",
+        "text": "Fotíš nebo točíš? Portfolio, akreditace na srazy jako média a tvoje fotky u aut členů."
+      }
+    },
+    "eventsEyebrow": "Nejbližší srazy",
+    "eventsTitleA": "Kde se",
+    "eventsTitleB": "potkáme",
+    "eventsAll": "Všechny srazy",
+    "turboEyebrow": "Turbo",
+    "turboTitleA": "Líbí se ti auto?",
+    "turboTitleB": "Dej mu turbo.",
+    "turboText": "Turbo je klubový „lajk“. Sbírej je pro svou garáž, rozdávej je ostatním, drž denní sérii 🔥 a stoupej v žebříčcích.",
+    "turboDemoHint": "Zkus to – klepni!",
+    "turboDemoDone": "Přesně tak. V klubu to počítá doopravdy.",
+    "missionEyebrow": "Tvoje testovací mise",
+    "missionTitleA": "Šest kroků",
+    "missionTitleB": "do klubu",
+    "missionText": "Pomoz nám vyzkoušet všechno, co ELITEZ umí. Každý krok zabere pár minut.",
+    "missions": {
+      "profile": {
+        "title": "Založ si profil",
+        "text": "Přezdívka, fotka a pár slov o sobě."
+      },
+      "car": {
+        "title": "Přidej auto do garáže",
+        "text": "Stačí jedno – a pár fotek."
+      },
+      "turbo": {
+        "title": "Rozdej první turba",
+        "text": "Najdi auta, která se ti líbí."
+      },
+      "event": {
+        "title": "Přihlas se na sraz",
+        "text": "Vyber si z nejbližších akcí."
+      },
+      "crew": {
+        "title": "Najdi svou crew",
+        "text": "Nebo založ vlastní."
+      },
+      "feedback": {
+        "title": "Napiš nám, co si myslíš",
+        "text": "Každá připomínka nám pomůže."
+      }
+    },
+    "badgeEyebrow": "Jen pro první členy",
+    "badgeTitleA": "Odznak",
+    "badgeTitleB": "Beta tester",
+    "badgeText": "Každý, kdo se přidá během testování, dostane do své Síně slávy legendární odznak Beta tester. Po spuštění už ho nikdo nezíská.",
+    "feedbackTitle": "Testuješ s námi",
+    "feedbackText": "Je to testovací verze – něco se může pokazit a spoustu věcí ještě ladíme. Narazíš na chybu nebo máš nápad? Napiš nám, čteme všechno.",
+    "feedbackCta": "Napsat připomínku",
+    "finalTitleA": "Startujeme.",
+    "finalTitleB": "Jedeš s námi?",
+    "finalText": "Registrace je zdarma a zabere půl minuty. Pak už jen garáž, srazy a turba."
   }
 }

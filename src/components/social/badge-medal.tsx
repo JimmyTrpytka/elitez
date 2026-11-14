@@ -33,6 +33,13 @@ function Glyph({ icon, className }: { icon: string; className?: string }) {
     case "turbo_silver":
     case "turbo_gold":
       return <TurboIcon className={className} filled />;
+    case "beta":
+      // klíč (stavíme klub) – odznak Beta tester
+      return (
+        <svg {...common}>
+          <path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.4 2.4-2.6-.6-.6-2.6 2.6-2.2Z" fill="currentColor" fillOpacity={0.2} />
+        </svg>
+      );
     case "crown":
       return (
         <svg {...common}>

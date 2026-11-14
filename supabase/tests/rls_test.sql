@@ -2118,6 +2118,27 @@ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Odznak Beta tester: noví členové během testování ho dostanou
+-- =====================================================================
+do $$ begin
+  if not exists (select 1 from public.user_badges
+                 where user_id = '00000000-0000-4000-a000-0000000d0e01' and badge_code = 'beta_tester') then
+    raise exception 'FAIL: nový člen nedostal odznak Beta tester';
+  end if;
+end $$;
+update public.badges set active = false where code = 'beta_tester';
+insert into auth.users (id, email, aud, role, instance_id)
+values ('00000000-0000-4000-a000-0000000d0e02', 'rls-test-po-spusteni@example.invalid', 'authenticated', 'authenticated',
+        '00000000-0000-0000-0000-000000000000');
+do $$ begin
+  if exists (select 1 from public.user_badges
+             where user_id = '00000000-0000-4000-a000-0000000d0e02' and badge_code = 'beta_tester') then
+    raise exception 'FAIL: odznak Beta tester se dává i po vypnutí';
+  end if;
+end $$;
+update public.badges set active = true where code = 'beta_tester';
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;
