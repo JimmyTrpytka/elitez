@@ -185,3 +185,7 @@ Vlastník projektu **není programátor**. Proto:
 - `turbos.portfolio_item_id` (třetí typ cíle; `turbos_one_target`). `toggle_turbo(p_photo_id, p_profile_id, p_portfolio_item_id)` – právě jeden cíl. Upozornění klíč `portfolio` (`target: "portfolio"`). Počty `portfolio_turbo_stats` / `getPortfolioTurbos`.
 - Statistiky garáže a žebříček garáží filtrují `profile_id is not null or vehicle public` → turba portfolia se tam nepočítají (záměr); odznaky a žebříček fanoušků ano.
 - `PortfolioGallery` prop `turbo` (mode, viewerId, initial); u práce `turboable` a `ownerId` (vlastní práce = jen počet).
+
+## Technické poznámky (pozvánka pro testery)
+- Landing page `src/app/[locale]/invite/page.tsx` (texty `Welcome`), komponenty `src/components/welcome/` (`CarMarquee` – CSS `.marquee-track`, `TurboDemo` – jen ukázka, nic neukládá). Krátká adresa `/invite` přesměruje podle jazyka prohlížeče.
+- Odznak `beta_tester` (trigger `profiles_beta_tester` → `award_badge`). Při spuštění ho vypni `badges.active = false` – kdo ho má, tomu zůstane (Síň slávy čte získané odznaky bez ohledu na `active`).

@@ -67,7 +67,7 @@ export default async function WelcomePage() {
             <span className="h-2 w-2 animate-pulse rounded-full bg-ink" aria-hidden />
             {t("heroBadge")}
           </span>
-          <DisplayHeading as="h1" size="xl" className="reveal reveal-delay-1 max-w-5xl text-white">
+          <DisplayHeading as="h1" size="lg" className="reveal reveal-delay-1 max-w-4xl text-white">
             {t("heroTitleA")} <br className="hidden sm:block" />
             {t("heroTitleB")} <Highlight dark>{t("heroTitleC")}</Highlight>
           </DisplayHeading>
@@ -191,7 +191,7 @@ export default async function WelcomePage() {
       {/* 7) Odznak Beta tester */}
       <DarkSection>
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-4 py-16 text-center sm:px-6 sm:py-24">
-          <BadgeMedal icon="star" rarity="legendary" size={140} className="reveal" />
+          <BadgeMedal icon="beta" rarity="legendary" size={140} className="reveal" />
           <Eyebrow dark>{t("badgeEyebrow")}</Eyebrow>
           <DisplayHeading className="max-w-3xl text-white">
             {t("badgeTitleA")} <Highlight dark>{t("badgeTitleB")}</Highlight>
