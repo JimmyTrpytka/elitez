@@ -122,7 +122,7 @@
     "ageRequired": "Registrace je možná od 16 let.",
     "rateLimited": "Příliš mnoho pokusů. Zkus to prosím za chvíli.",
     "notSignedIn": "Platnost odkazu vypršela nebo nejsi přihlášen(a).",
-    "linkInvalid": "Odkaz je neplatný nebo vypršel. Zkus to prosím znovu.",
+    "linkInvalid": "Odkaz se nepodařilo otevřít (vypršel, nebo se otevřel v jiném prohlížeči). Pokud jsi potvrzoval(a) registraci, účet je nejspíš už potvrzený – stačí se přihlásit.",
     "notConfigured": "Aplikace zatím není připojená k databázi (chybí nastavení Supabase).",
     "generic": "Něco se pokazilo. Zkus to prosím znovu.",
     "promoRequired": "Bez tohoto souhlasu se do klubu registrovat nejde."

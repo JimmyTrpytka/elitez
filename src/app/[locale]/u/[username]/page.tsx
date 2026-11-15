@@ -89,7 +89,14 @@ async function PublicProfile({
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
   const current = shown.filter((v) => v.status === "current");
-  const former = shown.filter((v) => v.status === "former");
+  // Bývalá auta od posledního prodaného (bez data prodeje na konec, pak podle pořízení)
+  const former = shown
+    .filter((v) => v.status === "former")
+    .sort(
+      (a, b) =>
+        (b.sold_on ?? "").localeCompare(a.sold_on ?? "") ||
+        (b.acquired_on ?? "").localeCompare(a.acquired_on ?? ""),
+    );
   const [vehicleSocial, portfolioTurbos] = await Promise.all([
     getVehicleSocial(shown.map((v) => v.id)),
     getPortfolioTurbos(portfolio?.items.map((i) => i.id) ?? []),

@@ -122,7 +122,7 @@
     "ageRequired": "You must be at least 16 to sign up.",
     "rateLimited": "Too many attempts. Please try again in a moment.",
     "notSignedIn": "The link has expired or you are not signed in.",
-    "linkInvalid": "The link is invalid or has expired. Please try again.",
+    "linkInvalid": "The link could not be opened (it expired or opened in a different browser). If you were confirming your sign-up, your account is most likely already confirmed – just sign in.",
     "notConfigured": "The app isn't connected to the database yet (Supabase settings are missing).",
     "generic": "Something went wrong. Please try again.",
     "promoRequired": "You can't join the club without this consent."

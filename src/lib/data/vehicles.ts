@@ -94,7 +94,8 @@ export async function listMyVehicles(
     .select(`*, vehicle_photos(${PHOTO_COLUMNS})`)
     .eq("owner_id", auth.user.id)
     .eq("status", status)
-    .order(status === "former" ? "sold_on" : "created_at", { ascending: false });
+    .order(status === "former" ? "sold_on" : "created_at", { ascending: false, nullsFirst: false })
+    .order("acquired_on", { ascending: false, nullsFirst: false });
   return toCards(supabase, data ?? []);
 }
 
