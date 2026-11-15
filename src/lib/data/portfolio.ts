@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { PROFILE_MEDIA_BUCKET, portfolioPath, signFiles } from "@/lib/storage";
+import { PROFILE_MEDIA_BUCKET, portfolioPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 import { isVerticalVideo, videoEmbed, type VideoEmbed } from "@/lib/portfolio/video";
 
 /** Kolik prací je vidět přímo na profilu; zbytek je v Archivu tvorby. */
@@ -61,14 +62,15 @@ export async function listPortfolio(
   const paths: string[] = [];
   for (const r of chosen) {
     if (r.photo_key && r.photo_format) {
-      paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "md", r.photo_format));
+      paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "sm", r.photo_format));
       if (r.kind === "photo") paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "lg", r.photo_format));
     }
   }
   const urls = await signFiles(supabase, PROFILE_MEDIA_BUCKET, paths);
 
   const items = chosen.map((r): PortfolioItemView => {
-    const md = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "md", r.photo_format) : null;
+    // náhled do mřížky stačí malý (sm), velká fotka jen v prohlížeči
+    const md = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "sm", r.photo_format) : null;
     const lg = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "lg", r.photo_format) : null;
     const embed = r.kind === "video" && r.video_url && r.video_provider ? videoEmbed(r.video_provider, r.video_url) : null;
     const ownThumb = md ? (urls.get(md) ?? null) : null;

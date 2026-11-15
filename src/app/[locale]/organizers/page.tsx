@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { listPublicOrganizers } from "@/lib/data/organizers";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Organizers");
@@ -23,7 +24,7 @@ export default async function OrganizersPage() {
           {t("title")}
         </DisplayHeading>
         <p className="reveal reveal-delay-2 mt-4 mb-12 max-w-2xl text-lg text-white/75">{t("subtitle")}</p>
-        <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
+        <Suspense fallback={<SkeletonGrid dark label={tAuth("loading")} />}>
           <OrganizersList />
         </Suspense>
       </div>

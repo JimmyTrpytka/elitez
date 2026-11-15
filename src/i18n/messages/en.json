@@ -716,7 +716,8 @@
     "cancelConfirmText": "Really cancel?",
     "cancelConfirm": "Yes, cancel",
     "closedStarted": "The event started {date} – applications were only possible until it started.",
-    "closedDeadline": "The deadline was {date}."
+    "closedDeadline": "The deadline was {date}.",
+    "stickyRegister": "Register car"
   },
   "RegistrationErrors": {
     "not_signed_in": "You are not signed in.",

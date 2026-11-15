@@ -1,11 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import {
-  VEHICLE_PHOTOS_BUCKET,
-  signFiles,
-  vehiclePhotoPath,
-  type PhotoSize,
-} from "@/lib/storage";
+import { VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath, type PhotoSize } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type Vehicle = Tables<"vehicles">;
 export type VehicleMod = Tables<"vehicle_mods">;

@@ -8,6 +8,7 @@ import { Avatar } from "@/components/avatar";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Members");
@@ -28,7 +29,7 @@ export default async function MembersPage({ searchParams }: PageProps<"/[locale]
         <p className="reveal reveal-delay-2 mt-4 mb-10 max-w-2xl text-lg text-white/75">
           {t("subtitle")}
         </p>
-        <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
+        <Suspense fallback={<SkeletonGrid dark label={tAuth("loading")} />}>
           <MembersList searchParams={searchParams} />
         </Suspense>
       </div>

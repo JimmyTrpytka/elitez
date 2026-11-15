@@ -7,6 +7,7 @@ import { getMyProfile } from "@/lib/data/profiles";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 import { CrewCard } from "@/components/crews/crew-card";
 import { buttonClasses } from "@/components/ui/button";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Crews");
@@ -25,7 +26,7 @@ export default async function CrewsPage({ searchParams }: PageProps<"/[locale]/c
           {t("title")}
         </DisplayHeading>
         <p className="reveal reveal-delay-2 mt-4 mb-8 max-w-2xl text-lg text-white/75">{t("subtitle")}</p>
-        <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
+        <Suspense fallback={<SkeletonGrid dark label={tAuth("loading")} />}>
           <CrewsContent searchParams={searchParams} />
         </Suspense>
       </div>

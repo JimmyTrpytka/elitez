@@ -716,7 +716,8 @@
     "cancelConfirmText": "Opravdu zrušit?",
     "cancelConfirm": "Ano, zrušit",
     "closedStarted": "Event začal {date} – přihlášky šlo podávat jen do jeho začátku.",
-    "closedDeadline": "Uzávěrka byla {date}."
+    "closedDeadline": "Uzávěrka byla {date}.",
+    "stickyRegister": "Přihlásit auto"
   },
   "RegistrationErrors": {
     "not_signed_in": "Nejsi přihlášen(a).",

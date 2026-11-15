@@ -10,6 +10,7 @@ import { PageShell } from "@/components/page-shell";
 import { DreamCard } from "@/components/dreams/dream-card";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dreams");
@@ -20,7 +21,7 @@ export default async function DreamsPage() {
   const [tGarage, tAuth] = await Promise.all([getTranslations("Garage"), getTranslations("Auth")]);
   return (
     <PageShell width="lg" title={tGarage("title")}>
-      <Suspense fallback={<p className="text-subtle">{tAuth("loading")}</p>}>
+      <Suspense fallback={<SkeletonGrid label={tAuth("loading")} />}>
         <DreamsContent />
       </Suspense>
     </PageShell>

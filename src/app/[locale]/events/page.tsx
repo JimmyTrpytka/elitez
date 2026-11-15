@@ -5,6 +5,7 @@ import { listPublicEvents } from "@/lib/data/events";
 import { DarkSection, DisplayHeading, Eyebrow } from "@/components/brand";
 import { EventCard } from "@/components/events/event-card";
 import { Link } from "@/i18n/navigation";
+import { SkeletonGrid } from "@/components/ui/skeleton";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Events");
@@ -33,7 +34,7 @@ export default async function EventsPage() {
             {t("allOrganizers")} →
           </Link>
         </p>
-        <Suspense fallback={<p className="text-night-subtle">{tAuth("loading")}</p>}>
+        <Suspense fallback={<SkeletonGrid dark label={tAuth("loading")} />}>
           <EventsList />
         </Suspense>
       </div>

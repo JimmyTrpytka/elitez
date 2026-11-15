@@ -16,6 +16,7 @@ import { ShareButton } from "@/components/share-button";
 import { SocialLinks } from "@/components/social/social-links";
 import { OrganizerLogo } from "@/components/organizers/organizer-logo";
 import { buttonClasses } from "@/components/ui/button";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/o/[slug]">): Promise<Metadata> {
   const [{ slug }, t] = await Promise.all([params, getTranslations("Organizers")]);
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/o/[slug]
 export default async function OrganizerPage({ params }: PageProps<"/[locale]/o/[slug]">) {
   const tAuth = await getTranslations("Auth");
   return (
-    <Suspense fallback={<p className="mx-auto max-w-6xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}>
+    <Suspense fallback={<SkeletonDetail label={tAuth("loading")} avatar />}>
       <OrganizerProfile params={params} />
     </Suspense>
   );

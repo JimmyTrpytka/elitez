@@ -21,6 +21,7 @@ import { Alert } from "@/components/ui/alert";
 import { HeroGallery } from "@/components/lightbox";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 
 export async function generateMetadata({ params }: PageProps<"/[locale]/v/[id]">): Promise<Metadata> {
   const [{ id }, t] = await Promise.all([params, getTranslations("PublicVehicle")]);
@@ -31,7 +32,7 @@ export default async function PublicVehiclePage({ params }: PageProps<"/[locale]
   const tAuth = await getTranslations("Auth");
   return (
     <Suspense
-      fallback={<p className="mx-auto max-w-5xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}
+      fallback={<SkeletonDetail label={tAuth("loading")} />}
     >
       <PublicVehicle params={params} />
     </Suspense>
@@ -158,8 +159,10 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
         <Translatable
           kind="vehicle"
           id={vehicle.id}
-          show={translationEnabled() && [vehicle.description ?? "", vehicle.story ?? "", vehicle.proud_of ?? "", ...vehicle.mods.map((m) => m.description)].some((x) =>
-            needsTranslation(x, locale === "en" ? "en" : "cs"),
+          // jazyk posuzujeme z celého textu auta najednou (jednotlivé úpravy bývají jen značky dílů)
+          show={translationEnabled() && needsTranslation(
+            [vehicle.description ?? "", vehicle.story ?? "", vehicle.proud_of ?? "", ...vehicle.mods.map((m) => m.description)].join("\n"),
+            locale === "en" ? "en" : "cs",
           )}
         >
         {vehicle.description ? (

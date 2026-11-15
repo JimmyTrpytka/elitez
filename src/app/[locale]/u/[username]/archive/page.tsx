@@ -9,6 +9,7 @@ import { PortfolioGallery } from "@/components/portfolio/portfolio-gallery";
 import { getCurrentUser } from "@/lib/auth/user";
 import { getPortfolioTurbos } from "@/lib/data/social";
 import { DisplayHeading, Eyebrow } from "@/components/brand";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 
 export async function generateMetadata({
   params,
@@ -21,7 +22,7 @@ export async function generateMetadata({
 export default async function PortfolioArchivePage({ params }: PageProps<"/[locale]/u/[username]/archive">) {
   const tAuth = await getTranslations("Auth");
   return (
-    <Suspense fallback={<p className="mx-auto max-w-6xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}>
+    <Suspense fallback={<SkeletonDetail label={tAuth("loading")} />}>
       <Archive params={params} />
     </Suspense>
   );

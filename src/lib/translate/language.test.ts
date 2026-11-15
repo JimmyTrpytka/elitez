@@ -23,6 +23,18 @@ describe("needsTranslation", () => {
   it("translates Czech text for English readers", () => {
     expect(needsTranslation("Přijeď s autem, bude to jízda!", "en")).toBe(true);
   });
+  it("Czech car description with technical words is Czech", () => {
+    const text = "Seat Leon ST Cupra 5F s motorem 2.0 TSI 4Drive s výkonem 300 koní.";
+    expect(guessLanguage(text)).toBe("cs");
+    expect(needsTranslation(text, "cs")).toBe(false);
+  });
+  it("does not offer translation for short names and slogans", () => {
+    expect(needsTranslation("LOWER UNITED 🖤", "cs")).toBe(false);
+    expect(needsTranslation("BMW M3 E30 Turbo", "en")).toBe(false);
+  });
+  it("still offers translation for longer unknown-language text", () => {
+    expect(needsTranslation("Wir treffen uns jeden Samstag mit unseren Autos am Parkplatz", "cs")).toBe(true);
+  });
   it("skips empty text", () => {
     expect(needsTranslation("   ", "en")).toBe(false);
   });

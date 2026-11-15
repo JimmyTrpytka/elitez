@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath, signFiles } from "@/lib/storage";
+import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type OrganizerListItem = {
   id: string;

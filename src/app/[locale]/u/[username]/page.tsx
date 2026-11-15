@@ -40,6 +40,7 @@ import { cn } from "@/lib/cn";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { DisplayHeading, Eyebrow } from "@/components/brand";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 
 export async function generateMetadata({
   params,
@@ -55,7 +56,7 @@ export default async function PublicProfilePage({
   const tAuth = await getTranslations("Auth");
   return (
     <Suspense
-      fallback={<p className="mx-auto max-w-6xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}
+      fallback={<SkeletonDetail label={tAuth("loading")} avatar />}
     >
       <PublicProfile params={params} />
     </Suspense>

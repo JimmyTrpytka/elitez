@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, signFiles } from "@/lib/storage";
+import { AVATARS_BUCKET } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 export type MediaRequest = Tables<"event_media_requests">;
 export type MediaStatus = "pending" | "approved" | "rejected" | "cancelled";

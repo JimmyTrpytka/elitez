@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Database, Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, signFiles, vehiclePhotoPath } from "@/lib/storage";
+import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 
 /** Turbo/sledování: počty čte databáze funkcemi, které vrací jen veřejná data. */
 
@@ -183,7 +184,7 @@ export async function getLeaderboards(period: LeaderboardPeriod, limit = 10) {
   const vehicleRows = v.data ?? [];
   const coverPaths = vehicleRows
     .filter((r) => r.cover_photo_id)
-    .map((r) => vehiclePhotoPath(r.vehicle_id, r.cover_photo_id!, "md", r.cover_format ?? "webp"));
+    .map((r) => vehiclePhotoPath(r.vehicle_id, r.cover_photo_id!, "sm", r.cover_format ?? "webp"));
   const memberRows = [...(g.data ?? []), ...(f.data ?? [])];
   const avatarPaths = memberRows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p));
   const [covers, avatars] = await Promise.all([
@@ -198,7 +199,7 @@ export async function getLeaderboards(period: LeaderboardPeriod, limit = 10) {
     ownerUsername: r.owner_username,
     ownerName: r.owner_display_name ?? `@${r.owner_username}`,
     coverUrl: r.cover_photo_id
-      ? (covers.get(vehiclePhotoPath(r.vehicle_id, r.cover_photo_id, "md", r.cover_format ?? "webp")) ?? null)
+      ? (covers.get(vehiclePhotoPath(r.vehicle_id, r.cover_photo_id, "sm", r.cover_format ?? "webp")) ?? null)
       : null,
     turbos: r.turbos,
   }));

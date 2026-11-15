@@ -5,6 +5,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  // Úvodní fotka a další obrázky z /public: menší AVIF/WebP podle velikosti displeje
+  images: { formats: ["image/avif", "image/webp"] },
   partialPrefetching: true,
   turbopack: {
     rules: {

@@ -4,8 +4,8 @@ import {
   PROFILE_MEDIA_BUCKET,
   eventGalleryPath,
   portfolioPath,
-  signFiles,
 } from "@/lib/storage";
+import { signFiles } from "@/lib/storage-sign";
 import { isVerticalVideo, videoEmbed } from "@/lib/portfolio/video";
 import type { PortfolioItemView } from "@/lib/data/portfolio";
 
@@ -29,16 +29,16 @@ async function worksToViews(supabase: TypedSupabaseClient, rows: WorkRow[]): Pro
   const paths: string[] = [];
   for (const r of rows) {
     if (r.photo_key && r.photo_format) {
-      paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "md", r.photo_format));
+      paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "sm", r.photo_format));
       if (r.kind === "photo") paths.push(portfolioPath(r.owner_id, r.id, r.photo_key, "lg", r.photo_format));
     }
   }
   const urls = await signFiles(supabase, PROFILE_MEDIA_BUCKET, paths);
   return rows.map((r) => {
-    const md = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "md", r.photo_format) : null;
+    const thumbPath = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "sm", r.photo_format) : null;
     const lg = r.photo_key && r.photo_format ? portfolioPath(r.owner_id, r.id, r.photo_key, "lg", r.photo_format) : null;
     const embed = r.kind === "video" && r.video_url && r.video_provider ? videoEmbed(r.video_provider, r.video_url) : null;
-    const thumb = md ? (urls.get(md) ?? null) : null;
+    const thumb = thumbPath ? (urls.get(thumbPath) ?? null) : null;
     return {
       id: r.id,
       kind: r.kind === "video" ? "video" : "photo",
@@ -84,7 +84,7 @@ export async function listEventGallery(eventId: string): Promise<EventGallery> {
     supabase,
     EVENT_GALLERY_BUCKET,
     rows.flatMap((r) => [
-      eventGalleryPath(r.event_id, r.id, r.photo_key, "md", r.photo_format),
+      eventGalleryPath(r.event_id, r.id, r.photo_key, "sm", r.photo_format),
       eventGalleryPath(r.event_id, r.id, r.photo_key, "lg", r.photo_format),
     ]),
   );
@@ -97,7 +97,7 @@ export async function listEventGallery(eventId: string): Promise<EventGallery> {
       createdAt: r.created_at,
       width: r.width,
       height: r.height,
-      thumbUrl: urls.get(eventGalleryPath(r.event_id, r.id, r.photo_key, "md", r.photo_format)) ?? null,
+      thumbUrl: urls.get(eventGalleryPath(r.event_id, r.id, r.photo_key, "sm", r.photo_format)) ?? null,
       fullUrl: urls.get(eventGalleryPath(r.event_id, r.id, r.photo_key, "lg", r.photo_format)) ?? null,
       hasOwnThumb: true,
       video: null,

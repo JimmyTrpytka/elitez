@@ -194,3 +194,12 @@ Vlastník projektu **není programátor**. Proto:
 - E-mailové šablony (`supabase/templates/`) mají odkaz `https://www.elitezclub.eu/auth/confirm?token_hash={{ .TokenHash }}&type=…&next=…` místo `{{ .ConfirmationURL }}` – funguje i v jiném prohlížeči, než kde začala registrace (PKCE kód to neumí). Route `/auth/confirm` umí obojí.
 - `vehicles.proud_of` (≤300), `vehicles.highlighted` (srdcovka, akce `setVehicleHighlighted`), kategorie `performance`, `drift`, úprava `exhaust`. Úprava položky `updateVehicleMod`.
 - `ShowMoreGrid` (`src/components/ui/show-more.tsx`) – prvních N položek + „Ukázat další (#)“; `PortfolioGallery collapsed` = 1 řádek + Rozbalit. `VEHICLE_GRID` = třídy mřížky aut.
+
+## Technické poznámky (rychlost)
+- Podepisování souborů je v `src/lib/storage-sign.ts` (`signFiles`, jen server); `src/lib/storage.ts` má jen cesty a názvy úložišť (importují ho i klientské komponenty).
+- `signFiles` podepíše nejdřív jako nepřihlášený návštěvník a takový (veřejný) odkaz znovu používá 30 min → prohlížeč fotky nestahuje znovu. Soukromé soubory podepíše klient uživatele, bez mezipaměti. Platnost odkazů 90 min.
+- Malé náhledy brát ve velikosti `sm` (žebříček, mřížka portfolia). Úvodní fotka přes `next/image` (AVIF/WebP podle displeje).
+- Místo „Načítám…“ na veřejných stránkách `SkeletonGrid` / `SkeletonDetail` (`src/components/ui/skeleton.tsx`).
+- Event na mobilu: přilepená lišta `StickyRegisterBar` (jen když je box `#registrace` pod obrazovkou).
+- Tlačítko „Přeložit“: `needsTranslation` u nejistého jazyka a krátkého textu (méně než 5 slov) vrací false; u auta se posuzují všechny texty dohromady.
+- Server (funkce Vercelu) běží ve Frankfurtu `fra1` (`vercel.json` → `regions`) vedle databáze Supabase (eu-central-1). Bez toho běžel v USA a každý dotaz přeletěl Atlantik.
