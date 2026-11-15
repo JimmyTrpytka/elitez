@@ -34,7 +34,9 @@ import { FollowButton } from "@/components/social/follow-button";
 import { TurboGivers } from "@/components/social/turbo-givers";
 import { TurboIcon } from "@/components/social/turbo-icon";
 import { Avatar } from "@/components/avatar";
-import { VehicleCard, VehicleGrid } from "@/components/garage/vehicle-card";
+import { VEHICLE_GRID, VehicleCard } from "@/components/garage/vehicle-card";
+import { ShowMoreGrid } from "@/components/ui/show-more";
+import { cn } from "@/lib/cn";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { DisplayHeading, Eyebrow } from "@/components/brand";
@@ -89,11 +91,12 @@ async function PublicProfile({
   // Majitel vidí i svá soukromá vozidla; na veřejné stránce je ale nevypisujeme
   const shown = vehicles.filter((v) => v.visibility === "public");
   const current = shown.filter((v) => v.status === "current");
-  // Bývalá auta od posledního prodaného (bez data prodeje na konec, pak podle pořízení)
+  // Bývalá auta: srdcovky první, pak od posledního prodaného (bez data prodeje na konec, pak podle pořízení)
   const former = shown
     .filter((v) => v.status === "former")
     .sort(
       (a, b) =>
+        Number(b.highlighted) - Number(a.highlighted) ||
         (b.sold_on ?? "").localeCompare(a.sold_on ?? "") ||
         (b.acquired_on ?? "").localeCompare(a.acquired_on ?? ""),
     );
@@ -256,8 +259,60 @@ async function PublicProfile({
       </header>
 
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        {showGarage ? (
+        <section>
+          <h2 className="mb-6 font-display text-4xl font-extrabold text-white uppercase">
+            {t("garageTitle")}
+          </h2>
+          {current.length ? (
+            <ShowMoreGrid
+              initial={6}
+              className={VEHICLE_GRID}
+              moreLabel={t("showMore")}
+              lessLabel={t("showLess")}
+            >
+              {current.map((v) => (
+                <VehicleCard
+                  key={v.id}
+                  vehicle={v}
+                  href={`/v/${v.id}`}
+                  tone="dark"
+                  turbos={vehicleSocial.get(v.id)?.turbos}
+                />
+              ))}
+            </ShowMoreGrid>
+          ) : (
+            <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("garageEmpty")}</p>
+          )}
+        </section>
+        ) : null}
+
+        {former.length ? (
+          <section className="mt-16">
+            <h2 className="mb-6 font-display text-3xl font-extrabold text-white/70 uppercase">
+              {t("formerTitle")}
+            </h2>
+            <ShowMoreGrid
+              initial={Math.max(3, former.filter((v) => v.highlighted).length)}
+              className={VEHICLE_GRID}
+              moreLabel={t("showMore")}
+              lessLabel={t("showLess")}
+            >
+              {former.map((v) => (
+                <VehicleCard
+                  key={v.id}
+                  vehicle={v}
+                  href={`/v/${v.id}`}
+                  tone="dark"
+                  turbos={vehicleSocial.get(v.id)?.turbos}
+                />
+              ))}
+            </ShowMoreGrid>
+          </section>
+        ) : null}
+
         {creator && portfolio && (portfolio.items.length || isOwner) ? (
-          <section id="portfolio" className="mb-16 scroll-mt-24">
+          <section id="portfolio" className={cn("scroll-mt-24", (showGarage || former.length > 0) && "mt-16")}>
             <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
               <h2 className="font-display text-4xl font-extrabold text-white uppercase">{t("portfolioTitle")}</h2>
               {isOwner ? (
@@ -270,6 +325,8 @@ async function PublicProfile({
               <PortfolioGallery
                 items={portfolio.items}
                 alt={name}
+                collapsed
+                expandLabel={t("portfolioExpand", { count: portfolio.items.length })}
                 turbo={social ? { mode, viewerId: user?.id ?? null, initial: portfolioTurbos } : undefined}
               />
             ) : (
@@ -285,50 +342,6 @@ async function PublicProfile({
                 </Link>
               </p>
             ) : null}
-          </section>
-        ) : null}
-
-        {showGarage ? (
-        <section>
-          <h2 className="mb-6 font-display text-4xl font-extrabold text-white uppercase">
-            {t("garageTitle")}
-          </h2>
-          {current.length ? (
-            <VehicleGrid>
-              {current.map((v) => (
-                <VehicleCard
-                  key={v.id}
-                  vehicle={v}
-                  href={`/v/${v.id}`}
-                  tone="dark"
-                  turbos={vehicleSocial.get(v.id)?.turbos}
-                />
-              ))}
-            </VehicleGrid>
-          ) : (
-            <p className="rounded-card bg-night-soft p-8 text-night-subtle">{t("garageEmpty")}</p>
-          )}
-        </section>
-        ) : null}
-
-        {former.length ? (
-          <section className="mt-16">
-            <h2 className="mb-6 font-display text-3xl font-extrabold text-white/70 uppercase">
-              {t("formerTitle")}
-            </h2>
-            <div className="opacity-80">
-              <VehicleGrid>
-                {former.map((v) => (
-                  <VehicleCard
-                    key={v.id}
-                    vehicle={v}
-                    href={`/v/${v.id}`}
-                    tone="dark"
-                    turbos={vehicleSocial.get(v.id)?.turbos}
-                  />
-                ))}
-              </VehicleGrid>
-            </div>
           </section>
         ) : null}
 

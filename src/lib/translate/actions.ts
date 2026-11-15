@@ -27,12 +27,13 @@ export async function translateContent(
   if (kind === "vehicle") {
     const { data } = await supabase
       .from("vehicles")
-      .select("description, story, vehicle_mods(id, description)")
+      .select("description, story, proud_of, vehicle_mods(id, description)")
       .eq("id", id)
       .maybeSingle();
     if (!data) return { ok: false, error: "notFound" };
     if (data.description) fields.description = data.description;
     if (data.story) fields.story = data.story;
+    if (data.proud_of) fields.proud = data.proud_of;
     for (const m of data.vehicle_mods) fields[`mod:${m.id}`] = m.description;
   } else {
     const { data } = await supabase.from("profiles").select("bio").eq("id", id).maybeSingle();

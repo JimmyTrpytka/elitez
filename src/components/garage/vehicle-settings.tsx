@@ -9,6 +9,7 @@ import {
   deleteVehicle,
   markVehicleSold,
   restoreVehicle,
+  setVehicleHighlighted,
   setVehicleVisibility,
 } from "@/lib/garage/actions";
 
@@ -17,10 +18,12 @@ export function VehicleSettings({
   vehicleId,
   visibility,
   status,
+  highlighted,
 }: {
   vehicleId: string;
   visibility: "public" | "private";
   status: "current" | "former";
+  highlighted: boolean;
 }) {
   const t = useTranslations("VehicleSettings");
   const tCommon = useTranslations("Common");
@@ -121,6 +124,23 @@ export function VehicleSettings({
             </Button>
           </div>
         )}
+        {status === "former" ? (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
+            <div>
+              <p className="font-semibold text-ink">{t("highlightTitle")}</p>
+              <p className="text-sm text-ink-soft">
+                {highlighted ? t("highlightOn") : t("highlightText")}
+              </p>
+            </div>
+            <Button
+              variant="secondary"
+              disabled={pending}
+              onClick={() => run(() => setVehicleHighlighted(vehicleId, !highlighted))}
+            >
+              {highlighted ? t("highlightRemove") : t("highlightAdd")}
+            </Button>
+          </div>
+        ) : null}
       </div>
 
       {/* Smazání */}

@@ -28,9 +28,14 @@ export function PortfolioGallery({
   items,
   alt,
   turbo,
+  collapsed = false,
+  expandLabel,
 }: {
   items: PortfolioItemView[];
   alt: string;
+  /** Na začátku jen jeden řádek (3 práce, na mobilu 2×2) a tlačítko „Rozbalit“ */
+  collapsed?: boolean;
+  expandLabel?: string;
   /** Turba u prací (bez = bez tlačítek) */
   turbo?: PortfolioTurbo;
 }) {
@@ -74,10 +79,16 @@ export function PortfolioGallery({
     .map((i) => ({ id: i.id, thumb: i.thumbUrl, full: i.fullUrl }));
   const [photoIndex, setPhotoIndex] = useState<number | null>(null);
   const [video, setVideo] = useState<PortfolioItemView | null>(null);
+  const [expanded, setExpanded] = useState(!collapsed);
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
+      <ul
+        className={cn(
+          "grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3",
+          !expanded && "max-lg:[&>li:nth-child(n+5)]:hidden lg:[&>li:nth-child(n+4)]:hidden",
+        )}
+      >
         {items.map((item) => (
           <li key={item.id} className="group">
             <div className="relative">
@@ -142,6 +153,18 @@ export function PortfolioGallery({
           </li>
         ))}
       </ul>
+      {!expanded && items.length > 3 ? (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className={cn(
+            "mt-4 inline-flex min-h-11 items-center rounded-full border border-white/20 px-5 text-sm font-semibold text-white transition-colors hover:border-accent",
+            items.length === 4 && "lg:inline-flex max-lg:hidden",
+          )}
+        >
+          {expandLabel ?? t("expand")} ↓
+        </button>
+      ) : null}
       {photoIndex !== null && photoIndex >= 0 ? (
         <Lightbox
           photos={photos}

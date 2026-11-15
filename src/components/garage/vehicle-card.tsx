@@ -25,6 +25,8 @@ export async function VehicleCard({
   const tCommon = await getTranslations("Common");
   const title = `${vehicle.make} ${vehicle.model}`;
   const sold = vehicle.status === "former";
+  // Srdcovka: bývalé auto zůstává barevné a dostane štítek
+  const star = sold && vehicle.highlighted;
   const soldYear = vehicle.sold_on ? vehicle.sold_on.slice(0, 4) : null;
 
   return (
@@ -35,6 +37,8 @@ export async function VehicleCard({
         dark
           ? "bg-night-soft ring-1 ring-white/10 hover:shadow-[0_20px_60px_-24px_rgb(255_214_10/0.35)] hover:ring-accent/40"
           : "bg-muted hover:shadow-lg",
+        star && (dark ? "ring-2 ring-accent/70" : "ring-2 ring-accent"),
+        sold && !star && dark && "opacity-80 hover:opacity-100",
       )}
     >
       <div className={cn("relative aspect-[4/3] w-full overflow-hidden", dark ? "bg-white/5" : "bg-line")}>
@@ -46,7 +50,7 @@ export async function VehicleCard({
             loading="lazy"
             className={cn(
               "h-full w-full object-cover transition-all duration-700 group-hover:scale-105",
-              sold && "grayscale group-hover:grayscale-0",
+              sold && !star && "grayscale group-hover:grayscale-0",
             )}
           />
         ) : (
@@ -64,6 +68,11 @@ export async function VehicleCard({
         {sold ? (
           <span className="absolute top-3 right-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-ink">
             {soldYear ? t("soldIn", { year: soldYear }) : t("soldBadge")}
+          </span>
+        ) : null}
+        {star ? (
+          <span className="absolute top-3 left-3 rounded-full bg-accent px-3 py-1 text-xs font-bold text-ink">
+            ★ {t("highlightBadge")}
           </span>
         ) : null}
         {showVisibility && vehicle.visibility === "private" ? (
@@ -91,6 +100,8 @@ export async function VehicleCard({
   );
 }
 
+export const VEHICLE_GRID = "grid gap-4 sm:grid-cols-2 lg:grid-cols-3";
+
 export function VehicleGrid({ children }: { children: React.ReactNode }) {
-  return <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{children}</div>;
+  return <div className={VEHICLE_GRID}>{children}</div>;
 }

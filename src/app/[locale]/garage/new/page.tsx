@@ -51,6 +51,7 @@ async function NewVehicleContent() {
         power_hp: "",
         description: "",
         story: "",
+        proudOf: "",
         country: profile.country ?? "",
         acquired_on: "",
         visibility: "public",

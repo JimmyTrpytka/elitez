@@ -60,6 +60,7 @@ async function EditVehicle({
           power_hp: vehicle.power_hp?.toString() ?? "",
           description: vehicle.description ?? "",
           story: vehicle.story ?? "",
+          proudOf: vehicle.proud_of ?? "",
           country: vehicle.country ?? "",
           acquired_on: vehicle.acquired_on ?? "",
           visibility: vehicle.visibility,

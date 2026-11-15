@@ -290,7 +290,7 @@
     "acquiredLabel": "Acquired",
     "engineLabel": "Engine",
     "enginePlaceholder": "e.g. 2.5 I6 turbo",
-    "countryLabel": "Country",
+    "countryLabel": "Country of registration",
     "descriptionLabel": "Short description",
     "descriptionHint": "A few sentences shown under the title.",
     "storyLabel": "Project story",
@@ -309,7 +309,9 @@
       "veteran": "Veteran",
       "classic": "Classic",
       "motorcycle": "Motorcycle",
-      "other": "Other"
+      "other": "Other",
+      "performance": "Performance",
+      "drift": "Drift"
     },
     "errors": {
       "makeRequired": "Enter the make.",
@@ -325,7 +327,12 @@
       "generic": "Saving failed. Please try again."
     },
     "soldBadge": "Sold",
-    "soldIn": "Sold {year}"
+    "soldIn": "Sold {year}",
+    "countryHint": "Where the car is registered (plates).",
+    "proudLabel": "What I'm most proud of on this build",
+    "proudHint": "One sentence, shown highlighted on the car page.",
+    "proudTitle": "Most proud of",
+    "highlightBadge": "Highlight"
   },
   "Photos": {
     "empty": "No photos yet. The first photo will be the main one.",
@@ -361,8 +368,12 @@
       "exterior": "Exterior",
       "interior": "Interior",
       "audio": "Audio",
-      "other": "Other"
-    }
+      "other": "Other",
+      "exhaust": "Exhaust"
+    },
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "VehicleSettings": {
     "visibilityTitle": "Visibility",
@@ -383,7 +394,12 @@
     "deleteButton": "Delete vehicle",
     "deleteConfirm": "Yes, delete permanently",
     "deleteBlocked": "This vehicle has attended an event, so it can't be deleted. You can mark it as sold.",
-    "failed": "The action failed. Please try again."
+    "failed": "The action failed. Please try again.",
+    "highlightTitle": "Highlight",
+    "highlightText": "Highlight a car you love to remember – it stays in colour on your profile, comes first among previous cars and gets a badge.",
+    "highlightOn": "This car is highlighted.",
+    "highlightAdd": "Mark as highlight",
+    "highlightRemove": "Remove highlight"
   },
   "PublicProfile": {
     "garageTitle": "Garage",
@@ -414,7 +430,10 @@
     "archiveTitle": "Work archive",
     "archiveText": "Older work that no longer fits among the 12 featured on the profile.",
     "archiveBack": "Back to {name}'s profile",
-    "archiveEmpty": "The archive is empty for now."
+    "archiveEmpty": "The archive is empty for now.",
+    "showMore": "Show more (#)",
+    "showLess": "Show less",
+    "portfolioExpand": "Open full portfolio ({count})"
   },
   "PublicVehicle": {
     "metaTitle": "Vehicle",
@@ -1680,7 +1699,8 @@
     "tagOwnerLabel": "Owner's username",
     "tagFind": "Find cars",
     "tagNoVehicles": "This member has no public cars (or doesn't exist).",
-    "tagRemove": "Remove"
+    "tagRemove": "Remove",
+    "expand": "Open full portfolio"
   },
   "Media": {
     "title": "Media",

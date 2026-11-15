@@ -290,7 +290,7 @@
     "acquiredLabel": "Pořízeno",
     "engineLabel": "Motor",
     "enginePlaceholder": "např. 2.5 R6 turbo",
-    "countryLabel": "Země",
+    "countryLabel": "Země registrace",
     "descriptionLabel": "Krátký popis",
     "descriptionHint": "Pár vět, které se zobrazí pod názvem.",
     "storyLabel": "Příběh projektu",
@@ -305,11 +305,13 @@
     "categories": {
       "tuning": "Tuning",
       "youngtimer": "Youngtimer",
-      "american": "Americké",
+      "american": "Amerika",
       "veteran": "Veterán",
       "classic": "Klasik",
       "motorcycle": "Motorka",
-      "other": "Ostatní"
+      "other": "Ostatní",
+      "performance": "Performance",
+      "drift": "Drift"
     },
     "errors": {
       "makeRequired": "Vyplň značku.",
@@ -325,7 +327,12 @@
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu."
     },
     "soldBadge": "Prodáno",
-    "soldIn": "Prodáno {year}"
+    "soldIn": "Prodáno {year}",
+    "countryHint": "Kde má auto SPZ / je registrované.",
+    "proudLabel": "Na co jsem v tomhle projektu nejvíc hrdý",
+    "proudHint": "Jedna věta, která se ukáže zvýrazněně u auta.",
+    "proudTitle": "Nejvíc hrdý na",
+    "highlightBadge": "Srdcovka"
   },
   "Photos": {
     "empty": "Zatím žádné fotky. První fotka bude hlavní.",
@@ -361,8 +368,12 @@
       "exterior": "Exteriér",
       "interior": "Interiér",
       "audio": "Audio",
-      "other": "Ostatní"
-    }
+      "other": "Ostatní",
+      "exhaust": "Výfuk"
+    },
+    "edit": "Upravit",
+    "save": "Uložit",
+    "cancel": "Zrušit"
   },
   "VehicleSettings": {
     "visibilityTitle": "Viditelnost",
@@ -383,7 +394,12 @@
     "deleteButton": "Smazat vozidlo",
     "deleteConfirm": "Ano, trvale smazat",
     "deleteBlocked": "Vozidlo už bylo na eventu, proto ho nejde smazat. Můžeš ho označit jako prodané.",
-    "failed": "Akce se nepovedla. Zkus to prosím znovu."
+    "failed": "Akce se nepovedla. Zkus to prosím znovu.",
+    "highlightTitle": "Srdcovka",
+    "highlightText": "Zvýrazni auto, na které rád vzpomínáš – na profilu zůstane barevné, bude mezi bývalými první a dostane štítek.",
+    "highlightOn": "Auto je zvýrazněné jako srdcovka.",
+    "highlightAdd": "Označit jako srdcovku",
+    "highlightRemove": "Zrušit srdcovku"
   },
   "PublicProfile": {
     "garageTitle": "Garáž",
@@ -414,7 +430,10 @@
     "archiveTitle": "Archiv tvorby",
     "archiveText": "Starší práce, které už se nevešly mezi 12 hlavních na profilu.",
     "archiveBack": "Zpět na profil {name}",
-    "archiveEmpty": "Archiv je zatím prázdný."
+    "archiveEmpty": "Archiv je zatím prázdný.",
+    "showMore": "Ukázat další (#)",
+    "showLess": "Ukázat méně",
+    "portfolioExpand": "Rozbalit portfolio ({count})"
   },
   "PublicVehicle": {
     "metaTitle": "Vozidlo",
@@ -1680,7 +1699,8 @@
     "tagOwnerLabel": "Uživatelské jméno majitele",
     "tagFind": "Najít auta",
     "tagNoVehicles": "Tento člen nemá žádné veřejné auto (nebo neexistuje).",
-    "tagRemove": "Odebrat"
+    "tagRemove": "Odebrat",
+    "expand": "Rozbalit portfolio"
   },
   "Media": {
     "title": "Média",

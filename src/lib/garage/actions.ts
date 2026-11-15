@@ -83,6 +83,7 @@ export async function saveVehicle(
   const engine = emptyToNull(text(formData, "engine"));
   const description = emptyToNull(text(formData, "description"));
   const story = emptyToNull(text(formData, "story"));
+  const proudOf = emptyToNull(text(formData, "proud_of"));
   const country = emptyToNull(text(formData, "country"));
   const acquiredOn = emptyToNull(text(formData, "acquired_on"));
   const visibility = text(formData, "visibility") === "private" ? "private" : "public";
@@ -97,7 +98,8 @@ export async function saveVehicle(
     model.length > LIMITS.model ||
     (engine?.length ?? 0) > LIMITS.engine ||
     (description?.length ?? 0) > LIMITS.description ||
-    (story?.length ?? 0) > LIMITS.story
+    (story?.length ?? 0) > LIMITS.story ||
+    (proudOf?.length ?? 0) > LIMITS.proudOf
   )
     return { status: "error", error: "tooLong" };
   if (year === undefined) return { status: "error", error: "yearInvalid" };
@@ -121,6 +123,7 @@ export async function saveVehicle(
     power_hp: power,
     description,
     story,
+    proud_of: proudOf,
     country,
     visibility,
     acquired_on: acquiredOn,
@@ -171,6 +174,23 @@ export async function setVehicleVisibility(
   const { data, error } = await ctx.supabase
     .from("vehicles")
     .update({ visibility: visibility === "private" ? "private" : "public" })
+    .eq("id", vehicleId)
+    .select("id");
+  if (error || !data?.length) return { ok: false, error: "notAllowed" };
+  refreshGarage();
+  return { ok: true };
+}
+
+/** Srdcovka: zvýrazněné auto na profilu (hlavně mezi bývalými). */
+export async function setVehicleHighlighted(
+  vehicleId: string,
+  highlighted: boolean,
+): Promise<ActionResult> {
+  const ctx = await requireUser();
+  if (!ctx || !UUID.test(vehicleId)) return { ok: false, error: "notAllowed" };
+  const { data, error } = await ctx.supabase
+    .from("vehicles")
+    .update({ highlighted: highlighted === true })
     .eq("id", vehicleId)
     .select("id");
   if (error || !data?.length) return { ok: false, error: "notAllowed" };
@@ -277,6 +297,27 @@ export async function addVehicleMod(
     .from("vehicle_mods")
     .insert({ vehicle_id: vehicleId, category: cat, description: desc, position: count ?? 0 });
   if (error) return { ok: false, error: "notAllowed" };
+  refreshGarage();
+  return { ok: true };
+}
+
+export async function updateVehicleMod(
+  modId: string,
+  category: string,
+  description: string,
+): Promise<ActionResult> {
+  const ctx = await requireUser();
+  if (!ctx || !UUID.test(modId)) return { ok: false, error: "notAllowed" };
+  const cat = oneOf(category, Constants.public.Enums.mod_category) ?? "other";
+  const desc = description.trim();
+  if (!desc || desc.length > LIMITS.modDescription) return { ok: false, error: "invalid" };
+  // RLS pustí jen úpravu vlastního vozidla
+  const { data, error } = await ctx.supabase
+    .from("vehicle_mods")
+    .update({ category: cat, description: desc })
+    .eq("id", modId)
+    .select("id");
+  if (error || !data?.length) return { ok: false, error: "notAllowed" };
   refreshGarage();
   return { ok: true };
 }
