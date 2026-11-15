@@ -212,6 +212,17 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
 ---
 
+## Připomínky testerů – 3. kolo (15. 11. 2026)
+
+- [x] Potvrzovací e-mail a obnova hesla fungují i v jiném prohlížeči (odkaz `token_hash`) – **šablony vložit ručně do Supabase**
+- [x] Bývalá auta seřazená podle data prodeje
+- [x] Úpravy auta jde upravit (nejen odebrat)
+- [x] „Země“ → „Země registrace“
+- [x] Kategorie Amerika, Performance, Drift; úprava Výfuk; „Na co jsem nejvíc hrdý“
+- [x] Profil: auta nahoře, portfolio 1 řádek + Rozbalit, „Ukázat další“ u aut, srdcovka u bývalých aut
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.

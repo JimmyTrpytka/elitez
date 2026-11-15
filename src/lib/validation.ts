@@ -12,6 +12,7 @@ export const LIMITS = {
   engine: 120,
   description: 2000,
   story: 5000,
+  proudOf: 300,
   modDescription: 300,
   photosPerVehicle: 20,
 } as const;

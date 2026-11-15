@@ -189,3 +189,8 @@ Vlastník projektu **není programátor**. Proto:
 ## Technické poznámky (pozvánka pro testery)
 - Landing page `src/app/[locale]/invite/page.tsx` (texty `Welcome`), komponenty `src/components/welcome/` (`CarMarquee` – CSS `.marquee-track`, `TurboDemo` – jen ukázka, nic neukládá). Krátká adresa `/invite` přesměruje podle jazyka prohlížeče.
 - Odznak `beta_tester` (trigger `profiles_beta_tester` → `award_badge`). Při spuštění ho vypni `badges.active = false` – kdo ho má, tomu zůstane (Síň slávy čte získané odznaky bez ohledu na `active`).
+
+## Technické poznámky (připomínky testerů – 3. kolo)
+- E-mailové šablony (`supabase/templates/`) mají odkaz `https://www.elitezclub.eu/auth/confirm?token_hash={{ .TokenHash }}&type=…&next=…` místo `{{ .ConfirmationURL }}` – funguje i v jiném prohlížeči, než kde začala registrace (PKCE kód to neumí). Route `/auth/confirm` umí obojí.
+- `vehicles.proud_of` (≤300), `vehicles.highlighted` (srdcovka, akce `setVehicleHighlighted`), kategorie `performance`, `drift`, úprava `exhaust`. Úprava položky `updateVehicleMod`.
+- `ShowMoreGrid` (`src/components/ui/show-more.tsx`) – prvních N položek + „Ukázat další (#)“; `PortfolioGallery collapsed` = 1 řádek + Rozbalit. `VEHICLE_GRID` = třídy mřížky aut.

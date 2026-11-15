@@ -1584,11 +1584,13 @@ export type Database = {
           created_at: string
           description: string | null
           engine: string | null
+          highlighted: boolean
           id: string
           make: string
           model: string
           owner_id: string
           power_hp: number | null
+          proud_of: string | null
           sold_on: string | null
           status: Database["public"]["Enums"]["vehicle_status"]
           story: string | null
@@ -1604,11 +1606,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           engine?: string | null
+          highlighted?: boolean
           id?: string
           make: string
           model: string
           owner_id?: string
           power_hp?: number | null
+          proud_of?: string | null
           sold_on?: string | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           story?: string | null
@@ -1624,11 +1628,13 @@ export type Database = {
           created_at?: string
           description?: string | null
           engine?: string | null
+          highlighted?: boolean
           id?: string
           make?: string
           model?: string
           owner_id?: string
           power_hp?: number | null
+          proud_of?: string | null
           sold_on?: string | null
           status?: Database["public"]["Enums"]["vehicle_status"]
           story?: string | null
@@ -2496,6 +2502,7 @@ export type Database = {
       mod_category:
         | "engine"
         | "drivetrain"
+        | "exhaust"
         | "suspension"
         | "wheels"
         | "brakes"
@@ -2544,6 +2551,8 @@ export type Database = {
         | "tuning"
         | "youngtimer"
         | "american"
+        | "performance"
+        | "drift"
         | "veteran"
         | "classic"
         | "motorcycle"
@@ -2706,6 +2715,7 @@ export const Constants = {
       mod_category: [
         "engine",
         "drivetrain",
+        "exhaust",
         "suspension",
         "wheels",
         "brakes",
@@ -2757,6 +2767,8 @@ export const Constants = {
         "tuning",
         "youngtimer",
         "american",
+        "performance",
+        "drift",
         "veteran",
         "classic",
         "motorcycle",

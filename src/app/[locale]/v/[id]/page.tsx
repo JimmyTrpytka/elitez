@@ -158,7 +158,7 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
         <Translatable
           kind="vehicle"
           id={vehicle.id}
-          show={translationEnabled() && [vehicle.description ?? "", vehicle.story ?? "", ...vehicle.mods.map((m) => m.description)].some((x) =>
+          show={translationEnabled() && [vehicle.description ?? "", vehicle.story ?? "", vehicle.proud_of ?? "", ...vehicle.mods.map((m) => m.description)].some((x) =>
             needsTranslation(x, locale === "en" ? "en" : "cs"),
           )}
         >
@@ -166,6 +166,17 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
           <p className="mb-10 max-w-3xl text-lg leading-relaxed whitespace-pre-line text-white/80">
             <TText k="description" original={vehicle.description} />
           </p>
+        ) : null}
+
+        {vehicle.proud_of ? (
+          <figure className="mb-10 max-w-3xl border-l-4 border-accent pl-5">
+            <figcaption className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+              {tVehicle("proudTitle")}
+            </figcaption>
+            <blockquote className="mt-2 text-xl leading-snug font-semibold text-white">
+              <TText k="proud" original={vehicle.proud_of} />
+            </blockquote>
+          </figure>
         ) : null}
 
         <dl className="mb-12 grid grid-cols-2 gap-x-8 gap-y-6 border-y border-white/10 py-8 sm:grid-cols-3">

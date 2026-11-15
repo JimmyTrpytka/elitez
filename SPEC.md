@@ -96,7 +96,8 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - **Soukromý profil:** cizí uživatel nevidí profil ani žádné vozidlo v něm (ani veřejně nastavené).
 - **Mazání vozidla:** smazat lze jen vozidlo, které **nikdy nebylo přihlášené na event** (omylem založené). Jinak jen „Prodáno“ → archiv „Bývalá auta“.
 - **Uživatelské jméno:** povinné, jedinečné, 3–30 znaků (malá písmena a–z, číslice, tečka, podtržítko). Je v adrese veřejného profilu `/u/<jmeno>`.
-- **Kategorie vozidel:** Tuning, Youngtimer, Americké, Veterán, Klasik, Motorka, Ostatní. Typ: auto / motorka.
+- **Kategorie vozidel:** Tuning, Youngtimer, Amerika, Performance, Drift, Veterán, Klasik, Motorka, Ostatní (Performance a Drift přidány 15. 11. 2026). Typ: auto / motorka.
+- **Upřesnění 15. 11. 2026 (připomínky testerů):** „Země“ u auta = **země registrace** (SPZ). Pole „Na co jsem v tomhle projektu nejvíc hrdý“ (max 300 znaků, zvýrazněné na stránce auta). Úprava „Výfuk“ je kategorie v seznamu úprav. Úpravy jdou upravit, nejen odebrat. Bývalé auto lze označit jako **srdcovku** (barevné, první, štítek). Profil: auta → bývalá auta → portfolio (1 řádek + Rozbalit) → Garáž snů → Síň slávy; dlouhé seznamy aut „Ukázat další“.
 - **Výkon:** zadává se v koních (k), kW se dopočítá.
 - **Fotky:** max. 20 na vozidlo, zmenšení v prohlížeči do 3 velikostí (WebP). Při nahrání uživatel potvrdí, že SPZ je zakrytá/rozmazaná. Automatické rozpoznání SPZ ve v1 není.
 - **Země:** evropské země, nahoře ČR, SK, PL.
@@ -209,7 +210,7 @@ Odznak za účast na eventu se uděluje **jen po check-inu** (ověřená účast
 Obecné objekty: `entry` = to, co se hlásí na event (auto, model, motorka). Ve v1 podporujeme **auto** a **motorku**; model expo zatím jako samostatná kategorie registrace, ne plnohodnotný profil (rozhodnout později).
 
 - `profiles` – id, uživatelské jméno, jméno, země, město, bio, avatar, role, viditelnost (public/private), verified_at
-- `vehicles` – id, owner_id, typ (auto/moto), kategorie (tuning/youngtimer/americké/veterán/…), značka, model, rok, motor, výkon, popis, příběh projektu, země, viditelnost (public/private), stav (current/former), pořízeno_kdy, prodáno_kdy
+- `vehicles` – id, owner_id, typ (auto/moto), kategorie (tuning/youngtimer/americké/veterán/…), značka, model, rok, motor, výkon, popis, příběh projektu, na co je majitel hrdý, země registrace, srdcovka, viditelnost (public/private), stav (current/former), pořízeno_kdy, prodáno_kdy
 - `vehicle_photos` – vehicle_id, url, pořadí
 - `vehicle_mods` – vehicle_id, kategorie, popis (seznam úprav)
 - `verifications` – user_id, vehicle_id (nepovinné), kód, cesta k videu (soukromé úložiště), stav (pending/approved/rejected/expired), důvod, kým, kdy, smazání videa

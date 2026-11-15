@@ -27,6 +27,7 @@ export type VehicleFormValues = {
   power_hp: string;
   description: string;
   story: string;
+  proudOf: string;
   country: string;
   acquired_on: string;
   visibility: "public" | "private";
@@ -140,7 +141,7 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         defaultValue={values.engine}
       />
 
-      <SelectField label={t("countryLabel")} name="country" error={errorFor("country")} defaultValue={values.country}>
+      <SelectField label={t("countryLabel")} hint={t("countryHint")} name="country" error={errorFor("country")} defaultValue={values.country}>
         <option value="">{tCommon("notSelected")}</option>
         {countries.priority.map((c) => (
           <option key={c.code} value={c.code}>
@@ -170,6 +171,14 @@ export function VehicleForm({ values }: { values: VehicleFormValues }) {
         maxLength={LIMITS.story}
         defaultValue={values.story}
         hint={t("storyHint")}
+      />
+      <TextareaField
+        label={t("proudLabel")}
+        name="proud_of"
+        rows={2}
+        maxLength={LIMITS.proudOf}
+        defaultValue={values.proudOf}
+        hint={t("proudHint")}
       />
 
       <ChoiceCards

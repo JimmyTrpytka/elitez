@@ -84,6 +84,7 @@ async function ManageVehicle({
             vehicleId={vehicle.id}
             visibility={vehicle.visibility}
             status={vehicle.status}
+            highlighted={vehicle.highlighted}
           />
         </Card>
       </div>
