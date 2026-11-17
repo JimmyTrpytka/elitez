@@ -668,7 +668,9 @@
     "minPhotosHint": "Auto s menším počtem fotek nejde přihlásit – člen dostane odkaz na jejich přidání.",
     "minPhotosOption": "{count, plural, =0 {Bez požadavku} one {# fotka} few {# fotky} other {# fotek}}",
     "participantInfoLabel": "Informace pro schválené účastníky",
-    "participantInfoHint": "Příjezd, čas, brána, parkování, co s sebou… Uvidí je jen schválení (na stránce eventu a v e-mailu o schválení) a pořadatel."
+    "participantInfoHint": "Příjezd, čas, brána, parkování, co s sebou… Uvidí je jen schválení (na stránce eventu a v e-mailu o schválení) a pořadatel.",
+    "holdDecisionsLabel": "Odeslat rozhodnutí najednou",
+    "holdDecisionsHint": "Schválení, zamítnutí i čekací listinu si v klidu připravíš a uchazečům je odešleš najednou tlačítkem „Odeslat rozhodnutí“. Do té doby vidí „čeká na posouzení“."
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -756,7 +758,8 @@
     "generic": "Něco se pokazilo. Zkus to prosím znovu.",
     "crew_only": "Tento sraz je jen pro členy crew.",
     "not_enough_photos": "Auto nemá dost fotek. Přidej je v garáži a přihlas ho znovu.",
-    "not_editable": "Přihlášku už nejde upravit – pořadatel ji posoudil."
+    "not_editable": "Přihlášku už nejde upravit – pořadatel ji posoudil.",
+    "invalid_rating": "Neplatné hodnocení."
   },
   "MyRegistrations": {
     "title": "Moje registrace",
@@ -801,7 +804,28 @@
     "otherRegistrations": "{count, plural, one {# další vozidlo} few {# další vozidla} other {# dalších vozidel}} na tento event",
     "messageFromApplicant": "Zpráva od uchazeče",
     "noteTitle": "Interní poznámka",
-    "noteHint": "Vidíš ji jen ty, uchazeč ne."
+    "noteHint": "Vidíš ji jen ty, uchazeč ne.",
+    "sortLabel": "Řadit:",
+    "sort": {
+      "time": "podle času",
+      "rating": "podle hvězd"
+    },
+    "draftBadge": "neodesláno",
+    "ratingLabel": "Hodnocení",
+    "ratingStar": "{count, plural, one {# hvězda} few {# hvězdy} other {# hvězd}}",
+    "ratingFailed": "Nepodařilo se uložit",
+    "draftsTitle": "Neodeslaná rozhodnutí: {count}",
+    "draftsHint": "Uchazeči je zatím nevidí. Až budeš hotový, odešli je všem najednou (přijde jim e-mail).",
+    "release": "Odeslat rozhodnutí",
+    "releaseConfirmText": "Odeslat {count} rozhodnutí?",
+    "releaseConfirm": "Ano, odeslat",
+    "releasing": "Odesílám…",
+    "releaseDone": "Odesláno: {count, plural, one {# rozhodnutí} few {# rozhodnutí} other {# rozhodnutí}}.",
+    "navLabel": "Procházení přihlášek",
+    "prev": "Předchozí",
+    "next": "Další",
+    "lastOne": "Poslední v seznamu",
+    "position": "{current} / {total}"
   },
   "Decision": {
     "approve": "Schválit",
@@ -819,7 +843,13 @@
     "noteTitle": "Interní poznámka",
     "notePlaceholder": "Např. Viděno na Undergroundu, skvělý stav.",
     "noteSaved": "Poznámka uložena.",
-    "noteFailed": "Poznámku se nepodařilo uložit."
+    "noteFailed": "Poznámku se nepodařilo uložit.",
+    "approveAndNext": "Schválit a další →",
+    "rejectAndNext": "Zamítnout a další →",
+    "savedDraft": "Uloženo jako koncept – uchazeč se to dozví až po „Odeslat rozhodnutí“.",
+    "draftInfo": "Neodesláno: {status}. Uchazeč zatím vidí „čeká na posouzení“.",
+    "holdInfo": "U tohoto eventu se rozhodnutí odesílají najednou – zatím se ukládají jako koncept.",
+    "discardDraft": "Zrušit koncept"
   },
   "Email": {
     "defaultName": "ahoj",

@@ -278,6 +278,7 @@ export async function saveEvent(
     media_capacity: mediaCapacity ?? null,
     min_photos: minPhotos,
     auto_approve: formData.get("auto_approve") === "on",
+    hold_decisions: formData.get("hold_decisions") === "on",
   };
 
   let eventId = id;

@@ -35,6 +35,7 @@ const KNOWN_ERRORS = [
   "not_enough_photos",
   "not_editable",
   "crew_only",
+  "invalid_rating",
 ] as const;
 
 export type RegistrationErrorKey = (typeof KNOWN_ERRORS)[number] | "generic";
@@ -183,3 +184,38 @@ export async function saveRegistrationNote(
   refresh();
   return { ok: true };
 }
+
+/** Interní hodnocení 1–5 hvězd (null = smazat). Oprávnění kontroluje databáze. */
+export async function setRegistrationRating(
+  registrationId: string,
+  rating: number | null,
+): Promise<SimpleResult> {
+  if (!UUID.test(registrationId)) return { ok: false, error: "not_allowed" };
+  if (rating !== null && !(Number.isInteger(rating) && rating >= 1 && rating <= 5))
+    return { ok: false, error: "invalid_rating" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("set_registration_rating", {
+    p_registration_id: registrationId,
+    p_rating: rating,
+  });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+export type ReleaseResult = { ok: true; count: number } | { ok: false; error: RegistrationErrorKey };
+
+/** Odeslání všech neodeslaných rozhodnutí eventu najednou (e-maily jdou frontou). */
+export async function releaseDecisions(eventId: string): Promise<ReleaseResult> {
+  if (!UUID.test(eventId)) return { ok: false, error: "not_allowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { data, error } = await supabase.rpc("release_registration_decisions", {
+    p_event_id: eventId,
+  });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  refresh();
+  return { ok: true, count: data ?? 0 };
+}
+

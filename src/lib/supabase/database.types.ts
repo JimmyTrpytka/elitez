@@ -566,6 +566,44 @@ export type Database = {
           },
         ]
       }
+      event_registration_reviews: {
+        Row: {
+          draft_message: string | null
+          draft_reason: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status: Database["public"]["Enums"]["registration_status"] | null
+          rating: number | null
+          registration_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          draft_message?: string | null
+          draft_reason?: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status?: Database["public"]["Enums"]["registration_status"] | null
+          rating?: number | null
+          registration_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          draft_message?: string | null
+          draft_reason?: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status?: Database["public"]["Enums"]["registration_status"] | null
+          rating?: number | null
+          registration_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registration_reviews_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: true
+            referencedRelation: "event_registrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -701,6 +739,7 @@ export type Database = {
         Row: {
           access: Database["public"]["Enums"]["event_access"]
           auto_approve: boolean
+          hold_decisions: boolean
           capacity: number | null
           category: Database["public"]["Enums"]["event_category"]
           country: string | null
@@ -743,6 +782,7 @@ export type Database = {
         Insert: {
           access?: Database["public"]["Enums"]["event_access"]
           auto_approve?: boolean
+          hold_decisions?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -785,6 +825,7 @@ export type Database = {
         Update: {
           access?: Database["public"]["Enums"]["event_access"]
           auto_approve?: boolean
+          hold_decisions?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -1878,6 +1919,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      release_registration_decisions: {
+        Args: { p_event_id: string }
+        Returns: number
+      }
+      set_registration_rating: {
+        Args: { p_rating: number | null; p_registration_id: string }
+        Returns: undefined
       }
       claim_email_batch: {
         Args: { p_daily_limit: number; p_limit: number }
