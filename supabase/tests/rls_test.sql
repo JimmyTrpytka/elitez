@@ -2241,6 +2241,119 @@ do $$ begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Registrace – část 2: hvězdičky a odeslání rozhodnutí najednou
+-- Alice = pořadatelka, Fanda a Gábina = uchazeči
+-- =====================================================================
+insert into auth.users (id, email, aud, role, instance_id)
+values ('00000000-0000-4000-a000-0000000f0a02', 'rls-test-gabina@example.invalid',
+        'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000');
+update public.profiles set username = 'rls_gabina' where id = '00000000-0000-4000-a000-0000000f0a02';
+insert into public.vehicles (id, owner_id, category, make, model, visibility)
+values ('00000000-0000-4000-b000-0000000f0a02', '00000000-0000-4000-a000-0000000f0a02', 'american', 'Chevrolet', 'Camaro', 'public');
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity,
+   registration_opens_at, verified_head_start_hours, min_photos, hold_decisions)
+values
+  ('00000000-0000-4000-e000-000000000022', '00000000-0000-4000-c000-00000000000a',
+   'rls-najednou', 'Najednou', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', 1, now() - interval '1 day', 0, 0, true);
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a01","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  r := public.register_for_event('00000000-0000-4000-e000-000000000022',
+    '00000000-0000-4000-b000-0000000f0a01', '+420777333444', 'fanda@example.invalid', null, true, false);
+  perform set_config('rls.reg_f', r.id::text, true);
+end $$;
+reset role;
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  r := public.register_for_event('00000000-0000-4000-e000-000000000022',
+    '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false);
+  perform set_config('rls.reg_g', r.id::text, true);
+end $$;
+reset role;
+
+-- Alice hodnotí a schvaluje oba (koncept), uchazeči nic nevidí
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  perform public.set_registration_rating(current_setting('rls.reg_g')::uuid, 5::smallint);
+  r := public.decide_registration(current_setting('rls.reg_f')::uuid, 'approved');
+  if r.status <> 'pending' then raise exception 'FAIL: při „odeslat najednou“ se rozhodnutí provedlo hned'; end if;
+  perform public.decide_registration(current_setting('rls.reg_g')::uuid, 'approved');
+  if (select count(*) from public.event_registration_reviews where draft_status = 'approved'
+      and registration_id in (current_setting('rls.reg_f')::uuid, current_setting('rls.reg_g')::uuid)) <> 2 then
+    raise exception 'FAIL: koncepty rozhodnutí se neuložily';
+  end if;
+  begin
+    insert into public.event_registration_reviews (registration_id, rating)
+    values (current_setting('rls.reg_f')::uuid, 1);
+    raise exception 'FAIL: hodnocení jde zapsat přímo do tabulky';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  if exists (select 1 from public.event_registration_reviews) then
+    raise exception 'FAIL: uchazeč vidí hodnocení / koncept rozhodnutí';
+  end if;
+  if (select status from public.event_registrations where id = current_setting('rls.reg_g')::uuid) <> 'pending' then
+    raise exception 'FAIL: uchazeč vidí neodeslané rozhodnutí';
+  end if;
+  begin
+    perform public.set_registration_rating(current_setting('rls.reg_g')::uuid, 5::smallint);
+    raise exception 'FAIL: uchazeč si nastavil hodnocení';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    perform public.release_registration_decisions('00000000-0000-4000-e000-000000000022');
+    raise exception 'FAIL: uchazeč odeslal rozhodnutí';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Alice odešle najednou: kapacita 1 → jeden schválený, druhý čekací listina
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare n integer; begin
+  n := public.release_registration_decisions('00000000-0000-4000-e000-000000000022');
+  if n <> 2 then raise exception 'FAIL: odeslalo se % rozhodnutí místo 2', n; end if;
+  if (select count(*) from public.event_registrations
+      where event_id = '00000000-0000-4000-e000-000000000022' and status = 'approved') <> 1
+     or (select count(*) from public.event_registrations
+      where event_id = '00000000-0000-4000-e000-000000000022' and status = 'waitlist') <> 1 then
+    raise exception 'FAIL: odeslání najednou nerespektuje kapacitu';
+  end if;
+  if exists (select 1 from public.event_registration_reviews where draft_status is not null
+             and registration_id in (current_setting('rls.reg_f')::uuid, current_setting('rls.reg_g')::uuid)) then
+    raise exception 'FAIL: koncepty po odeslání zůstaly';
+  end if;
+  if (select rating from public.event_registration_reviews where registration_id = current_setting('rls.reg_g')::uuid) <> 5 then
+    raise exception 'FAIL: hodnocení se po odeslání ztratilo';
+  end if;
+  -- Koncept zamítnutí schváleného a jeho zahození → skutečný stav zůstane
+  perform public.decide_registration(current_setting('rls.reg_f')::uuid, 'rejected');
+  perform public.decide_registration(current_setting('rls.reg_f')::uuid, 'pending');
+  if (select status from public.event_registrations where id = current_setting('rls.reg_f')::uuid) = 'pending' then
+    raise exception 'FAIL: zahození konceptu změnilo skutečný stav';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

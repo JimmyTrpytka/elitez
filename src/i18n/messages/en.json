@@ -668,7 +668,9 @@
     "minPhotosHint": "A car with fewer photos can't be registered – the member gets a link to add them.",
     "minPhotosOption": "{count, plural, =0 {No requirement} one {# photo} other {# photos}}",
     "participantInfoLabel": "Info for approved participants",
-    "participantInfoHint": "Arrival, time, gate, parking, what to bring… Only approved participants (on the event page and in the approval email) and the organizer can see it."
+    "participantInfoHint": "Arrival, time, gate, parking, what to bring… Only approved participants (on the event page and in the approval email) and the organizer can see it.",
+    "holdDecisionsLabel": "Send decisions all at once",
+    "holdDecisionsHint": "Prepare approvals, rejections and the waitlist calmly and send them to applicants all at once with “Send decisions”. Until then they see “waiting for review”."
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -756,7 +758,8 @@
     "generic": "Something went wrong. Please try again.",
     "crew_only": "This meet is for crew members only.",
     "not_enough_photos": "The car doesn't have enough photos. Add them in your garage and register again.",
-    "not_editable": "The application can no longer be edited – the organizer has already decided."
+    "not_editable": "The application can no longer be edited – the organizer has already decided.",
+    "invalid_rating": "Invalid rating."
   },
   "MyRegistrations": {
     "title": "My registrations",
@@ -801,7 +804,28 @@
     "otherRegistrations": "{count, plural, one {# more vehicle} other {# more vehicles}} in this event",
     "messageFromApplicant": "Message from the applicant",
     "noteTitle": "Internal note",
-    "noteHint": "Only you can see it, not the applicant."
+    "noteHint": "Only you can see it, not the applicant.",
+    "sortLabel": "Sort:",
+    "sort": {
+      "time": "by time",
+      "rating": "by stars"
+    },
+    "draftBadge": "not sent",
+    "ratingLabel": "Rating",
+    "ratingStar": "{count, plural, one {# star} other {# stars}}",
+    "ratingFailed": "Couldn't save",
+    "draftsTitle": "Unsent decisions: {count}",
+    "draftsHint": "Applicants can't see them yet. When you're done, send them all at once (they get an email).",
+    "release": "Send decisions",
+    "releaseConfirmText": "Send {count} decisions?",
+    "releaseConfirm": "Yes, send",
+    "releasing": "Sending…",
+    "releaseDone": "Sent: {count, plural, one {# decision} other {# decisions}}.",
+    "navLabel": "Browse applications",
+    "prev": "Previous",
+    "next": "Next",
+    "lastOne": "Last in the list",
+    "position": "{current} / {total}"
   },
   "Decision": {
     "approve": "Approve",
@@ -819,7 +843,13 @@
     "noteTitle": "Internal note",
     "notePlaceholder": "E.g. Seen at Underground, great condition.",
     "noteSaved": "Note saved.",
-    "noteFailed": "The note couldn't be saved."
+    "noteFailed": "The note couldn't be saved.",
+    "approveAndNext": "Approve and next →",
+    "rejectAndNext": "Reject and next →",
+    "savedDraft": "Saved as a draft – the applicant will find out after “Send decisions”.",
+    "draftInfo": "Not sent: {status}. The applicant still sees “waiting for review”.",
+    "holdInfo": "Decisions for this event are sent all at once – for now they are saved as drafts.",
+    "discardDraft": "Discard draft"
   },
   "Email": {
     "defaultName": "there",

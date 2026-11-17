@@ -31,6 +31,7 @@ export function toEventFormValues(e: EventRow, participantInfo: string | null = 
     media_capacity: e.media_capacity?.toString() ?? "",
     min_photos: e.min_photos,
     auto_approve: e.auto_approve,
+    hold_decisions: e.hold_decisions,
     participant_info: participantInfo ?? "",
     social: {
       website_url: e.website_url,
@@ -68,6 +69,7 @@ export const EMPTY_EVENT_VALUES: EventFormValues = {
   media_capacity: "",
   min_photos: 3,
   auto_approve: false,
+  hold_decisions: false,
   participant_info: "",
   social: {},
 };

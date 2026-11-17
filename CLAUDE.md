@@ -208,4 +208,6 @@ Vlastník projektu **není programátor**. Proto:
 - `events.min_photos` (kontrola v `register_for_event` → chyba `not_enough_photos`), `events.auto_approve` (přihláška rovnou `approved`; trigger pak posílá `registration_approved`, ne „přijato“).
 - Informace pro schválené: tabulka `event_participant_info` (RLS: `is_approved_participant` / pořadatel). Ukládá se ve `saveEvent`, kopíruje při duplikaci, zobrazuje v `RegistrationBox` (`#ucastnici`), do e-mailu jde přes `payload.participant_info`.
 - Úprava přihlášky jen funkcí `update_registration` (stav pending/waitlist, před začátkem) – UI `EditRegistration` v Moje registrace.
+- Hvězdičky a koncepty rozhodnutí: tabulka `event_registration_reviews` (čte jen pořadatel; uchazeč čte svůj řádek v `event_registrations`, proto koncept NESMÍ být tam). Zápis jen `set_registration_rating`, `decide_registration` (při `events.hold_decisions` ukládá koncept; „pending“ koncept zahodí), `release_registration_decisions` (pořadí: zamítnutí, listina, schválení; kapacita). Skutečné provedení `apply_registration_decision` (interní).
+- Seznam přihlášek pracuje s `effectiveStatus` (koncept, jinak stav); detail má navigaci a „Schválit a další“ podle stejného filtru (`?status&verified&sort`).
 

@@ -6,7 +6,13 @@ import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
 import { formatDateTime } from "@/lib/dates";
 import { getMyEvent, getMyOrganizer } from "@/lib/data/events";
-import { getRegistrationDetail } from "@/lib/data/registrations";
+import {
+  getRegistrationDetail,
+  listEventRegistrations,
+  type RegistrationSort,
+  type RegistrationStatus,
+} from "@/lib/data/registrations";
+import { StarRating } from "@/components/organizer/star-rating";
 import { hpToKw } from "@/lib/validation";
 import { PageShell } from "@/components/page-shell";
 import { Avatar } from "@/components/avatar";
@@ -24,22 +30,39 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 type Params = PageProps<"/[locale]/organizer/events/[id]/registrations/[registrationId]">["params"];
+type SearchParams = PageProps<"/[locale]/organizer/events/[id]/registrations/[registrationId]">["searchParams"];
+
+const STATUSES: Array<RegistrationStatus | "all"> = [
+  "pending",
+  "approved",
+  "waitlist",
+  "rejected",
+  "cancelled",
+  "all",
+];
 
 export default async function RegistrationDetailPage({
   params,
+  searchParams,
 }: PageProps<"/[locale]/organizer/events/[id]/registrations/[registrationId]">) {
   const tAuth = await getTranslations("Auth");
   return (
     <Suspense
       fallback={<p className="mx-auto max-w-4xl px-4 py-14 text-subtle">{tAuth("loading")}</p>}
     >
-      <RegistrationDetailContent params={params} />
+      <RegistrationDetailContent params={params} searchParams={searchParams} />
     </Suspense>
   );
 }
 
-async function RegistrationDetailContent({ params }: { params: Params }) {
-  const { id, registrationId } = await params;
+async function RegistrationDetailContent({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const [{ id, registrationId }, sp] = await Promise.all([params, searchParams]);
   const [t, tVehicle, tMods, tReasons, locale, organizer] = await Promise.all([
     getTranslations("Applications"),
     getTranslations("Vehicle"),
@@ -54,6 +77,38 @@ async function RegistrationDetailContent({ params }: { params: Params }) {
     getRegistrationDetail(registrationId),
   ]);
   if (!event || !reg || reg.event_id !== event.id) notFound();
+
+  // Navigace v rámci seznamu, ze kterého pořadatel přišel (stejný filtr a řazení)
+  const status =
+    typeof sp.status === "string" && (STATUSES as string[]).includes(sp.status)
+      ? (sp.status as RegistrationStatus | "all")
+      : "pending";
+  const verifiedOnly = sp.verified === "1";
+  const sort: RegistrationSort = sp.sort === "rating" ? "rating" : "time";
+  const listQuery = {
+    status,
+    ...(verifiedOnly ? { verified: "1" } : {}),
+    ...(sort === "rating" ? { sort: "rating" } : {}),
+  };
+  const { rows: order } = await listEventRegistrations(event.id, {
+    status,
+    verifiedOnly,
+    verifiedFirst: event.verified_priority,
+    sort,
+    withCovers: false,
+  });
+  const index = order.findIndex((r) => r.id === reg.id);
+  const others = order.filter((r) => r.id !== reg.id);
+  const next = index >= 0 ? order[index + 1] : others[0];
+  const prev = index > 0 ? order[index - 1] : undefined;
+  const detailHref = (regId: string) => ({
+    pathname: `/organizer/events/${event.id}/registrations/${regId}`,
+    query: listQuery,
+  });
+  const qs = new URLSearchParams(listQuery).toString();
+  const nextHref = next
+    ? `/${locale}/organizer/events/${event.id}/registrations/${next.id}?${qs}`
+    : null;
 
   const v = reg.vehicle;
   const a = reg.applicant;
@@ -75,7 +130,10 @@ async function RegistrationDetailContent({ params }: { params: Params }) {
       title={v ? `${v.make} ${v.model}` : t("detailTitle")}
       subtitle={
         <span className="flex flex-wrap items-center gap-3">
-          <Link href={`/organizer/events/${event.id}/registrations`} className={textLinkClass}>
+          <Link
+            href={{ pathname: `/organizer/events/${event.id}/registrations`, query: listQuery }}
+            className={textLinkClass}
+          >
             {t("backToList")}
           </Link>
           <RegistrationStatusBadge status={reg.status} />
@@ -88,15 +146,49 @@ async function RegistrationDetailContent({ params }: { params: Params }) {
       }
     >
       <div className="flex flex-col gap-6">
+        <nav className="flex items-center justify-between gap-3 text-sm" aria-label={t("navLabel")}>
+          {prev ? (
+            <Link href={detailHref(prev.id)} className={textLinkClass}>
+              ← {t("prev")}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {index >= 0 ? (
+            <span className="text-subtle">{t("position", { current: index + 1, total: order.length })}</span>
+          ) : null}
+          {next ? (
+            <Link href={detailHref(next.id)} className={textLinkClass}>
+              {t("next")} →
+            </Link>
+          ) : (
+            <span className="text-subtle">{t("lastOne")}</span>
+          )}
+        </nav>
         <Card>
-          <h2 className="mb-4 text-lg font-semibold">{t("decisionTitle")}</h2>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">{t("decisionTitle")}</h2>
+            {reg.status !== "cancelled" ? (
+              <span className="flex items-center gap-2 text-sm text-subtle">
+                {t("ratingLabel")}
+                <StarRating key={reg.id} registrationId={reg.id} initial={reg.review?.rating ?? null} />
+              </span>
+            ) : null}
+          </div>
           {reg.status === "rejected" ? (
             <p className="mb-4 text-sm text-ink-soft">
               {t("rejectedWith", { reason: tReasons(reg.rejection_reason ?? "other") })}
               {reg.decision_message ? ` „${reg.decision_message}“` : ""}
             </p>
           ) : null}
-          <RegistrationDecision registrationId={reg.id} status={reg.status} />
+          <RegistrationDecision
+            key={reg.id}
+            registrationId={reg.id}
+            status={reg.status}
+            draftStatus={reg.review?.draft_status ?? null}
+            holdDecisions={event.hold_decisions}
+            nextHref={nextHref}
+          />
         </Card>
 
         {v?.photos.length ? (

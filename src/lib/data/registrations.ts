@@ -175,6 +175,14 @@ export async function listMyRegistrations(): Promise<MyRegistrationView[]> {
 // Pořadatel
 // ---------------------------------------------------------------------
 
+/** Interní hodnocení a koncept rozhodnutí (vidí jen pořadatel). */
+export type RegistrationReview = {
+  rating: number | null;
+  draft_status: RegistrationStatus | null;
+  draft_reason: Enums<"rejection_reason"> | null;
+  draft_message: string | null;
+};
+
 export type OrganizerRegistrationRow = Registration & {
   vehicle: {
     id: string;
@@ -191,18 +199,39 @@ export type OrganizerRegistrationRow = Registration & {
     verified_at: string | null;
   } | null;
   coverUrl: string | null;
+  rating: number | null;
+  /** Neodeslané rozhodnutí (u eventu s „odeslat najednou“) */
+  draftStatus: RegistrationStatus | null;
+  /** Stav, jak ho vidí pořadatel: koncept, jinak skutečný stav */
+  effectiveStatus: RegistrationStatus;
 };
 
 export type RegistrationCounts = Record<RegistrationStatus, number>;
 
+export type RegistrationSort = "time" | "rating";
+
+export type RegistrationListOptions = {
+  status?: RegistrationStatus | "all";
+  verifiedOnly?: boolean;
+  verifiedFirst: boolean;
+  sort?: RegistrationSort;
+  /** Podepsat náhledové fotky (seznam ano, navigace v detailu ne) */
+  withCovers?: boolean;
+};
+
+function oneReview(review: RegistrationReview | RegistrationReview[] | null | undefined): RegistrationReview | null {
+  return (Array.isArray(review) ? review[0] : review) ?? null;
+}
+
 /**
  * Přihlášky na event pro pořadatele. RLS vrátí jen přihlášky na jeho eventy.
- * Řazení: při „upřednostnit Verified“ nejdřív Verified, pak podle času.
+ * Stav = koncept rozhodnutí, pokud existuje. Řazení: podle hvězd, nebo podle
+ * času (při „upřednostnit Verified“ nejdřív Verified).
  */
 export async function listEventRegistrations(
   eventId: string,
-  options: { status?: RegistrationStatus | "all"; verifiedOnly?: boolean; verifiedFirst: boolean },
-): Promise<{ rows: OrganizerRegistrationRow[]; counts: RegistrationCounts }> {
+  options: RegistrationListOptions,
+): Promise<{ rows: OrganizerRegistrationRow[]; counts: RegistrationCounts; drafts: number }> {
   const empty: RegistrationCounts = {
     pending: 0,
     approved: 0,
@@ -210,38 +239,53 @@ export async function listEventRegistrations(
     waitlist: 0,
     cancelled: 0,
   };
-  if (!UUID.test(eventId)) return { rows: [], counts: empty };
+  if (!UUID.test(eventId)) return { rows: [], counts: empty, drafts: 0 };
   const supabase = await createClient();
-  if (!supabase) return { rows: [], counts: empty };
+  if (!supabase) return { rows: [], counts: empty, drafts: 0 };
 
   const { data } = await supabase
     .from("event_registrations")
     .select(
-      "*, vehicle:vehicles(id, make, model, year, category, visibility, vehicle_photos(id, vehicle_id, position, format, created_at)), applicant:profiles!event_registrations_user_id_fkey(id, username, display_name, verified_at)",
+      "*, vehicle:vehicles(id, make, model, year, category, visibility, vehicle_photos(id, vehicle_id, position, format, created_at)), applicant:profiles!event_registrations_user_id_fkey(id, username, display_name, verified_at), review:event_registration_reviews(rating, draft_status, draft_reason, draft_message)",
     )
     .eq("event_id", eventId)
     .order("created_at", { ascending: true });
 
-  const all = data ?? [];
+  const all = (data ?? []).map((r) => {
+    const review = oneReview(r.review);
+    const draftStatus = r.status === "cancelled" ? null : (review?.draft_status ?? null);
+    return {
+      ...r,
+      rating: review?.rating ?? null,
+      draftStatus,
+      effectiveStatus: draftStatus ?? r.status,
+    };
+  });
   const counts = { ...empty };
-  for (const r of all) counts[r.status] += 1;
+  let drafts = 0;
+  for (const r of all) {
+    counts[r.effectiveStatus] += 1;
+    if (r.draftStatus) drafts += 1;
+  }
 
   let filtered = all;
   if (options.status && options.status !== "all") {
-    filtered = filtered.filter((r) => r.status === options.status);
+    filtered = filtered.filter((r) => r.effectiveStatus === options.status);
   }
   if (options.verifiedOnly) filtered = filtered.filter((r) => r.applicant?.verified_at);
-  if (options.verifiedFirst) {
-    filtered = [...filtered].sort(
-      (a, b) =>
-        Number(Boolean(b.applicant?.verified_at)) - Number(Boolean(a.applicant?.verified_at)) ||
-        a.created_at.localeCompare(b.created_at),
-    );
-  }
+  const byTime = (a: (typeof all)[number], b: (typeof all)[number]) =>
+    (options.verifiedFirst
+      ? Number(Boolean(b.applicant?.verified_at)) - Number(Boolean(a.applicant?.verified_at))
+      : 0) || a.created_at.localeCompare(b.created_at);
+  filtered = [...filtered].sort(
+    options.sort === "rating" ? (a, b) => (b.rating ?? 0) - (a.rating ?? 0) || byTime(a, b) : byTime,
+  );
 
-  const covers = filtered
-    .map((r) => firstPhoto(r.vehicle?.vehicle_photos))
-    .filter((p): p is PhotoRow => Boolean(p));
+  const covers = options.withCovers === false
+    ? []
+    : filtered
+        .map((r) => firstPhoto(r.vehicle?.vehicle_photos))
+        .filter((p): p is PhotoRow => Boolean(p));
   const urls = await signFiles(
     supabase,
     VEHICLE_PHOTOS_BUCKET,
@@ -260,15 +304,17 @@ export async function listEventRegistrations(
           visibility: r.vehicle.visibility,
         }
       : null;
+    const { review: _review, ...rest } = r;
+    void _review;
     return {
-      ...r,
+      ...rest,
       vehicle,
       coverUrl: cover
         ? (urls.get(vehiclePhotoPath(cover.vehicle_id, cover.id, "sm", cover.format)) ?? null)
         : null,
     };
   });
-  return { rows, counts };
+  return { rows, counts, drafts };
 }
 
 export type RegistrationDetail = Registration & {
@@ -298,6 +344,7 @@ export type RegistrationDetail = Registration & {
   } | null;
   note: string;
   otherRegistrations: number;
+  review: RegistrationReview | null;
 };
 
 /** Detail přihlášky pro pořadatele (všechny fotky, úpravy, kontakt, poznámka). */
@@ -309,7 +356,7 @@ export async function getRegistrationDetail(registrationId: string): Promise<Reg
   const { data } = await supabase
     .from("event_registrations")
     .select(
-      "*, vehicle:vehicles(id, make, model, year, category, type, engine, power_hp, description, story, visibility, vehicle_photos(id, vehicle_id, position, format, created_at), vehicle_mods(id, category, description, position, created_at)), applicant:profiles!event_registrations_user_id_fkey(id, username, display_name, verified_at, country, city, avatar_path), note:event_registration_notes(note)",
+      "*, vehicle:vehicles(id, make, model, year, category, type, engine, power_hp, description, story, visibility, vehicle_photos(id, vehicle_id, position, format, created_at), vehicle_mods(id, category, description, position, created_at)), applicant:profiles!event_registrations_user_id_fkey(id, username, display_name, verified_at, country, city, avatar_path), note:event_registration_notes(note), review:event_registration_reviews(rating, draft_status, draft_reason, draft_message)",
     )
     .eq("id", registrationId)
     .maybeSingle();
@@ -379,5 +426,6 @@ export async function getRegistrationDetail(registrationId: string): Promise<Reg
       : null,
     note: noteRow?.note ?? "",
     otherRegistrations: count ?? 0,
+    review: data.status === "cancelled" ? null : oneReview(data.review),
   };
 }

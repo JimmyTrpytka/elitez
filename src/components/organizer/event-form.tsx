@@ -46,6 +46,7 @@ export type EventFormValues = {
   media_capacity: string;
   min_photos: number;
   auto_approve: boolean;
+  hold_decisions: boolean;
   participant_info: string;
   social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
 };
@@ -282,6 +283,18 @@ export function EventForm({
           <span>
             <span className="font-semibold">{t("autoApproveLabel")}</span>
             <span className="block text-ink-soft">{t("autoApproveHint")}</span>
+          </span>
+        </label>
+        <label className="flex items-start gap-3 text-sm text-ink">
+          <input
+            type="checkbox"
+            name="hold_decisions"
+            defaultChecked={values.hold_decisions}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
+          />
+          <span>
+            <span className="font-semibold">{t("holdDecisionsLabel")}</span>
+            <span className="block text-ink-soft">{t("holdDecisionsHint")}</span>
           </span>
         </label>
         <SelectField

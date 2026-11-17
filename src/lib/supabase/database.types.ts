@@ -602,6 +602,57 @@ export type Database = {
           },
         ]
       }
+      event_registration_reviews: {
+        Row: {
+          draft_message: string | null
+          draft_reason: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status:
+            | Database["public"]["Enums"]["registration_status"]
+            | null
+          rating: number | null
+          registration_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          draft_message?: string | null
+          draft_reason?: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status?:
+            | Database["public"]["Enums"]["registration_status"]
+            | null
+          rating?: number | null
+          registration_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          draft_message?: string | null
+          draft_reason?: Database["public"]["Enums"]["rejection_reason"] | null
+          draft_status?:
+            | Database["public"]["Enums"]["registration_status"]
+            | null
+          rating?: number | null
+          registration_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registration_reviews_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: true
+            referencedRelation: "event_registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registration_reviews_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registrations: {
         Row: {
           cancelled_at: string | null
@@ -710,6 +761,7 @@ export type Database = {
           description: string | null
           ends_at: string
           facebook_url: string | null
+          hold_decisions: boolean
           id: string
           instagram_url: string | null
           lat: number | null
@@ -752,6 +804,7 @@ export type Database = {
           description?: string | null
           ends_at: string
           facebook_url?: string | null
+          hold_decisions?: boolean
           id?: string
           instagram_url?: string | null
           lat?: number | null
@@ -794,6 +847,7 @@ export type Database = {
           description?: string | null
           ends_at?: string
           facebook_url?: string | null
+          hold_decisions?: boolean
           id?: string
           instagram_url?: string | null
           lat?: number | null
@@ -1789,6 +1843,41 @@ export type Database = {
         Args: { p_user_id: string; p_verified: boolean }
         Returns: undefined
       }
+      apply_registration_decision: {
+        Args: {
+          p_decision: Database["public"]["Enums"]["registration_status"]
+          p_message: string
+          p_reason: Database["public"]["Enums"]["rejection_reason"]
+          p_registration_id: string
+        }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       award_badge: {
         Args: {
           p_by?: string
@@ -2329,6 +2418,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      release_registration_decisions: {
+        Args: { p_event_id: string }
+        Returns: number
+      }
       remove_event_cohost: {
         Args: { p_event_id: string; p_organizer_id: string }
         Returns: undefined
@@ -2428,6 +2521,10 @@ export type Database = {
         Returns: undefined
       }
       set_home_crew: { Args: { p_crew_id: string }; Returns: undefined }
+      set_registration_rating: {
+        Args: { p_rating: number; p_registration_id: string }
+        Returns: undefined
+      }
       similar_crews: {
         Args: { p_name: string }
         Returns: {
