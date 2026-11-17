@@ -283,6 +283,7 @@ export async function saveEvent(
     min_photos: minPhotos,
     auto_approve: formData.get("auto_approve") === "on",
     hold_decisions: formData.get("hold_decisions") === "on",
+    confirm_days_before: parseIntInRange(text(formData, "confirm_days_before"), 1, 30) || null,
   };
 
   let eventId = id;

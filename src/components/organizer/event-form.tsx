@@ -48,6 +48,7 @@ export type EventFormValues = {
   min_photos: number;
   auto_approve: boolean;
   hold_decisions: boolean;
+  confirm_days_before: number | null;
   participant_info: string;
   questions: QuestionDraft[];
   social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
@@ -56,6 +57,7 @@ export type EventFormValues = {
 const initial: EventFormState = { status: "idle" };
 const HEAD_START = [0, 24, 72, 168, 720] as const;
 const MIN_PHOTOS = [0, 1, 2, 3, 4, 5] as const;
+const CONFIRM_DAYS = [0, 2, 3, 5, 7, 14] as const;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -308,6 +310,18 @@ export function EventForm({
           {MIN_PHOTOS.map((n) => (
             <option key={n} value={n}>
               {t("minPhotosOption", { count: n })}
+            </option>
+          ))}
+        </SelectField>
+        <SelectField
+          label={t("confirmDaysLabel")}
+          name="confirm_days_before"
+          defaultValue={String(values.confirm_days_before ?? 0)}
+          hint={t("confirmDaysHint")}
+        >
+          {CONFIRM_DAYS.map((n) => (
+            <option key={n} value={n}>
+              {t("confirmDaysOption", { count: n })}
             </option>
           ))}
         </SelectField>

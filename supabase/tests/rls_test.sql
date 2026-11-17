@@ -2479,6 +2479,84 @@ do $$ begin
   end if;
 end $$;
 
+-- =====================================================================
+-- Registrace – část 4: potvrzení účasti (L)
+-- =====================================================================
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity,
+   registration_opens_at, verified_head_start_hours, min_photos, auto_approve, confirm_days_before)
+values
+  ('00000000-0000-4000-e000-000000000024', '00000000-0000-4000-c000-00000000000a',
+   'rls-potvrzeni', 'Potvrzení', now() + interval '3 days', now() + interval '4 days',
+   'published', 'public', null, now() - interval '1 day', 0, 0, true, 7),
+  ('00000000-0000-4000-e000-000000000025', '00000000-0000-4000-c000-00000000000a',
+   'rls-potvrzeni-pozdeji', 'Potvrzení později', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', null, now() - interval '1 day', 0, 0, true, 7);
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; r2 public.event_registrations; begin
+  r := public.register_for_event('00000000-0000-4000-e000-000000000024',
+    '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false);
+  r2 := public.register_for_event('00000000-0000-4000-e000-000000000025',
+    '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false);
+  perform set_config('rls.reg_a', r.id::text, true);
+  begin
+    perform public.confirm_attendance(r2.id);
+    raise exception 'FAIL: potvrzení účasti před otevřením okna';
+  exception when raise_exception then
+    if sqlerrm <> 'confirm_not_open' then raise; end if;
+  end;
+  begin
+    perform public.send_attendance_requests();
+    raise exception 'FAIL: člen spustil rozesílání výzev';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a01","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.confirm_attendance(current_setting('rls.reg_a')::uuid);
+    raise exception 'FAIL: cizí člen potvrdil účast';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+-- Rozeslání (jako server): výzvu dostane jen event s otevřeným oknem, jen jednou
+do $$ declare n integer; begin
+  n := public.send_attendance_requests();
+  if (select confirm_requested_at from public.event_registrations where id = current_setting('rls.reg_a')::uuid) is null then
+    raise exception 'FAIL: výzva k potvrzení se neodeslala';
+  end if;
+  if exists (select 1 from public.event_registrations
+             where event_id = '00000000-0000-4000-e000-000000000025' and confirm_requested_at is not null) then
+    raise exception 'FAIL: výzva odešla před otevřením okna';
+  end if;
+  n := public.send_attendance_requests();
+  if exists (select 1 from public.event_registrations r
+             where r.id = current_setting('rls.reg_a')::uuid
+               and (select count(*) from public.notifications nn
+                    where nn.registration_id = r.id and nn.type = 'attendance_confirm_request') <> 1) then
+    raise exception 'FAIL: výzva odešla vícekrát';
+  end if;
+end $$;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  r := public.confirm_attendance(current_setting('rls.reg_a')::uuid);
+  if r.attendance_confirmed_at is null then raise exception 'FAIL: potvrzení účasti nefunguje'; end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

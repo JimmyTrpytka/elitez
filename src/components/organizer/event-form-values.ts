@@ -37,6 +37,7 @@ export function toEventFormValues(
     min_photos: e.min_photos,
     auto_approve: e.auto_approve,
     hold_decisions: e.hold_decisions,
+    confirm_days_before: e.confirm_days_before,
     participant_info: participantInfo ?? "",
     questions: questions.map((q) => ({
       id: q.id,
@@ -82,6 +83,7 @@ export const EMPTY_EVENT_VALUES: EventFormValues = {
   min_photos: 3,
   auto_approve: false,
   hold_decisions: false,
+  confirm_days_before: null,
   participant_info: "",
   questions: [],
   social: {},

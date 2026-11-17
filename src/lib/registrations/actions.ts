@@ -40,6 +40,7 @@ const KNOWN_ERRORS = [
   "answer_required",
   "answers_invalid",
   "message_required",
+  "confirm_not_open",
 ] as const;
 
 export type RegistrationErrorKey = (typeof KNOWN_ERRORS)[number] | "generic";
@@ -256,6 +257,17 @@ export async function replyRegistrationInfo(
   });
   if (error) return { ok: false, error: toErrorKey(error.message) };
   refresh();
+  return { ok: true };
+}
+
+/** Člen potvrdí, že na event přijede (jen schválená přihláška v okně potvrzení). */
+export async function confirmMyAttendance(registrationId: string): Promise<SimpleResult> {
+  if (!UUID.test(registrationId)) return { ok: false, error: "not_allowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("confirm_attendance", { p_registration_id: registrationId });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 

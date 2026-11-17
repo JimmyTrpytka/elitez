@@ -8,6 +8,7 @@ import { PageShell } from "@/components/page-shell";
 import { CancelRegistrationButton } from "@/components/registrations/cancel-button";
 import { EditRegistration } from "@/components/registrations/edit-registration";
 import { InfoReply } from "@/components/registrations/info-reply";
+import { AttendanceConfirm } from "@/components/registrations/attendance-confirm";
 import { RegistrationStatusBadge } from "@/components/registrations/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
@@ -112,6 +113,9 @@ async function MyRegistrationsList({
                     reply={r.info_reply}
                     canReply={r.canEdit}
                   />
+                ) : null}
+                {r.attendanceOpen ? (
+                  <AttendanceConfirm registrationId={r.id} confirmed={Boolean(r.attendance_confirmed_at)} />
                 ) : null}
                 {r.status === "approved" && r.event ? (
                   <Link

@@ -672,7 +672,10 @@
     "participantInfoHint": "Arrival, time, gate, parking, what to bring… Only approved participants (on the event page and in the approval email) and the organizer can see it.",
     "holdDecisionsLabel": "Send decisions all at once",
     "holdDecisionsHint": "Prepare approvals, rejections and the waitlist calmly and send them to applicants all at once with “Send decisions”. Until then they see “waiting for review”.",
-    "questionsTitle": "Questions in the application"
+    "questionsTitle": "Questions in the application",
+    "confirmDaysLabel": "Attendance confirmation",
+    "confirmDaysHint": "Approved participants get an email “Confirm you're coming”. Those who answer “Not coming” free their spot for the waitlist. You'll see who hasn't confirmed in the list.",
+    "confirmDaysOption": "{count, plural, =0 {Not required} one {# day before the event} other {# days before the event}}"
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -764,7 +767,8 @@
     "invalid_rating": "Invalid rating.",
     "answer_required": "Please answer the required questions.",
     "answers_invalid": "Check your answers (number, choice).",
-    "message_required": "Please write a message."
+    "message_required": "Please write a message.",
+    "confirm_not_open": "Attendance confirmation isn't open now."
   },
   "MyRegistrations": {
     "title": "My registrations",
@@ -834,7 +838,13 @@
     "infoTitle": "More info",
     "infoHint": "If an application is hard to judge, ask for more photos or info. The applicant gets an email.",
     "infoWaiting": "waiting for info",
-    "infoReplied": "info added"
+    "infoReplied": "info added",
+    "attendanceSummary": "{confirmed} of {total} confirmed attendance",
+    "attendanceConfirmed": "confirmed",
+    "attendanceNotConfirmed": "not confirmed",
+    "attendanceConfirmedAt": "✓ Attendance confirmed {date}",
+    "attendanceWaiting": "The confirmation request was sent, not confirmed yet. If they're not coming, move them to the waitlist or reject – the spot is filled from the waitlist.",
+    "attendanceNotYet": "The confirmation request goes out {count, plural, one {# day} other {# days}} before the event."
   },
   "Decision": {
     "approve": "Approve",
@@ -903,6 +913,12 @@
       "subject": "Please complete your application – {event}",
       "heading": "The organizer needs more info",
       "body": "Hi {name},\n\nthe organizer of {event} ({when}) needs a bit more for your application with {vehicle}:"
+    },
+    "attendance": {
+      "subject": "Confirm attendance – {event}",
+      "heading": "Are you coming?",
+      "body": "Hi {name},\n\n{event} ({when}) is coming up and your {vehicle} is among the approved. Please confirm with one tap that you're coming. If you can't, choose “Not coming” – the spot goes to someone on the waitlist.",
+      "button": "Confirm attendance"
     }
   },
   "Notifications": {
@@ -1020,6 +1036,10 @@
       "registration_info_provided": {
         "title": "Application completed",
         "text": "{name} added info to the application with {vehicle} for {event}."
+      },
+      "attendance_confirm_request": {
+        "title": "Confirm attendance: {event}",
+        "text": "{event} is coming up. Please confirm you're coming with {vehicle}, or free your spot."
       }
     },
     "openVehicle": "View car",
@@ -1120,7 +1140,8 @@
     "printTitle": "Participant list",
     "print": "Print / Save as PDF",
     "approvedCount": "{count, plural, one {# approved vehicle} other {# approved vehicles}}",
-    "printEmpty": "No approved vehicles yet."
+    "printEmpty": "No approved vehicles yet.",
+    "colAttendance": "Attendance confirmed"
   },
   "Beta": {
     "label": "Test version",
@@ -2061,5 +2082,15 @@
     "sendRequest": "Send request",
     "request": "Ask for more…",
     "requestAgain": "Ask again"
+  },
+  "Attendance": {
+    "confirmed": "Attendance confirmed – see you there!",
+    "title": "Please confirm you're coming",
+    "hint": "The organizer needs to know who will really come. If you can't, free your spot for others.",
+    "declineConfirmText": "Really not coming? Your application will be cancelled and the spot goes to someone else.",
+    "declineConfirm": "Yes, not coming",
+    "back": "Back",
+    "yes": "I'm coming",
+    "no": "Not coming"
   }
 }

@@ -697,6 +697,8 @@ export type Database = {
       event_registrations: {
         Row: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -723,6 +725,8 @@ export type Database = {
         }
         Insert: {
           answers?: Json
+          attendance_confirmed_at?: string | null
+          confirm_requested_at?: string | null
           cancelled_at?: string | null
           consent_at?: string
           contact_email: string
@@ -749,6 +753,8 @@ export type Database = {
         }
         Update: {
           answers?: Json
+          attendance_confirmed_at?: string | null
+          confirm_requested_at?: string | null
           cancelled_at?: string | null
           consent_at?: string
           contact_email?: string
@@ -808,6 +814,7 @@ export type Database = {
         Row: {
           access: Database["public"]["Enums"]["event_access"]
           auto_approve: boolean
+          confirm_days_before: number | null
           capacity: number | null
           category: Database["public"]["Enums"]["event_category"]
           country: string | null
@@ -851,6 +858,7 @@ export type Database = {
         Insert: {
           access?: Database["public"]["Enums"]["event_access"]
           auto_approve?: boolean
+          confirm_days_before?: number | null
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -894,6 +902,7 @@ export type Database = {
         Update: {
           access?: Database["public"]["Enums"]["event_access"]
           auto_approve?: boolean
+          confirm_days_before?: number | null
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -1908,6 +1917,8 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2003,6 +2014,8 @@ export type Database = {
         Args: { p_registration_id: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2161,6 +2174,8 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2468,6 +2483,8 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2515,6 +2532,8 @@ export type Database = {
         Args: { p_registration_id: string; p_reply: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2589,6 +2608,8 @@ export type Database = {
         Args: { p_message: string; p_registration_id: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2747,6 +2768,8 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2777,6 +2800,47 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      confirm_attendance: {
+        Args: { p_registration_id: string }
+        Returns: {
+          answers: Json
+          attendance_confirmed_at: string | null
+          confirm_requested_at: string | null
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      send_attendance_requests: {
+        Args: never
+        Returns: number
       }
       user_streak: { Args: { p_user: string }; Returns: number }
       vehicle_creator_works: {
@@ -2846,6 +2910,7 @@ export type Database = {
         | "audio"
         | "other"
       notification_type:
+        | "attendance_confirm_request"
         | "registration_received"
         | "registration_approved"
         | "registration_rejected"
@@ -3063,6 +3128,7 @@ export const Constants = {
         "other",
       ],
       notification_type: [
+        "attendance_confirm_request",
         "registration_received",
         "registration_approved",
         "registration_rejected",

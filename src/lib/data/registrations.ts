@@ -2,6 +2,7 @@ import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
 import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
 import { signFiles } from "@/lib/storage-sign";
+import { attendanceWindowOpen } from "@/lib/registration-window";
 
 export type Registration = Tables<"event_registrations">;
 export type RegistrationStatus = Enums<"registration_status">;
@@ -140,7 +141,10 @@ export type MyRegistrationView = Registration & {
     ends_at: string;
     timezone: string;
     status: Enums<"event_status">;
+    confirm_days_before: number | null;
   } | null;
+  /** Je otevřené potvrzení účasti (schválená přihláška)? */
+  attendanceOpen: boolean;
   /** Lze přihlášku ještě zrušit (aktivní stav a event nezačal)? */
   canCancel: boolean;
   /** Lze ještě upravit telefon, e-mail a zprávu (čeká / čekací listina)? */
@@ -156,7 +160,7 @@ export async function listMyRegistrations(): Promise<MyRegistrationView[]> {
   const { data } = await supabase
     .from("event_registrations")
     .select(
-      "*, vehicle:vehicles(id, make, model), event:events(id, slug, title, starts_at, ends_at, timezone, status)",
+      "*, vehicle:vehicles(id, make, model), event:events(id, slug, title, starts_at, ends_at, timezone, status, confirm_days_before)",
     )
     .eq("user_id", uid)
     .order("created_at", { ascending: false });
@@ -167,6 +171,10 @@ export async function listMyRegistrations(): Promise<MyRegistrationView[]> {
       ...r,
       canCancel: ["pending", "approved", "waitlist"].includes(r.status) && upcoming,
       canEdit: ["pending", "waitlist"].includes(r.status) && upcoming,
+      attendanceOpen:
+        r.status === "approved" &&
+        Boolean(r.event) &&
+        attendanceWindowOpen(r.event!.starts_at, r.event!.confirm_days_before, now),
     };
   });
 }

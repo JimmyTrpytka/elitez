@@ -18,6 +18,7 @@ import { RegistrationStatusBadge } from "@/components/registrations/status-badge
 import { Badge } from "@/components/ui/badge";
 import { textLinkClass } from "@/components/auth/auth-shell";
 import { cn } from "@/lib/cn";
+import { attendanceWindowOpen } from "@/lib/registration-window";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Applications");
@@ -79,6 +80,20 @@ async function RegistrationsContent({
     sort,
   });
 
+  // Potvrzení účasti: počítá se ze všech skutečně schválených (bez ohledu na filtr)
+  const confirmOpen = attendanceWindowOpen(event.starts_at, event.confirm_days_before);
+  const { rows: approvedRows } = confirmOpen
+    ? await listEventRegistrations(event.id, {
+        status: "approved",
+        verifiedFirst: false,
+        withCovers: false,
+      })
+    : { rows: [] };
+  const approvedReal = approvedRows.filter((r) => r.status === "approved").length;
+  const confirmedCount = approvedRows.filter(
+    (r) => r.status === "approved" && r.attendance_confirmed_at,
+  ).length;
+
   const query = (s: RegistrationStatus | "all", v: boolean, so: RegistrationSort) => ({
     status: s,
     ...(v ? { verified: "1" } : {}),
@@ -110,6 +125,11 @@ async function RegistrationsContent({
         <p className="text-ink-soft">
           {t("summary", { pending: counts.pending, waitlist: counts.waitlist })}
         </p>
+        {confirmOpen ? (
+          <p className="text-ink-soft">
+            {t("attendanceSummary", { confirmed: confirmedCount, total: approvedReal })}
+          </p>
+        ) : null}
       </div>
 
       <nav className="mb-6 flex flex-wrap gap-2" aria-label={t("filtersLabel")}>
@@ -188,6 +208,16 @@ async function RegistrationsContent({
                       <RegistrationStatusBadge status={r.effectiveStatus} />
                       {r.draftStatus ? (
                         <span className="text-xs font-semibold text-subtle">{t("draftBadge")}</span>
+                      ) : null}
+                      {confirmOpen && r.status === "approved" ? (
+                        <span
+                          className={cn(
+                            "rounded-full px-2 py-0.5 text-xs font-semibold",
+                            r.attendance_confirmed_at ? "bg-success-soft text-success" : "bg-danger/10 text-danger",
+                          )}
+                        >
+                          {r.attendance_confirmed_at ? t("attendanceConfirmed") : t("attendanceNotConfirmed")}
+                        </span>
                       ) : null}
                       {r.info_requested_at && (r.status === "pending" || r.status === "waitlist") ? (
                         <span

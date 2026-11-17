@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
   let query = supabase
     .from("event_registrations")
     .select(
-      "status, contact_phone, contact_email, message, created_at, rejection_reason, answers, vehicle:vehicles(make, model, year, category), applicant:profiles!event_registrations_user_id_fkey(username, display_name, verified_at), note:event_registration_notes(note)",
+      "status, contact_phone, contact_email, message, created_at, rejection_reason, answers, attendance_confirmed_at, vehicle:vehicles(make, model, year, category), applicant:profiles!event_registrations_user_id_fkey(username, display_name, verified_at), note:event_registration_notes(note)",
     )
     .eq("event_id", event.id)
     .order("created_at", { ascending: true });
@@ -62,6 +62,7 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
       t("colSubmitted"),
       t("colReason"),
       t("colNote"),
+      t("colAttendance"),
       ...questions.map((q) => q.label),
     ],
     ...(data ?? []).map((r) => {
@@ -80,6 +81,7 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
         formatDateTime(r.created_at, locale, event.timezone),
         r.rejection_reason ? tReason(r.rejection_reason) : "",
         note?.note ?? "",
+        r.attendance_confirmed_at ? t("yes") : "",
         ...questions.map((q) =>
           formatAnswer((r.answers as Record<string, unknown> | null)?.[q.id], q.kind, yesNo),
         ),
