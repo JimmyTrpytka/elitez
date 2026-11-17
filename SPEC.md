@@ -212,6 +212,7 @@ Cíl: registrace na Trojhalí (stovky přihlášek, výběr ~200 aut) musí být
 - **J) Automatické schvalování** (volba u eventu): přihláška se schválí hned, do naplnění kapacity, pak čekací listina.
 - **K) Vlastní otázky u eventu:** krátký text, číslo, ano/ne, výběr z možností; pořadatel je nastaví, odpovědi vidí u přihlášky a v exportu.
 - **L) Potvrzení účasti:** pořadatel zvolí, kolik dní před eventem dostanou schválení výzvu „Potvrď, že přijedeš“. Kdo odpoví „Nepřijedu“, uvolní místo (posune se čekací listina). Kdo nepotvrdí, je v seznamu označený „nepotvrdil“ – místo uvolní pořadatel ručně.
+- Upřesnění L: pořadatel volí 2/3/5/7/14 dní před eventem (nebo nevyžadovat). Výzvy rozesílá denní úloha (7:00 UTC) – kdo je schválený později, dostane výzvu další den; potvrdit jde hned v Moje registrace nebo na stránce eventu.
 - **Verified – rychlá cesta:** viz 5.1 (rozhodnuto 17. 11. 2026).
 
 ### 5.2 Ticketing

@@ -17,6 +17,7 @@ export type EmailTemplate =
   | "registration_waitlist"
   | "registration_promoted"
   | "registration_info_requested"
+  | "attendance_confirm_request"
   | "broadcast"
   | "feedback";
 
@@ -138,6 +139,12 @@ export function renderEmail(
       text = t("promoted.body", vars);
       if (payload.participant_info) text += `\n\n${t("participantInfo")}\n${payload.participant_info}`;
       button = { label: t("buttonEvent"), url: eventUrl };
+      break;
+    case "attendance_confirm_request":
+      subject = t("attendance.subject", { event: eventTitle });
+      heading = t("attendance.heading");
+      text = t("attendance.body", vars);
+      button = { label: t("attendance.button"), url: myUrl };
       break;
     case "registration_info_requested":
       subject = t("infoRequested.subject", { event: eventTitle });

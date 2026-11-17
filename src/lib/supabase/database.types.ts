@@ -697,7 +697,9 @@ export type Database = {
       event_registrations: {
         Row: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -723,7 +725,9 @@ export type Database = {
         }
         Insert: {
           answers?: Json
+          attendance_confirmed_at?: string | null
           cancelled_at?: string | null
+          confirm_requested_at?: string | null
           consent_at?: string
           contact_email: string
           contact_phone: string
@@ -749,7 +753,9 @@ export type Database = {
         }
         Update: {
           answers?: Json
+          attendance_confirmed_at?: string | null
           cancelled_at?: string | null
+          confirm_requested_at?: string | null
           consent_at?: string
           contact_email?: string
           contact_phone?: string
@@ -810,6 +816,7 @@ export type Database = {
           auto_approve: boolean
           capacity: number | null
           category: Database["public"]["Enums"]["event_category"]
+          confirm_days_before: number | null
           country: string | null
           cover_format: string | null
           cover_path: string | null
@@ -853,6 +860,7 @@ export type Database = {
           auto_approve?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
+          confirm_days_before?: number | null
           country?: string | null
           cover_format?: string | null
           cover_path?: string | null
@@ -896,6 +904,7 @@ export type Database = {
           auto_approve?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
+          confirm_days_before?: number | null
           country?: string | null
           cover_format?: string | null
           cover_path?: string | null
@@ -1908,7 +1917,9 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -1938,6 +1949,10 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      attendance_window_open: {
+        Args: { p_event: Database["public"]["Tables"]["events"]["Row"] }
+        Returns: boolean
       }
       award_badge: {
         Args: {
@@ -2003,7 +2018,9 @@ export type Database = {
         Args: { p_registration_id: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2080,6 +2097,43 @@ export type Database = {
       complete_email: {
         Args: { p_id: string; p_provider_id: string }
         Returns: undefined
+      }
+      confirm_attendance: {
+        Args: { p_registration_id: string }
+        Returns: {
+          answers: Json
+          attendance_confirmed_at: string | null
+          cancelled_at: string | null
+          confirm_requested_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_crew: {
         Args: {
@@ -2161,7 +2215,9 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2468,7 +2524,9 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2515,7 +2573,9 @@ export type Database = {
         Args: { p_registration_id: string; p_reply: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2589,7 +2649,9 @@ export type Database = {
         Args: { p_message: string; p_registration_id: string }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2635,6 +2697,7 @@ export type Database = {
         Args: { p_organizer_id: string; p_season_id: string }
         Returns: boolean
       }
+      send_attendance_requests: { Args: never; Returns: number }
       send_broadcast: {
         Args: {
           p_body: string
@@ -2747,7 +2810,9 @@ export type Database = {
         }
         Returns: {
           answers: Json
+          attendance_confirmed_at: string | null
           cancelled_at: string | null
+          confirm_requested_at: string | null
           consent_at: string
           contact_email: string
           contact_phone: string
@@ -2876,6 +2941,7 @@ export type Database = {
         | "vehicle_tagged"
         | "registration_info_requested"
         | "registration_info_provided"
+        | "attendance_confirm_request"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -3093,6 +3159,7 @@ export const Constants = {
         "vehicle_tagged",
         "registration_info_requested",
         "registration_info_provided",
+        "attendance_confirm_request",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

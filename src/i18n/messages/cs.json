@@ -672,7 +672,10 @@
     "participantInfoHint": "Příjezd, čas, brána, parkování, co s sebou… Uvidí je jen schválení (na stránce eventu a v e-mailu o schválení) a pořadatel.",
     "holdDecisionsLabel": "Odeslat rozhodnutí najednou",
     "holdDecisionsHint": "Schválení, zamítnutí i čekací listinu si v klidu připravíš a uchazečům je odešleš najednou tlačítkem „Odeslat rozhodnutí“. Do té doby vidí „čeká na posouzení“.",
-    "questionsTitle": "Otázky v přihlášce"
+    "questionsTitle": "Otázky v přihlášce",
+    "confirmDaysLabel": "Potvrzení účasti",
+    "confirmDaysHint": "Schválení dostanou e-mail „Potvrď, že přijedeš“. Kdo odpoví „Nepřijedu“, uvolní místo pro čekací listinu. Kdo nepotvrdí, uvidíš ho v seznamu.",
+    "confirmDaysOption": "{count, plural, =0 {Nevyžadovat} one {# den před eventem} few {# dny před eventem} other {# dní před eventem}}"
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -764,7 +767,8 @@
     "invalid_rating": "Neplatné hodnocení.",
     "answer_required": "Odpověz prosím na povinné otázky.",
     "answers_invalid": "Zkontroluj odpovědi na otázky (číslo, výběr).",
-    "message_required": "Napiš prosím text."
+    "message_required": "Napiš prosím text.",
+    "confirm_not_open": "Potvrzení účasti teď není otevřené."
   },
   "MyRegistrations": {
     "title": "Moje registrace",
@@ -834,7 +838,13 @@
     "infoTitle": "Doplnění",
     "infoHint": "Když přihlášku nejde snadno posoudit, požádej o víc fotek nebo informací. Uchazeči přijde e-mail.",
     "infoWaiting": "čeká na doplnění",
-    "infoReplied": "doplněno"
+    "infoReplied": "doplněno",
+    "attendanceSummary": "Účast potvrdilo {confirmed} z {total}",
+    "attendanceConfirmed": "potvrdil(a) účast",
+    "attendanceNotConfirmed": "nepotvrdil(a)",
+    "attendanceConfirmedAt": "✓ Účast potvrzena {date}",
+    "attendanceWaiting": "Výzva k potvrzení účasti odešla, zatím nepotvrdil(a). Když nepřijede, přesuň ho na čekací listinu nebo zamítni – místo se doplní z listiny.",
+    "attendanceNotYet": "Výzva k potvrzení účasti odejde {count, plural, one {# den} few {# dny} other {# dní}} před eventem."
   },
   "Decision": {
     "approve": "Schválit",
@@ -903,6 +913,12 @@
       "subject": "Doplň prosím přihlášku – {event}",
       "heading": "Pořadatel prosí o doplnění",
       "body": "Ahoj {name},\n\npořadatel {event} ({when}) potřebuje k přihlášce s vozidlem {vehicle} ještě něco doplnit:"
+    },
+    "attendance": {
+      "subject": "Potvrď účast – {event}",
+      "heading": "Přijedeš?",
+      "body": "Ahoj {name},\n\n{event} ({when}) se blíží a tvoje vozidlo {vehicle} je mezi schválenými. Potvrď prosím jedním klepnutím, že přijedeš. Pokud nemůžeš, dej vědět „Nepřijedu“ – místo dostane někdo z čekací listiny.",
+      "button": "Potvrdit účast"
     }
   },
   "Notifications": {
@@ -1020,6 +1036,10 @@
       "registration_info_provided": {
         "title": "Přihláška doplněna",
         "text": "{name} doplnil(a) přihlášku s vozidlem {vehicle} na {event}."
+      },
+      "attendance_confirm_request": {
+        "title": "Potvrď účast: {event}",
+        "text": "Blíží se {event}. Potvrď prosím, že přijedeš s vozidlem {vehicle}, nebo uvolni místo."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1120,7 +1140,8 @@
     "printTitle": "Seznam účastníků",
     "print": "Vytisknout / Uložit jako PDF",
     "approvedCount": "{count, plural, one {# schválené vozidlo} few {# schválená vozidla} other {# schválených vozidel}}",
-    "printEmpty": "Zatím nejsou žádná schválená vozidla."
+    "printEmpty": "Zatím nejsou žádná schválená vozidla.",
+    "colAttendance": "Účast potvrzena"
   },
   "Beta": {
     "label": "Testovací verze",
@@ -2061,5 +2082,15 @@
     "sendRequest": "Odeslat žádost",
     "request": "Doplň prosím…",
     "requestAgain": "Požádat znovu"
+  },
+  "Attendance": {
+    "confirmed": "Účast potvrzena – těšíme se!",
+    "title": "Potvrď prosím, že přijedeš",
+    "hint": "Pořadatel potřebuje vědět, kdo opravdu dorazí. Když nemůžeš, uvolni místo dalším.",
+    "declineConfirmText": "Opravdu nepřijedeš? Přihláška se zruší a místo dostane někdo další.",
+    "declineConfirm": "Ano, nepřijedu",
+    "back": "Zpět",
+    "yes": "Přijedu",
+    "no": "Nepřijedu"
   }
 }

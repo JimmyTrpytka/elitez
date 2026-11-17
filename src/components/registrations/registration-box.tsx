@@ -7,7 +7,8 @@ import {
   getParticipantInfo,
   getRegistrationFormContext,
 } from "@/lib/data/registrations";
-import { registrationWindow } from "@/lib/registration-window";
+import { attendanceWindowOpen, registrationWindow } from "@/lib/registration-window";
+import { AttendanceConfirm } from "./attendance-confirm";
 import { RegistrationStatusBadge } from "./status-badge";
 import { buttonClasses } from "@/components/ui/button";
 import { StickyRegisterBar } from "./sticky-register-bar";
@@ -23,6 +24,7 @@ export async function RegistrationBox({ event }: { event: EventView }) {
     ? await Promise.all([getMyRegistrationsForEvent(event.id), getParticipantInfo(event.id)])
     : [[], null];
   const win = registrationWindow(event, ctx?.isVerified ?? false);
+  const attendanceOpen = attendanceWindowOpen(event.starts_at, event.confirm_days_before);
   const fmt = (iso: string) => formatDateTime(iso, locale, event.timezone);
 
   let headline: string;
@@ -130,6 +132,11 @@ export async function RegistrationBox({ event }: { event: EventView }) {
                 {r.vehicle ? `${r.vehicle.make} ${r.vehicle.model}` : "—"}
               </span>
               <RegistrationStatusBadge status={r.status} />
+              {r.status === "approved" && attendanceOpen ? (
+                <div className="w-full">
+                  <AttendanceConfirm registrationId={r.id} confirmed={Boolean(r.attendance_confirmed_at)} dark />
+                </div>
+              ) : null}
             </li>
           ))}
         </ul>

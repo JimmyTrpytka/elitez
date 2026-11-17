@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { registrationWindow, type RegistrationEventFields } from "./registration-window";
+import { attendanceWindowOpen, registrationWindow, type RegistrationEventFields } from "./registration-window";
 
 const base: RegistrationEventFields = {
   status: "published",
@@ -56,3 +56,18 @@ describe("okno registrace", () => {
     ).toBe("not_set");
   });
 });
+
+describe("okno pro potvrzení účasti", () => {
+  const start = "2027-05-15T08:00:00Z";
+  const t = (iso: string) => new Date(iso).getTime();
+  it("vypnuté potvrzení", () => {
+    expect(attendanceWindowOpen(start, null, t("2027-05-14T08:00:00Z"))).toBe(false);
+  });
+  it("otevře se X dní před začátkem a zavře začátkem", () => {
+    expect(attendanceWindowOpen(start, 7, t("2027-05-08T07:59:00Z"))).toBe(false);
+    expect(attendanceWindowOpen(start, 7, t("2027-05-08T08:00:00Z"))).toBe(true);
+    expect(attendanceWindowOpen(start, 7, t("2027-05-15T07:59:00Z"))).toBe(true);
+    expect(attendanceWindowOpen(start, 7, t("2027-05-15T08:00:00Z"))).toBe(false);
+  });
+});
+

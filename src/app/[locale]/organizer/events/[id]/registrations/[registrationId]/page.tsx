@@ -188,6 +188,23 @@ async function RegistrationDetailContent({
               {reg.decision_message ? ` „${reg.decision_message}“` : ""}
             </p>
           ) : null}
+          {reg.status === "approved" && event.confirm_days_before ? (
+            <p
+              className={
+                reg.attendance_confirmed_at
+                  ? "mb-4 text-sm font-semibold text-success"
+                  : "mb-4 text-sm text-ink-soft"
+              }
+            >
+              {reg.attendance_confirmed_at
+                ? t("attendanceConfirmedAt", {
+                    date: formatDateTime(reg.attendance_confirmed_at, locale, event.timezone),
+                  })
+                : reg.confirm_requested_at
+                  ? t("attendanceWaiting")
+                  : t("attendanceNotYet", { count: event.confirm_days_before })}
+            </p>
+          ) : null}
           <RegistrationDecision
             key={reg.id}
             registrationId={reg.id}

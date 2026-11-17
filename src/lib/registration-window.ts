@@ -57,3 +57,18 @@ export function registrationWindow(
   }
   return { kind: "open", closesAt: event.registration_closes_at };
 }
+
+/**
+ * Je otevřené okno pro potvrzení účasti? (X dní před začátkem až do začátku)
+ * Stejné pravidlo jako databázová funkce attendance_window_open.
+ */
+export function attendanceWindowOpen(
+  startsAt: string,
+  confirmDaysBefore: number | null,
+  now: number = Date.now(),
+): boolean {
+  if (!confirmDaysBefore) return false;
+  const start = new Date(startsAt).getTime();
+  return now >= start - confirmDaysBefore * 24 * 60 * 60 * 1000 && now < start;
+}
+

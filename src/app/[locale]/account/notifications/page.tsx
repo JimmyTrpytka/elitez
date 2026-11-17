@@ -242,6 +242,14 @@ async function NotificationsList() {
           href: "/organizer",
           linkLabel: t("openOrganizer"),
         };
+      case "attendance_confirm_request":
+        return {
+          title: t("types.attendance_confirm_request.title", vars),
+          text: t("types.attendance_confirm_request.text", vars),
+          href: n.registration_id ? `/account/registrations#reg-${n.registration_id}` : "/account/registrations",
+          linkLabel: t("openRegistrations"),
+          eventTitle: p.event_title,
+        };
       case "registration_info_requested":
         return {
           title: t("types.registration_info_requested.title", vars),
