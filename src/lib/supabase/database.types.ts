@@ -566,6 +566,47 @@ export type Database = {
           },
         ]
       }
+      event_questions: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          kind: Database["public"]["Enums"]["event_question_kind"]
+          label: string
+          options: string[] | null
+          position: number
+          required: boolean
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["event_question_kind"]
+          label: string
+          options?: string[] | null
+          position?: number
+          required?: boolean
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["event_question_kind"]
+          label?: string
+          options?: string[] | null
+          position?: number
+          required?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_questions_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -655,6 +696,7 @@ export type Database = {
       }
       event_registrations: {
         Row: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -665,6 +707,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -676,6 +722,7 @@ export type Database = {
           vehicle_id: string
         }
         Insert: {
+          answers?: Json
           cancelled_at?: string | null
           consent_at?: string
           contact_email: string
@@ -686,6 +733,10 @@ export type Database = {
           decision_message?: string | null
           event_id: string
           id?: string
+          info_replied_at?: string | null
+          info_reply?: string | null
+          info_request?: string | null
+          info_requested_at?: string | null
           message?: string | null
           private_vehicle_ack?: boolean
           rejection_reason?:
@@ -697,6 +748,7 @@ export type Database = {
           vehicle_id: string
         }
         Update: {
+          answers?: Json
           cancelled_at?: string | null
           consent_at?: string
           contact_email?: string
@@ -707,6 +759,10 @@ export type Database = {
           decision_message?: string | null
           event_id?: string
           id?: string
+          info_replied_at?: string | null
+          info_reply?: string | null
+          info_request?: string | null
+          info_requested_at?: string | null
           message?: string | null
           private_vehicle_ack?: boolean
           rejection_reason?:
@@ -1851,6 +1907,7 @@ export type Database = {
           p_registration_id: string
         }
         Returns: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -1861,6 +1918,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -1941,6 +2002,7 @@ export type Database = {
       cancel_registration: {
         Args: { p_registration_id: string }
         Returns: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -1951,6 +2013,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -1992,6 +2058,10 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      clean_registration_answers: {
+        Args: { p_answers: Json; p_event_id: string }
+        Returns: Json
       }
       cohost_check_event: {
         Args: {
@@ -2090,6 +2160,7 @@ export type Database = {
           p_registration_id: string
         }
         Returns: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2100,6 +2171,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -2382,6 +2457,7 @@ export type Database = {
       }
       register_for_event: {
         Args: {
+          p_answers?: Json
           p_consent: boolean
           p_email: string
           p_event_id: string
@@ -2391,6 +2467,7 @@ export type Database = {
           p_vehicle_id: string
         }
         Returns: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2401,6 +2478,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -2429,6 +2510,41 @@ export type Database = {
       remove_organizer_member: {
         Args: { p_organizer_id: string; p_user_id: string }
         Returns: undefined
+      }
+      reply_registration_info: {
+        Args: { p_registration_id: string; p_reply: string }
+        Returns: {
+          answers: Json
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       request_crew_organizer: {
         Args: { p_crew_id: string }
@@ -2465,6 +2581,41 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "event_media_requests"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      request_registration_info: {
+        Args: { p_message: string; p_registration_id: string }
+        Returns: {
+          answers: Json
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -2595,6 +2746,7 @@ export type Database = {
           p_registration_id: string
         }
         Returns: {
+          answers: Json
           cancelled_at: string | null
           consent_at: string
           contact_email: string
@@ -2605,6 +2757,10 @@ export type Database = {
           decision_message: string | null
           event_id: string
           id: string
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           message: string | null
           private_vehicle_ack: boolean
           rejection_reason:
@@ -2676,6 +2832,7 @@ export type Database = {
         | "classic"
         | "motorcycle"
         | "mix"
+      event_question_kind: "text" | "number" | "boolean" | "choice"
       event_status: "draft" | "published" | "closed" | "cancelled"
       mod_category:
         | "engine"
@@ -2717,6 +2874,8 @@ export type Database = {
         | "cohost_invite"
         | "cohost_accepted"
         | "vehicle_tagged"
+        | "registration_info_requested"
+        | "registration_info_provided"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -2889,6 +3048,7 @@ export const Constants = {
         "motorcycle",
         "mix",
       ],
+      event_question_kind: ["text", "number", "boolean", "choice"],
       event_status: ["draft", "published", "closed", "cancelled"],
       mod_category: [
         "engine",
@@ -2931,6 +3091,8 @@ export const Constants = {
         "cohost_invite",
         "cohost_accepted",
         "vehicle_tagged",
+        "registration_info_requested",
+        "registration_info_provided",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [

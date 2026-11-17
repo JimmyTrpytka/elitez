@@ -36,6 +36,7 @@ export default async function NotificationsPage() {
 
 type Payload = {
   message?: string | null;
+  registration_id?: string;
   event_id?: string;
   cohost_name?: string;
   event_title?: string;
@@ -241,6 +242,29 @@ async function NotificationsList() {
           href: "/organizer",
           linkLabel: t("openOrganizer"),
         };
+      case "registration_info_requested":
+        return {
+          title: t("types.registration_info_requested.title", vars),
+          text: p.message
+            ? `${t("types.registration_info_requested.text", vars)} ${t("organizerMessage", { message: p.message })}`
+            : t("types.registration_info_requested.text", vars),
+          href: n.registration_id ? `/account/registrations#reg-${n.registration_id}` : "/account/registrations",
+          linkLabel: t("openRegistrations"),
+          eventTitle: p.event_title,
+        };
+      case "registration_info_provided": {
+        const v = { ...vars, name: p.name ?? "" };
+        return {
+          title: t("types.registration_info_provided.title", v),
+          text: t("types.registration_info_provided.text", v),
+          href:
+            p.event_id && p.registration_id
+              ? `/organizer/events/${p.event_id}/registrations/${p.registration_id}?status=all`
+              : "/organizer",
+          linkLabel: t("openApplication"),
+          eventTitle: p.event_title,
+        };
+      }
       default:
         return {
           title: t(`types.${n.type}.title`, vars),

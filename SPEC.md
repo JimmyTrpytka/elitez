@@ -208,6 +208,7 @@ Cíl: registrace na Trojhalí (stovky přihlášek, výběr ~200 aut) musí být
 - **G) Interní hodnocení 1–5 hvězd** (člen nevidí), řazení podle hvězd. **Oznámení najednou:** u eventu volba, zda se rozhodnutí posílají hned, nebo se **všechna** (schválení, zamítnutí, čekací listina) drží jako koncept a odešlou se najednou tlačítkem „Odeslat rozhodnutí“. Do odeslání člen vidí „čeká na posouzení“.
 - **H) Filtr podle kategorie** auta se nedělá (přihlášky jsou většinou buď americká auta, nebo tuning).
 - **I) „Doplň prosím“:** pořadatel místo zamítnutí požádá o víc fotek / informací; přihláška čeká na doplnění, člen dostane upozornění a po doplnění se vrátí k posouzení.
+- Upřesnění I/K: žádost o doplnění nemění stav přihlášky (zůstává „čeká“), člen odpovídá textem v Moje registrace (fotky přidá v garáži). Odpovědi na vlastní otázky po odeslání upravit nejdou; otázky lze měnit kdykoli (odpovědi na smazané otázky se nezobrazují).
 - **J) Automatické schvalování** (volba u eventu): přihláška se schválí hned, do naplnění kapacity, pak čekací listina.
 - **K) Vlastní otázky u eventu:** krátký text, číslo, ano/ne, výběr z možností; pořadatel je nastaví, odpovědi vidí u přihlášky a v exportu.
 - **L) Potvrzení účasti:** pořadatel zvolí, kolik dní před eventem dostanou schválení výzvu „Potvrď, že přijedeš“. Kdo odpoví „Nepřijedu“, uvolní místo (posune se čekací listina). Kdo nepotvrdí, je v seznamu označený „nepotvrdil“ – místo uvolní pořadatel ručně.

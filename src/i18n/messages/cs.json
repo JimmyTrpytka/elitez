@@ -648,7 +648,8 @@
       "generic": "Uložení se nepovedlo. Zkus to prosím znovu.",
       "registrationAfterStart": "Registrace musí otevřít i skončit před začátkem eventu (přihlašovat se dá jen do začátku).",
       "socialInvalid": "Tohle nevypadá jako odkaz ani @jméno.",
-      "mediaCapacityInvalid": "Zadej počet míst pro média (1–500), nebo zvol Neomezeně."
+      "mediaCapacityInvalid": "Zadej počet míst pro média (1–500), nebo zvol Neomezeně.",
+      "questionsInvalid": "Zkontroluj otázky: každá potřebuje text a výběr aspoň 2 možnosti (nejvýš 20 otázek)."
     },
     "closesHint": "Nepovinné. Bez uzávěrky se lze hlásit až do začátku eventu.",
     "opensHint": "Bez data se zatím nikdo přihlásit nemůže.",
@@ -670,7 +671,8 @@
     "participantInfoLabel": "Informace pro schválené účastníky",
     "participantInfoHint": "Příjezd, čas, brána, parkování, co s sebou… Uvidí je jen schválení (na stránce eventu a v e-mailu o schválení) a pořadatel.",
     "holdDecisionsLabel": "Odeslat rozhodnutí najednou",
-    "holdDecisionsHint": "Schválení, zamítnutí i čekací listinu si v klidu připravíš a uchazečům je odešleš najednou tlačítkem „Odeslat rozhodnutí“. Do té doby vidí „čeká na posouzení“."
+    "holdDecisionsHint": "Schválení, zamítnutí i čekací listinu si v klidu připravíš a uchazečům je odešleš najednou tlačítkem „Odeslat rozhodnutí“. Do té doby vidí „čeká na posouzení“.",
+    "questionsTitle": "Otázky v přihlášce"
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -759,7 +761,10 @@
     "crew_only": "Tento sraz je jen pro členy crew.",
     "not_enough_photos": "Auto nemá dost fotek. Přidej je v garáži a přihlas ho znovu.",
     "not_editable": "Přihlášku už nejde upravit – pořadatel ji posoudil.",
-    "invalid_rating": "Neplatné hodnocení."
+    "invalid_rating": "Neplatné hodnocení.",
+    "answer_required": "Odpověz prosím na povinné otázky.",
+    "answers_invalid": "Zkontroluj odpovědi na otázky (číslo, výběr).",
+    "message_required": "Napiš prosím text."
   },
   "MyRegistrations": {
     "title": "Moje registrace",
@@ -825,7 +830,11 @@
     "prev": "Předchozí",
     "next": "Další",
     "lastOne": "Poslední v seznamu",
-    "position": "{current} / {total}"
+    "position": "{current} / {total}",
+    "infoTitle": "Doplnění",
+    "infoHint": "Když přihlášku nejde snadno posoudit, požádej o víc fotek nebo informací. Uchazeči přijde e-mail.",
+    "infoWaiting": "čeká na doplnění",
+    "infoReplied": "doplněno"
   },
   "Decision": {
     "approve": "Schválit",
@@ -889,7 +898,12 @@
       "page": "Stránka",
       "button": "Všechny připomínky"
     },
-    "participantInfo": "Informace pro účastníky:"
+    "participantInfo": "Informace pro účastníky:",
+    "infoRequested": {
+      "subject": "Doplň prosím přihlášku – {event}",
+      "heading": "Pořadatel prosí o doplnění",
+      "body": "Ahoj {name},\n\npořadatel {event} ({when}) potřebuje k přihlášce s vozidlem {vehicle} ještě něco doplnit:"
+    }
   },
   "Notifications": {
     "title": "Upozornění",
@@ -998,6 +1012,14 @@
       "vehicle_tagged": {
         "title": "Tvoje {vehicle} na fotce!",
         "text": "{who} označil(a) tvoje {vehicle} na fotce ve svém portfoliu. Najdeš ji u auta v sekci Fotky od creatorů."
+      },
+      "registration_info_requested": {
+        "title": "Doplň prosím přihlášku",
+        "text": "Pořadatel {event} potřebuje k přihlášce s vozidlem {vehicle} něco doplnit."
+      },
+      "registration_info_provided": {
+        "title": "Přihláška doplněna",
+        "text": "{name} doplnil(a) přihlášku s vozidlem {vehicle} na {event}."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1022,7 +1044,8 @@
     "organizerMessage": "Zpráva od pořadatele: {message}",
     "turboPortfolioTitle": "Turbo pro tvou práci!",
     "turboPortfolioText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvé práci v portfoliu.",
-    "openPortfolio": "Zobrazit portfolio"
+    "openPortfolio": "Zobrazit portfolio",
+    "openApplication": "Otevřít přihlášku"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
@@ -1995,5 +2018,48 @@
     "finalTitleA": "Startujeme.",
     "finalTitleB": "Jedeš s námi?",
     "finalText": "Registrace je zdarma a zabere půl minuty. Pak už jen garáž, srazy a turba."
+  },
+  "Questions": {
+    "formTitle": "Otázky od pořadatele",
+    "choose": "— vyber —",
+    "yes": "Ano",
+    "no": "Ne",
+    "answersTitle": "Odpovědi na otázky",
+    "editorIntro": "Otázky se zobrazí ve formuláři přihlášky. Odpovědi uvidíš u každé přihlášky a v exportu (CSV).",
+    "labelLabel": "Otázka",
+    "labelPlaceholder": "Např. Počet osob v autě",
+    "kindLabel": "Typ odpovědi",
+    "kinds": {
+      "text": "Krátký text",
+      "number": "Číslo",
+      "boolean": "Ano / Ne",
+      "choice": "Výběr z možností"
+    },
+    "optionsLabel": "Možnosti (každou na řádek)",
+    "optionsPlaceholder": "S\nM\nL\nXL",
+    "requiredLabel": "Povinná",
+    "moveUp": "Posunout nahoru",
+    "moveDown": "Posunout dolů",
+    "remove": "Odebrat",
+    "add": "Přidat otázku"
+  },
+  "InfoRequest": {
+    "memberTitle": "Pořadatel tě prosí o doplnění:",
+    "memberHint": "Fotky přidáš v garáži u auta (přihláška se aktualizuje sama). Pak sem napiš krátkou odpověď – pořadatel dostane upozornění.",
+    "yourReply": "Tvoje odpověď",
+    "replyAgain": "Napsat znovu",
+    "replyPlaceholder": "Např. Přidal jsem 4 fotky interiéru.",
+    "sendReply": "Odeslat odpověď",
+    "sending": "Odesílám…",
+    "organizerAsked": "Požádal(a) jsi o doplnění:",
+    "applicantReplied": "Uchazeč odpověděl:",
+    "waitingForReply": "Čeká se na odpověď uchazeče.",
+    "presetPhotos": "Přidej prosím víc fotek auta.",
+    "presetMods": "Doplň prosím seznam úprav.",
+    "presetInterior": "Přidej prosím fotky interiéru.",
+    "requestPlaceholder": "Co potřebuješ doplnit?",
+    "sendRequest": "Odeslat žádost",
+    "request": "Doplň prosím…",
+    "requestAgain": "Požádat znovu"
   }
 }

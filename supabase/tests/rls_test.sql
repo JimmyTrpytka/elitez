@@ -2354,6 +2354,131 @@ do $$ declare n integer; begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Registrace – část 3: vlastní otázky (K)
+-- =====================================================================
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity,
+   registration_opens_at, verified_head_start_hours, min_photos)
+values
+  ('00000000-0000-4000-e000-000000000023', '00000000-0000-4000-c000-00000000000a',
+   'rls-otazky', 'Otázky', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', null, now() - interval '1 day', 0, 0);
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+insert into public.event_questions (id, event_id, position, kind, label, options, required) values
+  ('00000000-0000-4000-f000-000000000001', '00000000-0000-4000-e000-000000000023', 0, 'number', 'Počet osob', null, true),
+  ('00000000-0000-4000-f000-000000000002', '00000000-0000-4000-e000-000000000023', 1, 'choice', 'Tričko', array['S','M','L'], false),
+  ('00000000-0000-4000-f000-000000000003', '00000000-0000-4000-e000-000000000023', 2, 'boolean', 'V pátek?', null, false);
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  if (select count(*) from public.event_questions where event_id = '00000000-0000-4000-e000-000000000023') <> 3 then
+    raise exception 'FAIL: člen nevidí otázky eventu';
+  end if;
+  begin
+    insert into public.event_questions (event_id, kind, label)
+    values ('00000000-0000-4000-e000-000000000023', 'text', 'Podvrh');
+    raise exception 'FAIL: člen přidal otázku k cizímu eventu';
+  exception when insufficient_privilege then null;
+  end;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000023',
+      '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false,
+      '{"00000000-0000-4000-f000-000000000002": "M"}');
+    raise exception 'FAIL: přihláška bez povinné odpovědi';
+  exception when raise_exception then
+    if sqlerrm <> 'answer_required' then raise; end if;
+  end;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000023',
+      '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false,
+      '{"00000000-0000-4000-f000-000000000001": "2", "00000000-0000-4000-f000-000000000002": "XXL"}');
+    raise exception 'FAIL: odpověď mimo nabídnuté možnosti';
+  exception when raise_exception then
+    if sqlerrm <> 'answers_invalid' then raise; end if;
+  end;
+  r := public.register_for_event('00000000-0000-4000-e000-000000000023',
+    '00000000-0000-4000-b000-0000000f0a02', '+420777555666', 'gabina@example.invalid', null, true, false,
+    '{"00000000-0000-4000-f000-000000000001": "3", "00000000-0000-4000-f000-000000000002": "L",
+      "00000000-0000-4000-f000-000000000003": "true", "cizi-klic": "x"}');
+  if r.answers <> '{"00000000-0000-4000-f000-000000000001": 3, "00000000-0000-4000-f000-000000000002": "L", "00000000-0000-4000-f000-000000000003": true}'::jsonb then
+    raise exception 'FAIL: odpovědi se neuložily správně: %', r.answers;
+  end if;
+  perform set_config('rls.reg_q', r.id::text, true);
+end $$;
+reset role;
+
+-- =====================================================================
+-- Registrace – část 3: „Doplň prosím“ (I)
+-- =====================================================================
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.request_registration_info(current_setting('rls.reg_q')::uuid, 'Přidej fotky');
+    raise exception 'FAIL: uchazeč si sám vyžádal doplnění';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+  begin
+    perform public.reply_registration_info(current_setting('rls.reg_q')::uuid, 'Hotovo');
+    raise exception 'FAIL: odpověď bez žádosti o doplnění';
+  exception when raise_exception then
+    if sqlerrm <> 'not_editable' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  r := public.request_registration_info(current_setting('rls.reg_q')::uuid, 'Přidej prosím fotky interiéru');
+  if r.info_requested_at is null or r.status <> 'pending' then
+    raise exception 'FAIL: žádost o doplnění se neuložila';
+  end if;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a01","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.reply_registration_info(current_setting('rls.reg_q')::uuid, 'Cizí odpověď');
+    raise exception 'FAIL: odpověď na cizí přihlášku';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a02","role":"authenticated"}', true);
+set local role authenticated;
+do $$ declare r public.event_registrations; begin
+  if not exists (select 1 from public.notifications where type = 'registration_info_requested') then
+    raise exception 'FAIL: uchazeč nedostal upozornění o doplnění';
+  end if;
+  r := public.reply_registration_info(current_setting('rls.reg_q')::uuid, 'Fotky jsou v garáži');
+  if r.info_replied_at is null then raise exception 'FAIL: odpověď se neuložila'; end if;
+end $$;
+reset role;
+
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-00000000a11c' and type = 'registration_info_provided') then
+    raise exception 'FAIL: pořadatel nedostal upozornění o doplnění';
+  end if;
+end $$;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

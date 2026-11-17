@@ -648,7 +648,8 @@
       "generic": "Saving failed. Please try again.",
       "registrationAfterStart": "Registration must open and close before the event starts (applications are only possible until the start).",
       "socialInvalid": "This doesn't look like a link or @name.",
-      "mediaCapacityInvalid": "Enter the number of media spots (1–500) or choose Unlimited."
+      "mediaCapacityInvalid": "Enter the number of media spots (1–500) or choose Unlimited.",
+      "questionsInvalid": "Check the questions: each needs a text and a choice needs at least 2 options (max 20 questions)."
     },
     "closesHint": "Optional. Without a deadline people can register until the event starts.",
     "opensHint": "Without a date nobody can register yet.",
@@ -670,7 +671,8 @@
     "participantInfoLabel": "Info for approved participants",
     "participantInfoHint": "Arrival, time, gate, parking, what to bring… Only approved participants (on the event page and in the approval email) and the organizer can see it.",
     "holdDecisionsLabel": "Send decisions all at once",
-    "holdDecisionsHint": "Prepare approvals, rejections and the waitlist calmly and send them to applicants all at once with “Send decisions”. Until then they see “waiting for review”."
+    "holdDecisionsHint": "Prepare approvals, rejections and the waitlist calmly and send them to applicants all at once with “Send decisions”. Until then they see “waiting for review”.",
+    "questionsTitle": "Questions in the application"
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -759,7 +761,10 @@
     "crew_only": "This meet is for crew members only.",
     "not_enough_photos": "The car doesn't have enough photos. Add them in your garage and register again.",
     "not_editable": "The application can no longer be edited – the organizer has already decided.",
-    "invalid_rating": "Invalid rating."
+    "invalid_rating": "Invalid rating.",
+    "answer_required": "Please answer the required questions.",
+    "answers_invalid": "Check your answers (number, choice).",
+    "message_required": "Please write a message."
   },
   "MyRegistrations": {
     "title": "My registrations",
@@ -825,7 +830,11 @@
     "prev": "Previous",
     "next": "Next",
     "lastOne": "Last in the list",
-    "position": "{current} / {total}"
+    "position": "{current} / {total}",
+    "infoTitle": "More info",
+    "infoHint": "If an application is hard to judge, ask for more photos or info. The applicant gets an email.",
+    "infoWaiting": "waiting for info",
+    "infoReplied": "info added"
   },
   "Decision": {
     "approve": "Approve",
@@ -889,7 +898,12 @@
       "page": "Page",
       "button": "All feedback"
     },
-    "participantInfo": "Info for participants:"
+    "participantInfo": "Info for participants:",
+    "infoRequested": {
+      "subject": "Please complete your application – {event}",
+      "heading": "The organizer needs more info",
+      "body": "Hi {name},\n\nthe organizer of {event} ({when}) needs a bit more for your application with {vehicle}:"
+    }
   },
   "Notifications": {
     "title": "Notifications",
@@ -998,6 +1012,14 @@
       "vehicle_tagged": {
         "title": "Your {vehicle} in a photo!",
         "text": "{who} tagged your {vehicle} in a photo in their portfolio. You'll find it on the car page under Photos by creators."
+      },
+      "registration_info_requested": {
+        "title": "Please complete your application",
+        "text": "The organizer of {event} needs more for your application with {vehicle}."
+      },
+      "registration_info_provided": {
+        "title": "Application completed",
+        "text": "{name} added info to the application with {vehicle} for {event}."
       }
     },
     "openVehicle": "View car",
@@ -1022,7 +1044,8 @@
     "organizerMessage": "Message from the organizer: {message}",
     "turboPortfolioTitle": "A turbo for your work!",
     "turboPortfolioText": "{who} gave your portfolio work a turbo.",
-    "openPortfolio": "View portfolio"
+    "openPortfolio": "View portfolio",
+    "openApplication": "Open application"
   },
   "Broadcast": {
     "title": "Messages to participants",
@@ -1995,5 +2018,48 @@
     "finalTitleA": "We're starting.",
     "finalTitleB": "Are you in?",
     "finalText": "Signing up is free and takes half a minute. Then it's garage, meets and turbos."
+  },
+  "Questions": {
+    "formTitle": "Questions from the organizer",
+    "choose": "— choose —",
+    "yes": "Yes",
+    "no": "No",
+    "answersTitle": "Answers to questions",
+    "editorIntro": "Questions appear in the application form. You'll see the answers with each application and in the export (CSV).",
+    "labelLabel": "Question",
+    "labelPlaceholder": "E.g. Number of people in the car",
+    "kindLabel": "Answer type",
+    "kinds": {
+      "text": "Short text",
+      "number": "Number",
+      "boolean": "Yes / No",
+      "choice": "Choice from options"
+    },
+    "optionsLabel": "Options (one per line)",
+    "optionsPlaceholder": "S\nM\nL\nXL",
+    "requiredLabel": "Required",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "remove": "Remove",
+    "add": "Add question"
+  },
+  "InfoRequest": {
+    "memberTitle": "The organizer asks you to add:",
+    "memberHint": "Add photos in your garage (the application updates itself). Then write a short reply here – the organizer gets notified.",
+    "yourReply": "Your reply",
+    "replyAgain": "Write again",
+    "replyPlaceholder": "E.g. I added 4 interior photos.",
+    "sendReply": "Send reply",
+    "sending": "Sending…",
+    "organizerAsked": "You asked for more:",
+    "applicantReplied": "The applicant replied:",
+    "waitingForReply": "Waiting for the applicant's reply.",
+    "presetPhotos": "Please add more photos of the car.",
+    "presetMods": "Please complete the list of modifications.",
+    "presetInterior": "Please add interior photos.",
+    "requestPlaceholder": "What do you need?",
+    "sendRequest": "Send request",
+    "request": "Ask for more…",
+    "requestAgain": "Ask again"
   }
 }

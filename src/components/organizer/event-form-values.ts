@@ -1,9 +1,14 @@
 import { utcToZonedLocal } from "@/lib/dates";
 import type { EventRow } from "@/lib/data/events";
 import type { EventFormValues } from "./event-form";
+import type { EventQuestion } from "@/lib/data/questions";
 
 /** Hodnoty formuláře z uloženého eventu (časy převedené na pražský čas). */
-export function toEventFormValues(e: EventRow, participantInfo: string | null = null): EventFormValues {
+export function toEventFormValues(
+  e: EventRow,
+  participantInfo: string | null = null,
+  questions: EventQuestion[] = [],
+): EventFormValues {
   return {
     id: e.id,
     title: e.title,
@@ -33,6 +38,13 @@ export function toEventFormValues(e: EventRow, participantInfo: string | null = 
     auto_approve: e.auto_approve,
     hold_decisions: e.hold_decisions,
     participant_info: participantInfo ?? "",
+    questions: questions.map((q) => ({
+      id: q.id,
+      kind: q.kind,
+      label: q.label,
+      options: q.options.join("\n"),
+      required: q.required,
+    })),
     social: {
       website_url: e.website_url,
       instagram_url: e.instagram_url,
@@ -71,5 +83,6 @@ export const EMPTY_EVENT_VALUES: EventFormValues = {
   auto_approve: false,
   hold_decisions: false,
   participant_info: "",
+  questions: [],
   social: {},
 };

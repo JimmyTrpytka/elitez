@@ -226,7 +226,7 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 ## Registrace na srazy – vychytání (17. 11. 2026, SPEC 5.1k)
 - [x] Část 1: minimum fotek (A), telefon z minula (B), úprava čekající přihlášky (C), informace pro schválené (E), automatické schvalování (J)
 - [x] Část 2: rychlé procházení přihlášek (F), hvězdičky a oznámení najednou (G)
-- [ ] Část 3: „Doplň prosím“ (I), vlastní otázky (K)
+- [x] Část 3: „Doplň prosím“ (I), vlastní otázky (K)
 - [ ] Část 4: potvrzení účasti (L)
 
 ---

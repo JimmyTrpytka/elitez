@@ -16,6 +16,7 @@ export type EmailTemplate =
   | "registration_rejected"
   | "registration_waitlist"
   | "registration_promoted"
+  | "registration_info_requested"
   | "broadcast"
   | "feedback";
 
@@ -137,6 +138,13 @@ export function renderEmail(
       text = t("promoted.body", vars);
       if (payload.participant_info) text += `\n\n${t("participantInfo")}\n${payload.participant_info}`;
       button = { label: t("buttonEvent"), url: eventUrl };
+      break;
+    case "registration_info_requested":
+      subject = t("infoRequested.subject", { event: eventTitle });
+      heading = t("infoRequested.heading");
+      text = t("infoRequested.body", vars);
+      if (payload.message) text += `\n\n${payload.message}`;
+      button = { label: t("buttonMyRegistrations"), url: myUrl };
       break;
     case "registration_waitlist":
       subject = t("waitlist.subject", { event: eventTitle });

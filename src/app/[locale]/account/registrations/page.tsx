@@ -7,6 +7,7 @@ import { listMyRegistrations } from "@/lib/data/registrations";
 import { PageShell } from "@/components/page-shell";
 import { CancelRegistrationButton } from "@/components/registrations/cancel-button";
 import { EditRegistration } from "@/components/registrations/edit-registration";
+import { InfoReply } from "@/components/registrations/info-reply";
 import { RegistrationStatusBadge } from "@/components/registrations/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
@@ -76,7 +77,7 @@ async function MyRegistrationsList({
         <ul className="flex flex-col gap-3">
           {registrations.map((r) => {
             return (
-              <li key={r.id} className="flex flex-col gap-3 rounded-card border border-line p-5">
+              <li key={r.id} id={`reg-${r.id}`} className="flex scroll-mt-24 flex-col gap-3 rounded-card border border-line p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     {r.event ? (
@@ -103,6 +104,14 @@ async function MyRegistrationsList({
                       <p className="mt-1 whitespace-pre-line">{r.decision_message}</p>
                     ) : null}
                   </div>
+                ) : null}
+                {r.info_request && r.info_requested_at && (r.status === "pending" || r.status === "waitlist") ? (
+                  <InfoReply
+                    registrationId={r.id}
+                    request={r.info_request}
+                    reply={r.info_reply}
+                    canReply={r.canEdit}
+                  />
                 ) : null}
                 {r.status === "approved" && r.event ? (
                   <Link

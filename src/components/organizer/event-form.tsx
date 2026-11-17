@@ -15,6 +15,7 @@ import { TextareaField } from "@/components/ui/textarea";
 import { MapPicker } from "@/components/organizer/map-picker";
 import { SocialFields } from "@/components/social/social-fields";
 import { MediaFields } from "@/components/organizer/media-fields";
+import { QuestionsEditor, type QuestionDraft } from "@/components/organizer/questions-editor";
 import { countryOptions } from "@/lib/countries";
 import { saveEvent, type EventFormState } from "@/lib/organizer/actions";
 import { Constants } from "@/lib/supabase/database.types";
@@ -48,6 +49,7 @@ export type EventFormValues = {
   auto_approve: boolean;
   hold_decisions: boolean;
   participant_info: string;
+  questions: QuestionDraft[];
   social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
 };
 
@@ -83,7 +85,7 @@ export function EventForm({
   const submit = useKeepValuesSubmit(action);
   const formRef = useRef<HTMLFormElement>(null);
   // Chyba u konkrétního pole: ukáže se pod ním a stránka se k němu posune
-  const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country", mediaCapacityInvalid: "media_capacity" };
+  const fieldOf: Record<string, string> = { titleRequired: "title", startInvalid: "starts_at", endBeforeStart: "ends_at", registrationOrder: "registration_closes_at", registrationAfterStart: "registration_closes_at", slugInvalid: "slug", slugTaken: "slug", capacityInvalid: "capacity", countryInvalid: "country", mediaCapacityInvalid: "media_capacity", questionsInvalid: "questions" };
   const errField = state.status === "error" ? (state.field ?? fieldOf[state.error]) : undefined;
   const errMessage = state.status === "error" ? t(`errors.${state.error}`) : undefined;
   const errorFor = (name: string) => (errField === name ? errMessage : undefined);
@@ -317,6 +319,13 @@ export function EventForm({
           defaultValue={values.participant_info}
           hint={t("participantInfoHint")}
         />
+      </Section>
+
+      <Section title={t("questionsTitle")}>
+        {errField === "questions" && errMessage ? <Alert tone="error">{errMessage}</Alert> : null}
+        <div data-field="questions">
+          <QuestionsEditor initial={values.questions} />
+        </div>
       </Section>
 
       <Section title={t("mediaTitle")}>

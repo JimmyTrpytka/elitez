@@ -14,6 +14,7 @@ import { DEFAULT_EVENT_TZ, zonedLocalToUtc } from "@/lib/dates";
 import { EVENT_IMAGES_BUCKET, eventImagePath } from "@/lib/storage";
 import { eventSlug, isValidSlug } from "@/lib/slug";
 import { emptyToNull, parseIntInRange } from "@/lib/validation";
+import { parseQuestionsJson } from "@/lib/questions-parse";
 import { parseSocialFields } from "@/lib/social-links";
 
 const UUID = /^[0-9a-f-]{36}$/i;
@@ -164,6 +165,7 @@ export type EventErrorKey =
   | "tooLong"
   | "socialInvalid"
   | "mediaCapacityInvalid"
+  | "questionsInvalid"
   | "notAllowed"
   | "generic";
 
@@ -244,6 +246,8 @@ export async function saveEvent(
   const minPhotos = parseIntInRange(text(formData, "min_photos"), 0, 10) ?? 0;
   const participantInfo = text(formData, "participant_info").trim();
   if (participantInfo.length > 5000) return { status: "error", error: "tooLong" };
+  const questions = parseQuestionsJson(text(formData, "questions_json"));
+  if (!questions.ok) return { status: "error", error: "questionsInvalid" };
 
   const ctx = await requireOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
@@ -311,6 +315,27 @@ export async function saveEvent(
       })
     : await ctx.supabase.from("event_participant_info").delete().eq("event_id", eventId);
   if (infoError) return { status: "error", error: "generic" };
+
+  // Vlastní otázky: smazat odebrané, upravit stávající, přidat nové (pořadí podle editoru)
+  const { data: existing } = await ctx.supabase
+    .from("event_questions")
+    .select("id")
+    .eq("event_id", eventId);
+  const existingIds = new Set((existing ?? []).map((q) => q.id));
+  const keep = new Set(questions.items.map((q) => q.id).filter((id): id is string => Boolean(id && existingIds.has(id))));
+  const removed = [...existingIds].filter((qid) => !keep.has(qid));
+  if (removed.length) {
+    const { error } = await ctx.supabase.from("event_questions").delete().in("id", removed);
+    if (error) return { status: "error", error: "generic" };
+  }
+  for (const [position, q] of questions.items.entries()) {
+    const row = { event_id: eventId, position, kind: q.kind, label: q.label, options: q.options, required: q.required };
+    const { error } =
+      q.id && keep.has(q.id)
+        ? await ctx.supabase.from("event_questions").update(row).eq("id", q.id)
+        : await ctx.supabase.from("event_questions").insert(row);
+    if (error) return { status: "error", error: "generic" };
+  }
 
   refresh();
   redirect(`/${locale}/organizer/events/${eventId}?saved=1`);
@@ -380,6 +405,17 @@ export async function duplicateEvent(eventId: string, localeValue: string): Prom
     .maybeSingle();
   if (info) {
     await ctx.supabase.from("event_participant_info").insert({ event_id: result.id, body: info.body });
+  }
+
+  // Vlastní otázky se kopírují taky
+  const { data: questionRows } = await ctx.supabase
+    .from("event_questions")
+    .select("position, kind, label, options, required")
+    .eq("event_id", eventId);
+  if (questionRows?.length) {
+    await ctx.supabase
+      .from("event_questions")
+      .insert(questionRows.map((q) => ({ ...q, event_id: result.id })));
   }
 
   // Zkopírovat obrázek do složky nového eventu

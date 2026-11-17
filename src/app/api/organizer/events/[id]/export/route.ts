@@ -6,6 +6,7 @@ import { toCsv } from "@/lib/csv";
 import { formatDateTime } from "@/lib/dates";
 import { getMyEvent, getMyOrganizer } from "@/lib/data/events";
 import { createClient } from "@/lib/supabase/server";
+import { formatAnswer, getEventQuestions } from "@/lib/data/questions";
 
 /**
  * Export přihlášek eventu do CSV (Excel). Jen pro pořadatele eventu –
@@ -29,20 +30,22 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
   let query = supabase
     .from("event_registrations")
     .select(
-      "status, contact_phone, contact_email, message, created_at, rejection_reason, vehicle:vehicles(make, model, year, category), applicant:profiles!event_registrations_user_id_fkey(username, display_name, verified_at), note:event_registration_notes(note)",
+      "status, contact_phone, contact_email, message, created_at, rejection_reason, answers, vehicle:vehicles(make, model, year, category), applicant:profiles!event_registrations_user_id_fkey(username, display_name, verified_at), note:event_registration_notes(note)",
     )
     .eq("event_id", event.id)
     .order("created_at", { ascending: true });
   if (onlyApproved) query = query.eq("status", "approved");
-  const { data, error } = await query;
+  const [{ data, error }, questions] = await Promise.all([query, getEventQuestions(event.id)]);
   if (error) return NextResponse.json({ error: "failed" }, { status: 500 });
 
-  const [t, tStatus, tVehicle, tReason] = await Promise.all([
+  const [t, tStatus, tVehicle, tReason, tQuestions] = await Promise.all([
     getTranslations({ locale, namespace: "Export" }),
     getTranslations({ locale, namespace: "RegistrationStatus" }),
     getTranslations({ locale, namespace: "Vehicle" }),
     getTranslations({ locale, namespace: "RejectionReason" }),
+    getTranslations({ locale, namespace: "Questions" }),
   ]);
+  const yesNo = { yes: tQuestions("yes"), no: tQuestions("no") };
 
   const rows: Array<Array<string | number | null>> = [
     [
@@ -59,6 +62,7 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
       t("colSubmitted"),
       t("colReason"),
       t("colNote"),
+      ...questions.map((q) => q.label),
     ],
     ...(data ?? []).map((r) => {
       const note = Array.isArray(r.note) ? r.note[0] : r.note;
@@ -76,6 +80,9 @@ export async function GET(request: NextRequest, { params }: RouteContext<"/api/o
         formatDateTime(r.created_at, locale, event.timezone),
         r.rejection_reason ? tReason(r.rejection_reason) : "",
         note?.note ?? "",
+        ...questions.map((q) =>
+          formatAnswer((r.answers as Record<string, unknown> | null)?.[q.id], q.kind, yesNo),
+        ),
       ];
     }),
   ];
