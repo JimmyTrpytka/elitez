@@ -29,6 +29,8 @@ async function currentUserId(supabase: TypedSupabaseClient): Promise<string | nu
 export type RegistrationFormContext = {
   userId: string;
   email: string;
+  /** Telefon z poslední přihlášky (předvyplnění) */
+  lastPhone: string | null;
   username: string | null;
   isVerified: boolean;
   profilePrivate: boolean;
@@ -38,16 +40,18 @@ export type RegistrationFormContext = {
     model: string;
     year: number | null;
     visibility: "public" | "private";
+    photoCount: number;
+    coverUrl: string | null;
   }>;
 };
 
-/** Údaje pro formulář přihlášky (vozidla z garáže, e-mail, Verified). */
+/** Údaje pro formulář přihlášky (vozidla z garáže s fotkou, e-mail, telefon, Verified). */
 export async function getRegistrationFormContext(): Promise<RegistrationFormContext | null> {
   const supabase = await createClient();
   if (!supabase) return null;
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return null;
-  const [{ data: profile }, { data: vehicles }] = await Promise.all([
+  const [{ data: profile }, { data: vehicles }, { data: last }] = await Promise.all([
     supabase
       .from("profiles")
       .select("username, verified_at, visibility")
@@ -55,19 +59,56 @@ export async function getRegistrationFormContext(): Promise<RegistrationFormCont
       .single(),
     supabase
       .from("vehicles")
-      .select("id, make, model, year, visibility")
+      .select("id, make, model, year, visibility, vehicle_photos(id, vehicle_id, position, format, created_at)")
       .eq("owner_id", auth.user.id)
       .eq("status", "current")
       .order("created_at", { ascending: false }),
+    supabase
+      .from("event_registrations")
+      .select("contact_phone")
+      .eq("user_id", auth.user.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
+  const rows = vehicles ?? [];
+  const covers = rows.map((v) => firstPhoto(v.vehicle_photos));
+  const paths = covers
+    .filter((c): c is PhotoRow => Boolean(c))
+    .map((c) => vehiclePhotoPath(c.vehicle_id, c.id, "sm", c.format));
+  const urls = await signFiles(supabase, VEHICLE_PHOTOS_BUCKET, paths);
   return {
     userId: auth.user.id,
     email: auth.user.email ?? "",
+    lastPhone: last?.contact_phone ?? null,
     username: profile?.username ?? null,
     isVerified: Boolean(profile?.verified_at),
     profilePrivate: profile?.visibility === "private",
-    vehicles: vehicles ?? [],
+    vehicles: rows.map((v, i) => {
+      const c = covers[i];
+      return {
+        id: v.id,
+        make: v.make,
+        model: v.model,
+        year: v.year,
+        visibility: v.visibility,
+        photoCount: v.vehicle_photos.length,
+        coverUrl: c ? (urls.get(vehiclePhotoPath(c.vehicle_id, c.id, "sm", c.format)) ?? null) : null,
+      };
+    }),
   };
+}
+
+/** Informace pro schválené účastníky (RLS: jen schválený účastník nebo pořadatel). */
+export async function getParticipantInfo(eventId: string): Promise<string | null> {
+  const supabase = await createClient();
+  if (!supabase) return null;
+  const { data } = await supabase
+    .from("event_participant_info")
+    .select("body")
+    .eq("event_id", eventId)
+    .maybeSingle();
+  return data?.body ?? null;
 }
 
 export type MyEventRegistration = Registration & {
@@ -102,6 +143,8 @@ export type MyRegistrationView = Registration & {
   } | null;
   /** Lze přihlášku ještě zrušit (aktivní stav a event nezačal)? */
   canCancel: boolean;
+  /** Lze ještě upravit telefon, e-mail a zprávu (čeká / čekací listina)? */
+  canEdit: boolean;
 };
 
 /** Všechny moje přihlášky (Moje registrace). */
@@ -118,13 +161,14 @@ export async function listMyRegistrations(): Promise<MyRegistrationView[]> {
     .eq("user_id", uid)
     .order("created_at", { ascending: false });
   const now = Date.now();
-  return (data ?? []).map((r) => ({
-    ...r,
-    canCancel:
-      ["pending", "approved", "waitlist"].includes(r.status) &&
-      Boolean(r.event) &&
-      new Date(r.event!.starts_at).getTime() > now,
-  }));
+  return (data ?? []).map((r) => {
+    const upcoming = Boolean(r.event) && new Date(r.event!.starts_at).getTime() > now;
+    return {
+      ...r,
+      canCancel: ["pending", "approved", "waitlist"].includes(r.status) && upcoming,
+      canEdit: ["pending", "waitlist"].includes(r.status) && upcoming,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------

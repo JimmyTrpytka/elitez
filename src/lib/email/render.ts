@@ -29,6 +29,7 @@ export type EmailPayload = {
   vehicle?: string | null;
   reason?: string | null;
   message?: string | null;
+  participant_info?: string | null;
   subject?: string;
   body?: string;
   page?: string;
@@ -127,12 +128,14 @@ export function renderEmail(
       subject = t("approved.subject", { event: eventTitle });
       heading = t("approved.heading");
       text = t("approved.body", vars);
+      if (payload.participant_info) text += `\n\n${t("participantInfo")}\n${payload.participant_info}`;
       button = { label: t("buttonEvent"), url: eventUrl };
       break;
     case "registration_promoted":
       subject = t("promoted.subject", { event: eventTitle });
       heading = t("promoted.heading");
       text = t("promoted.body", vars);
+      if (payload.participant_info) text += `\n\n${t("participantInfo")}\n${payload.participant_info}`;
       button = { label: t("buttonEvent"), url: eventUrl };
       break;
     case "registration_waitlist":

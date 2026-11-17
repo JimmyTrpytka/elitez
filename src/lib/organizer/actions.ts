@@ -241,6 +241,9 @@ export async function saveEvent(
   const mediaLimited = mediaEnabled && text(formData, "media_limit") === "limited";
   const mediaCapacity = mediaLimited ? parseIntInRange(text(formData, "media_capacity"), 1, 500) : null;
   if (mediaLimited && !mediaCapacity) return { status: "error", error: "mediaCapacityInvalid" };
+  const minPhotos = parseIntInRange(text(formData, "min_photos"), 0, 10) ?? 0;
+  const participantInfo = text(formData, "participant_info").trim();
+  if (participantInfo.length > 5000) return { status: "error", error: "tooLong" };
 
   const ctx = await requireOrganizer();
   if (!ctx) return { status: "error", error: "notAllowed" };
@@ -273,6 +276,8 @@ export async function saveEvent(
     ...social.values,
     media_enabled: mediaEnabled,
     media_capacity: mediaCapacity ?? null,
+    min_photos: minPhotos,
+    auto_approve: formData.get("auto_approve") === "on",
   };
 
   let eventId = id;
@@ -295,6 +300,16 @@ export async function saveEvent(
     if ("error" in result) return { status: "error", error: result.error };
     eventId = result.id;
   }
+
+  // Informace pro schválené (samostatná tabulka, čtou ji jen schválení a pořadatel)
+  const { error: infoError } = participantInfo
+    ? await ctx.supabase.from("event_participant_info").upsert({
+        event_id: eventId,
+        body: participantInfo,
+        updated_at: new Date().toISOString(),
+      })
+    : await ctx.supabase.from("event_participant_info").delete().eq("event_id", eventId);
+  if (infoError) return { status: "error", error: "generic" };
 
   refresh();
   redirect(`/${locale}/organizer/events/${eventId}?saved=1`);
@@ -355,6 +370,16 @@ export async function duplicateEvent(eventId: string, localeValue: string): Prom
     cover_format: null,
   });
   if ("error" in result) return { ok: false, error: result.error };
+
+  // Informace pro schválené účastníky se kopírují taky
+  const { data: info } = await ctx.supabase
+    .from("event_participant_info")
+    .select("body")
+    .eq("event_id", eventId)
+    .maybeSingle();
+  if (info) {
+    await ctx.supabase.from("event_participant_info").insert({ event_id: result.id, body: info.body });
+  }
 
   // Zkopírovat obrázek do složky nového eventu
   if (cover_path && cover_format) {

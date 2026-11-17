@@ -32,6 +32,9 @@ const KNOWN_ERRORS = [
   "event_started",
   "cancelled",
   "message_too_long",
+  "not_enough_photos",
+  "not_editable",
+  "crew_only",
 ] as const;
 
 export type RegistrationErrorKey = (typeof KNOWN_ERRORS)[number] | "generic";
@@ -100,6 +103,27 @@ export async function cancelMyRegistration(registrationId: string): Promise<Simp
   });
   if (error) return { ok: false, error: toErrorKey(error.message) };
   refresh();
+  return { ok: true };
+}
+
+/** Úprava čekající přihlášky (telefon, e-mail, zpráva) – kontroluje databáze. */
+export async function updateMyRegistration(input: {
+  registrationId: string;
+  phone: string;
+  email: string;
+  message: string;
+}): Promise<SimpleResult> {
+  if (!UUID.test(input.registrationId)) return { ok: false, error: "not_allowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("update_registration", {
+    p_registration_id: input.registrationId,
+    p_phone: input.phone.slice(0, 40),
+    p_email: input.email.slice(0, 260),
+    p_message: input.message.slice(0, 1100),
+  });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  revalidatePath("/", "layout");
   return { ok: true };
 }
 

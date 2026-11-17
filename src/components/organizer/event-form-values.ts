@@ -3,7 +3,7 @@ import type { EventRow } from "@/lib/data/events";
 import type { EventFormValues } from "./event-form";
 
 /** Hodnoty formuláře z uloženého eventu (časy převedené na pražský čas). */
-export function toEventFormValues(e: EventRow): EventFormValues {
+export function toEventFormValues(e: EventRow, participantInfo: string | null = null): EventFormValues {
   return {
     id: e.id,
     title: e.title,
@@ -29,6 +29,9 @@ export function toEventFormValues(e: EventRow): EventFormValues {
     registration_closes_at: utcToZonedLocal(e.registration_closes_at, e.timezone),
     media_enabled: e.media_enabled,
     media_capacity: e.media_capacity?.toString() ?? "",
+    min_photos: e.min_photos,
+    auto_approve: e.auto_approve,
+    participant_info: participantInfo ?? "",
     social: {
       website_url: e.website_url,
       instagram_url: e.instagram_url,
@@ -63,5 +66,8 @@ export const EMPTY_EVENT_VALUES: EventFormValues = {
   registration_closes_at: "",
   media_enabled: false,
   media_capacity: "",
+  min_photos: 3,
+  auto_approve: false,
+  participant_info: "",
   social: {},
 };

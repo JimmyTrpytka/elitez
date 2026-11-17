@@ -203,3 +203,9 @@ Vlastník projektu **není programátor**. Proto:
 - Event na mobilu: přilepená lišta `StickyRegisterBar` (jen když je box `#registrace` pod obrazovkou).
 - Tlačítko „Přeložit“: `needsTranslation` u nejistého jazyka a krátkého textu (méně než 5 slov) vrací false; u auta se posuzují všechny texty dohromady.
 - Server (funkce Vercelu) běží ve Frankfurtu `fra1` (`vercel.json` → `regions`) vedle databáze Supabase (eu-central-1). Bez toho běžel v USA a každý dotaz přeletěl Atlantik.
+
+## Technické poznámky (registrace – vychytání, SPEC 5.1k)
+- `events.min_photos` (kontrola v `register_for_event` → chyba `not_enough_photos`), `events.auto_approve` (přihláška rovnou `approved`; trigger pak posílá `registration_approved`, ne „přijato“).
+- Informace pro schválené: tabulka `event_participant_info` (RLS: `is_approved_participant` / pořadatel). Ukládá se ve `saveEvent`, kopíruje při duplikaci, zobrazuje v `RegistrationBox` (`#ucastnici`), do e-mailu jde přes `payload.participant_info`.
+- Úprava přihlášky jen funkcí `update_registration` (stav pending/waitlist, před začátkem) – UI `EditRegistration` v Moje registrace.
+

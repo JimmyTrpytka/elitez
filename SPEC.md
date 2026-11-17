@@ -66,6 +66,7 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - Verified se vztahuje na **člověka** (účet), ne na konkrétní auto.
 - Postup: uživatel natočí krátké video u svého auta a řekne **náhodně vygenerovanou větu/kód** zobrazený v aplikaci (kód platí omezenou dobu). Admin zkontroluje video a rozhodne.
 - Video je soukromé, po rozhodnutí se **smaže** (např. do 30 dnů), uchová se jen výsledek.
+- **Dvě cesty (rozhodnuto 17. 11. 2026):** desítky až stovky lidí zná vlastník osobně – ti dostanou Verified **rovnou**, bez videa. Člen klikne „Požádat o Verified“ a admin buď žádost **rovnou schválí**, nebo si **vyžádá ověření videem** (postup výše). Admin může Verified udělit i bez žádosti (přepínač ve správě uživatelů).
 - **Kritéria udělení (v1):**
   1. ověřená osoba (video s náhodnou větou u vlastního auta)
   2. zajímavé auto (posuzuje admin; jde o kvalitu a zajímavost projektu, ne o hodnotu)
@@ -195,6 +196,22 @@ Pořadatel zakládá **celou sezonu najednou** (více eventů pod jednou sezonou
 - Začít může **kterákoli strana**: spolupořadatel požádá na stránce eventu, nebo hlavní pořadatel pozve ve správě eventu. **Druhá strana vždy potvrdí.** Ukončit může kdokoli z nich.
 - Spolupořadatel se **jen ukazuje**: event je i na jeho profilu, na eventu „Pořádají: A × B“, jeho sledující a členové jeho crew dostanou upozornění (kdo už ho má, nedostane druhé). Spravovat event, přihlášky a média smí dál jen hlavní pořadatel (a jeho spolupořadatelé-lidé).
 - Jen zveřejněné eventy s přístupem pro všechny / pro Verified.
+
+### 5.1k Registrace na srazy – vychytání (rozhodnuto 17. 11. 2026)
+Cíl: registrace na Trojhalí (stovky přihlášek, výběr ~200 aut) musí být pohodlná pro člena i pořadatele.
+- **A) Fotky:** ve formuláři se u aut ukazuje fotka a počet fotek. Pořadatel u eventu nastaví **minimum fotek** (0–5, výchozí 3; stávající eventy 3). Auto s menším počtem nejde přihlásit (kontroluje databáze), člen dostane odkaz na přidání fotek.
+- **B) Telefon** se předvyplní z poslední přihlášky.
+- **C) Úprava přihlášky:** dokud je přihláška „čeká“ nebo „čekací listina“ a event nezačal, člen může upravit telefon, e-mail a zprávu. Auto změnit nejde (= zrušit a přihlásit jiné).
+- **D) Pořadí na čekací listině** se členům **nezobrazuje** (mohlo by být matoucí).
+- **E) Informace pro schválené** (příjezd, čas, parkování…): text u eventu, vidí ho jen schválení účastníci a pořadatel – na stránce eventu (v boxu Registrace) a v e-mailu o schválení.
+- **F) Rychlé procházení přihlášek:** v detailu „Schválit a další“ / „Zamítnout a další“, bez návratu do seznamu.
+- **G) Interní hodnocení 1–5 hvězd** (člen nevidí), řazení podle hvězd. **Oznámení najednou:** u eventu volba, zda se rozhodnutí posílají hned, nebo se **všechna** (schválení, zamítnutí, čekací listina) drží jako koncept a odešlou se najednou tlačítkem „Odeslat rozhodnutí“. Do odeslání člen vidí „čeká na posouzení“.
+- **H) Filtr podle kategorie** auta se nedělá (přihlášky jsou většinou buď americká auta, nebo tuning).
+- **I) „Doplň prosím“:** pořadatel místo zamítnutí požádá o víc fotek / informací; přihláška čeká na doplnění, člen dostane upozornění a po doplnění se vrátí k posouzení.
+- **J) Automatické schvalování** (volba u eventu): přihláška se schválí hned, do naplnění kapacity, pak čekací listina.
+- **K) Vlastní otázky u eventu:** krátký text, číslo, ano/ne, výběr z možností; pořadatel je nastaví, odpovědi vidí u přihlášky a v exportu.
+- **L) Potvrzení účasti:** pořadatel zvolí, kolik dní před eventem dostanou schválení výzvu „Potvrď, že přijedeš“. Kdo odpoví „Nepřijedu“, uvolní místo (posune se čekací listina). Kdo nepotvrdí, je v seznamu označený „nepotvrdil“ – místo uvolní pořadatel ručně.
+- **Verified – rychlá cesta:** viz 5.1 (rozhodnuto 17. 11. 2026).
 
 ### 5.2 Ticketing
 **Ve v1 není.** Registrace je jen žádost o účast. Vstupné se řeší mimo aplikaci (jako dosud).
