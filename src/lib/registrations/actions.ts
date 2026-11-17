@@ -197,7 +197,8 @@ export async function setRegistrationRating(
   if (!supabase) return { ok: false, error: "generic" };
   const { error } = await supabase.rpc("set_registration_rating", {
     p_registration_id: registrationId,
-    p_rating: rating,
+    // Generované typy neznají null u parametru funkce; databáze null přijímá (= smazat hodnocení)
+    p_rating: rating as number,
   });
   if (error) return { ok: false, error: toErrorKey(error.message) };
   revalidatePath("/", "layout");
