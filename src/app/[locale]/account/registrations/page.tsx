@@ -6,6 +6,7 @@ import { formatEventDates } from "@/lib/dates";
 import { listMyRegistrations } from "@/lib/data/registrations";
 import { PageShell } from "@/components/page-shell";
 import { CancelRegistrationButton } from "@/components/registrations/cancel-button";
+import { EditRegistration } from "@/components/registrations/edit-registration";
 import { RegistrationStatusBadge } from "@/components/registrations/status-badge";
 import { Alert } from "@/components/ui/alert";
 import { buttonClasses } from "@/components/ui/button";
@@ -102,6 +103,22 @@ async function MyRegistrationsList({
                       <p className="mt-1 whitespace-pre-line">{r.decision_message}</p>
                     ) : null}
                   </div>
+                ) : null}
+                {r.status === "approved" && r.event ? (
+                  <Link
+                    href={`/e/${r.event.slug}#ucastnici`}
+                    className="self-start text-sm font-semibold text-ink underline underline-offset-4"
+                  >
+                    {t("participantInfoLink")}
+                  </Link>
+                ) : null}
+                {r.canEdit ? (
+                  <EditRegistration
+                    registrationId={r.id}
+                    phone={r.contact_phone}
+                    email={r.contact_email}
+                    message={r.message}
+                  />
                 ) : null}
                 {r.canCancel ? <CancelRegistrationButton registrationId={r.id} /> : null}
               </li>

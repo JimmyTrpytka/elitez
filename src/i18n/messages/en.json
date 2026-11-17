@@ -660,7 +660,15 @@
       "unlimited": "Unlimited",
       "limited": "Limited"
     },
-    "mediaCapacityLabel": "How many media you'll accept"
+    "mediaCapacityLabel": "How many media you'll accept",
+    "approvalTitle": "Approval and info for participants",
+    "autoApproveLabel": "Approve automatically",
+    "autoApproveHint": "For open meets without car selection: applications are approved immediately (until capacity is full, then waitlist).",
+    "minPhotosLabel": "Minimum number of car photos",
+    "minPhotosHint": "A car with fewer photos can't be registered – the member gets a link to add them.",
+    "minPhotosOption": "{count, plural, =0 {No requirement} one {# photo} other {# photos}}",
+    "participantInfoLabel": "Info for approved participants",
+    "participantInfoHint": "Arrival, time, gate, parking, what to bring… Only approved participants (on the event page and in the approval email) and the organizer can see it."
   },
   "RegistrationStatus": {
     "pending": "Awaiting approval",
@@ -717,7 +725,14 @@
     "cancelConfirm": "Yes, cancel",
     "closedStarted": "The event started {date} – applications were only possible until it started.",
     "closedDeadline": "The deadline was {date}.",
-    "stickyRegister": "Register car"
+    "stickyRegister": "Register car",
+    "fewPhotos": "Has {count, plural, one {# photo} other {# photos}}, the organizer wants at least {min}",
+    "photoCount": "{count, plural, =0 {no photos} one {# photo} other {# photos}}",
+    "addPhotos": "Add photos to the car →",
+    "noPhotosWarning": "The car has no photos. Without photos the organizer can hardly judge it – we recommend adding some first.",
+    "minPhotosNote": "The organizer wants at least {min, plural, one {# photo} other {# photos}} of the car to judge it.",
+    "participantInfoTitle": "Info for participants",
+    "participantInfoHint": "Only approved participants and the organizer can see this."
   },
   "RegistrationErrors": {
     "not_signed_in": "You are not signed in.",
@@ -739,7 +754,9 @@
     "cancelled": "The applicant cancelled this application.",
     "message_too_long": "The message is too long.",
     "generic": "Something went wrong. Please try again.",
-    "crew_only": "This meet is for crew members only."
+    "crew_only": "This meet is for crew members only.",
+    "not_enough_photos": "The car doesn't have enough photos. Add them in your garage and register again.",
+    "not_editable": "The application can no longer be edited – the organizer has already decided."
   },
   "MyRegistrations": {
     "title": "My registrations",
@@ -755,7 +772,10 @@
       "rejected": "The organizer didn't accept the application this time.",
       "waitlist": "You're on the waitlist. If a spot opens up, you may be accepted.",
       "cancelled": "You cancelled this application."
-    }
+    },
+    "edit": "Edit application",
+    "editSaved": "Saved",
+    "participantInfoLink": "Info for participants →"
   },
   "Applications": {
     "title": "Applications",
@@ -838,7 +858,8 @@
       "from": "From",
       "page": "Page",
       "button": "All feedback"
-    }
+    },
+    "participantInfo": "Info for participants:"
   },
   "Notifications": {
     "title": "Notifications",

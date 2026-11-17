@@ -98,6 +98,8 @@ async function RegisterContent({
           eventId={event.id}
           vehicles={vehicles}
           email={ctx.email}
+          phone={ctx.lastPhone}
+          minPhotos={event.min_photos}
           profilePrivate={ctx.profilePrivate}
           selectionCriteria={event.selection_criteria}
         />

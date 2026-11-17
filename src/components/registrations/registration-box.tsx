@@ -4,6 +4,7 @@ import { formatDateTime } from "@/lib/dates";
 import type { EventView } from "@/lib/data/events";
 import {
   getMyRegistrationsForEvent,
+  getParticipantInfo,
   getRegistrationFormContext,
 } from "@/lib/data/registrations";
 import { registrationWindow } from "@/lib/registration-window";
@@ -18,7 +19,9 @@ export async function RegistrationBox({ event }: { event: EventView }) {
     getLocale(),
     getRegistrationFormContext(),
   ]);
-  const mine = ctx ? await getMyRegistrationsForEvent(event.id) : [];
+  const [mine, participantInfo] = ctx
+    ? await Promise.all([getMyRegistrationsForEvent(event.id), getParticipantInfo(event.id)])
+    : [[], null];
   const win = registrationWindow(event, ctx?.isVerified ?? false);
   const fmt = (iso: string) => formatDateTime(iso, locale, event.timezone);
 
@@ -107,6 +110,15 @@ export async function RegistrationBox({ event }: { event: EventView }) {
           <p className="mt-1 text-sm text-night-subtle">{t("capacityNote", { count: event.capacity })}</p>
         ) : null}
       </div>
+      {participantInfo ? (
+        <div id="ucastnici" className="scroll-mt-24 rounded-control bg-accent/10 p-4 ring-1 ring-accent/40">
+          <p className="font-display text-lg font-extrabold tracking-wide text-accent uppercase">
+            {t("participantInfoTitle")}
+          </p>
+          <p className="mt-1 text-xs text-night-subtle">{t("participantInfoHint")}</p>
+          <p className="mt-3 whitespace-pre-line text-white">{participantInfo}</p>
+        </div>
+      ) : null}
       {mine.length ? (
         <ul className="flex flex-col gap-2">
           {mine.map((r) => (

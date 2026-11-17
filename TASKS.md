@@ -223,6 +223,14 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 
 ---
 
+## Registrace na srazy – vychytání (17. 11. 2026, SPEC 5.1k)
+- [x] Část 1: minimum fotek (A), telefon z minula (B), úprava čekající přihlášky (C), informace pro schválené (E), automatické schvalování (J)
+- [ ] Část 2: rychlé procházení přihlášek (F), hvězdičky a oznámení najednou (G)
+- [ ] Část 3: „Doplň prosím“ (I), vlastní otázky (K)
+- [ ] Část 4: potvrzení účasti (L)
+
+---
+
 ## Milník 6 – Verified (členství v klubu)
 
 **Cíl:** prestižní status s ruční kontrolou.
@@ -234,6 +242,7 @@ Pravidla: SPEC.md 5.1g (navazuje na Milník 5c)
 4. Po rozhodnutí **automatické smazání videa** do 30 dnů, zachování výsledku
 5. Odznak Verified na profilu a v žádostech na eventech; odebrání statusu adminem
 6. Aplikace výhod: přednost, předstih, pozvánky na soukromé eventy
+7. **Rychlá cesta (17. 11. 2026):** žádost bez videa → admin rovnou schválí, nebo vyžádá video; známým lidem udělí admin Verified přímo
 
 Obrazovky: žádost o Verified, stav žádosti, admin fronta, správa pozvánek na event.
 

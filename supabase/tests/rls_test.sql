@@ -2139,6 +2139,108 @@ do $$ begin
 end $$;
 update public.badges set active = true where code = 'beta_tester';
 
+-- =====================================================================
+-- Registrace – část 1: fotky, automatické schválení, úprava, info pro schválené
+-- =====================================================================
+insert into auth.users (id, email, aud, role, instance_id)
+values ('00000000-0000-4000-a000-0000000f0a01', 'rls-test-fanda@example.invalid',
+        'authenticated', 'authenticated', '00000000-0000-0000-0000-000000000000');
+update public.profiles set username = 'rls_fanda' where id = '00000000-0000-4000-a000-0000000f0a01';
+insert into public.vehicles (id, owner_id, category, make, model, visibility)
+values ('00000000-0000-4000-b000-0000000f0a01', '00000000-0000-4000-a000-0000000f0a01', 'tuning', 'BMW', 'E30', 'public');
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity,
+   registration_opens_at, verified_head_start_hours, min_photos, auto_approve)
+values
+  ('00000000-0000-4000-e000-000000000020', '00000000-0000-4000-c000-00000000000a',
+   'rls-auto', 'Auto schválení', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', null, now() - interval '1 day', 0, 1, true),
+  ('00000000-0000-4000-e000-000000000021', '00000000-0000-4000-c000-00000000000a',
+   'rls-uprava', 'Úprava přihlášky', now() + interval '60 days', now() + interval '61 days',
+   'published', 'public', null, now() - interval '1 day', 0, 0, false);
+insert into public.event_participant_info (event_id, body)
+values ('00000000-0000-4000-e000-000000000020', 'Příjezd od 8:00, brána B');
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a01","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r public.event_registrations;
+begin
+  if exists (select 1 from public.event_participant_info where event_id = '00000000-0000-4000-e000-000000000020') then
+    raise exception 'FAIL: info pro účastníky vidí nepřihlášený člen';
+  end if;
+  begin
+    perform public.register_for_event('00000000-0000-4000-e000-000000000020',
+      '00000000-0000-4000-b000-0000000f0a01', '+420777333444', 'fanda@example.invalid', null, true, false);
+    raise exception 'FAIL: auto bez fotek přihlášené na event s minimem fotek';
+  exception when raise_exception then
+    if sqlerrm <> 'not_enough_photos' then raise; end if;
+  end;
+end $$;
+reset role;
+
+insert into public.vehicle_photos (vehicle_id) values ('00000000-0000-4000-b000-0000000f0a01');
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-0000000f0a01","role":"authenticated"}', true);
+set local role authenticated;
+do $$
+declare r public.event_registrations;
+begin
+  r := public.register_for_event('00000000-0000-4000-e000-000000000020',
+    '00000000-0000-4000-b000-0000000f0a01', '+420777333444', 'fanda@example.invalid', null, true, false);
+  if r.status <> 'approved' then raise exception 'FAIL: automatické schválení nefunguje'; end if;
+  if not exists (select 1 from public.event_participant_info where event_id = '00000000-0000-4000-e000-000000000020') then
+    raise exception 'FAIL: schválený účastník nevidí informace pro účastníky';
+  end if;
+  begin
+    perform public.update_registration(r.id, '+420777000000', 'fanda@example.invalid', null);
+    raise exception 'FAIL: schválenou přihlášku jde upravit';
+  exception when raise_exception then
+    if sqlerrm <> 'not_editable' then raise; end if;
+  end;
+  begin
+    insert into public.event_participant_info (event_id, body)
+    values ('00000000-0000-4000-e000-000000000021', 'Podvrh');
+    raise exception 'FAIL: účastník zapsal informace pro účastníky';
+  exception when insufficient_privilege then null;
+  end;
+  r := public.register_for_event('00000000-0000-4000-e000-000000000021',
+    '00000000-0000-4000-b000-0000000f0a01', '+420777333444', 'fanda@example.invalid', null, true, false);
+  r := public.update_registration(r.id, '+420777999888', 'Fanda@Example.invalid', 'Oprava');
+  if r.contact_phone <> '+420777999888' or r.message <> 'Oprava' then
+    raise exception 'FAIL: úprava čekající přihlášky nefunguje';
+  end if;
+  perform set_config('rls.fanda_reg', r.id::text, true);
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-000000000b0b","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  begin
+    perform public.update_registration(current_setting('rls.fanda_reg')::uuid, '+420111111111', 'x@example.invalid', null);
+    raise exception 'FAIL: cizí přihlášku jde upravit';
+  exception when raise_exception then
+    if sqlerrm <> 'not_allowed' then raise; end if;
+  end;
+end $$;
+reset role;
+
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-4000-a000-00000000a11c","role":"authenticated"}', true);
+set local role authenticated;
+do $$ begin
+  insert into public.event_participant_info (event_id, body)
+  values ('00000000-0000-4000-e000-000000000021', 'Parkování u haly');
+  if not exists (select 1 from public.event_participant_info where event_id = '00000000-0000-4000-e000-000000000020') then
+    raise exception 'FAIL: pořadatel nevidí informace pro účastníky';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

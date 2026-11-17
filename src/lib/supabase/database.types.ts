@@ -479,6 +479,42 @@ export type Database = {
           },
         ]
       }
+      event_participant_info: {
+        Row: {
+          body: string
+          event_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          body: string
+          event_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          body?: string
+          event_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_participant_info_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: true
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_participant_info_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_photos: {
         Row: {
           caption: string | null
@@ -664,6 +700,7 @@ export type Database = {
       events: {
         Row: {
           access: Database["public"]["Enums"]["event_access"]
+          auto_approve: boolean
           capacity: number | null
           category: Database["public"]["Enums"]["event_category"]
           country: string | null
@@ -679,6 +716,7 @@ export type Database = {
           lng: number | null
           media_capacity: number | null
           media_enabled: boolean
+          min_photos: number
           organizer_id: string
           program: string | null
           published_at: string | null
@@ -704,6 +742,7 @@ export type Database = {
         }
         Insert: {
           access?: Database["public"]["Enums"]["event_access"]
+          auto_approve?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -719,6 +758,7 @@ export type Database = {
           lng?: number | null
           media_capacity?: number | null
           media_enabled?: boolean
+          min_photos?: number
           organizer_id: string
           program?: string | null
           published_at?: string | null
@@ -744,6 +784,7 @@ export type Database = {
         }
         Update: {
           access?: Database["public"]["Enums"]["event_access"]
+          auto_approve?: boolean
           capacity?: number | null
           category?: Database["public"]["Enums"]["event_category"]
           country?: string | null
@@ -759,6 +800,7 @@ export type Database = {
           lng?: number | null
           media_capacity?: number | null
           media_enabled?: boolean
+          min_photos?: number
           organizer_id?: string
           program?: string | null
           published_at?: string | null
@@ -2041,6 +2083,10 @@ export type Database = {
         Returns: string
       }
       is_admin: { Args: never; Returns: boolean }
+      is_approved_participant: {
+        Args: { p_event_id: string }
+        Returns: boolean
+      }
       is_crew_manager: { Args: { p_crew_id: string }; Returns: boolean }
       is_event_organizer: { Args: { p_event_id: string }; Returns: boolean }
       is_organizer_crew_member: {
@@ -2444,6 +2490,41 @@ export type Database = {
         Returns: undefined
       }
       untag_vehicle_photo: { Args: { p_item_id: string }; Returns: undefined }
+      update_registration: {
+        Args: {
+          p_email: string
+          p_message: string
+          p_phone: string
+          p_registration_id: string
+        }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       user_streak: { Args: { p_user: string }; Returns: number }
       vehicle_creator_works: {
         Args: { p_vehicle_id: string }

@@ -24,6 +24,15 @@ describe("e-maily", () => {
     expect(mail.html).toContain("/cs/e/tuning-show-trojhali-2027");
   });
 
+  it("schválení nese informace pro účastníky (escapované)", () => {
+    const mail = renderEmail("registration_approved", "cs", {
+      ...payload,
+      participant_info: "Příjezd od 8:00, brána <B>",
+    });
+    expect(mail.text).toContain("Informace pro účastníky:\nPříjezd od 8:00, brána <B>");
+    expect(mail.html).toContain("brána &lt;B&gt;");
+  });
+
   it("anglická verze", () => {
     const mail = renderEmail("registration_waitlist", "en", payload);
     expect(mail.subject).toBe("Waitlist – Tuning show Trojhalí");

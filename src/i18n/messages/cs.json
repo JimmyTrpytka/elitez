@@ -660,7 +660,15 @@
       "unlimited": "Neomezeně",
       "limited": "Omezený počet"
     },
-    "mediaCapacityLabel": "Kolik médií přijmeš"
+    "mediaCapacityLabel": "Kolik médií přijmeš",
+    "approvalTitle": "Schvalování a informace pro účastníky",
+    "autoApproveLabel": "Schvalovat automaticky",
+    "autoApproveHint": "Pro volné srazy bez výběru aut: přihláška se schválí hned (do naplnění kapacity, pak čekací listina).",
+    "minPhotosLabel": "Minimální počet fotek auta",
+    "minPhotosHint": "Auto s menším počtem fotek nejde přihlásit – člen dostane odkaz na jejich přidání.",
+    "minPhotosOption": "{count, plural, =0 {Bez požadavku} one {# fotka} few {# fotky} other {# fotek}}",
+    "participantInfoLabel": "Informace pro schválené účastníky",
+    "participantInfoHint": "Příjezd, čas, brána, parkování, co s sebou… Uvidí je jen schválení (na stránce eventu a v e-mailu o schválení) a pořadatel."
   },
   "RegistrationStatus": {
     "pending": "Čeká na schválení",
@@ -717,7 +725,14 @@
     "cancelConfirm": "Ano, zrušit",
     "closedStarted": "Event začal {date} – přihlášky šlo podávat jen do jeho začátku.",
     "closedDeadline": "Uzávěrka byla {date}.",
-    "stickyRegister": "Přihlásit auto"
+    "stickyRegister": "Přihlásit auto",
+    "fewPhotos": "Má {count, plural, one {# fotku} few {# fotky} other {# fotek}}, pořadatel chce aspoň {min}",
+    "photoCount": "{count, plural, =0 {bez fotek} one {# fotka} few {# fotky} other {# fotek}}",
+    "addPhotos": "Přidat fotky k autu →",
+    "noPhotosWarning": "Auto nemá žádnou fotku. Bez fotek ho pořadatel těžko posoudí – doporučujeme nejdřív nějaké přidat.",
+    "minPhotosNote": "Pořadatel chce u auta aspoň {min, plural, one {# fotku} few {# fotky} other {# fotek}}, aby ho mohl posoudit.",
+    "participantInfoTitle": "Informace pro účastníky",
+    "participantInfoHint": "Vidí je jen schválení účastníci a pořadatel."
   },
   "RegistrationErrors": {
     "not_signed_in": "Nejsi přihlášen(a).",
@@ -739,7 +754,9 @@
     "cancelled": "Přihlášku uchazeč zrušil.",
     "message_too_long": "Zpráva je příliš dlouhá.",
     "generic": "Něco se pokazilo. Zkus to prosím znovu.",
-    "crew_only": "Tento sraz je jen pro členy crew."
+    "crew_only": "Tento sraz je jen pro členy crew.",
+    "not_enough_photos": "Auto nemá dost fotek. Přidej je v garáži a přihlas ho znovu.",
+    "not_editable": "Přihlášku už nejde upravit – pořadatel ji posoudil."
   },
   "MyRegistrations": {
     "title": "Moje registrace",
@@ -755,7 +772,10 @@
       "rejected": "Pořadatel přihlášku tentokrát nepřijal.",
       "waitlist": "Jsi na čekací listině. Když se uvolní místo, můžeš být přijat(a).",
       "cancelled": "Přihlášku jsi zrušil(a)."
-    }
+    },
+    "edit": "Upravit přihlášku",
+    "editSaved": "Uloženo",
+    "participantInfoLink": "Informace pro účastníky →"
   },
   "Applications": {
     "title": "Přihlášky",
@@ -838,7 +858,8 @@
       "from": "Od",
       "page": "Stránka",
       "button": "Všechny připomínky"
-    }
+    },
+    "participantInfo": "Informace pro účastníky:"
   },
   "Notifications": {
     "title": "Upozornění",

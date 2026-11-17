@@ -11,6 +11,7 @@ import { Field } from "@/components/ui/field";
 import { TextareaField } from "@/components/ui/textarea";
 import { submitRegistration, type RegistrationFormState } from "@/lib/registrations/actions";
 import { cn } from "@/lib/cn";
+import { Link } from "@/i18n/navigation";
 
 type VehicleOption = {
   id: string;
@@ -19,6 +20,8 @@ type VehicleOption = {
   year: number | null;
   visibility: "public" | "private";
   alreadyRegistered: boolean;
+  photoCount: number;
+  coverUrl: string | null;
 };
 
 const initial: RegistrationFormState = { status: "idle" };
@@ -27,12 +30,18 @@ export function RegistrationForm({
   eventId,
   vehicles,
   email,
+  phone,
+  minPhotos,
   profilePrivate,
   selectionCriteria,
 }: {
   eventId: string;
   vehicles: VehicleOption[];
   email: string;
+  /** Telefon z minulé přihlášky */
+  phone: string | null;
+  /** Minimální počet fotek auta (nastavuje pořadatel) */
+  minPhotos: number;
   profilePrivate: boolean;
   selectionCriteria: string | null;
 }) {
@@ -49,12 +58,14 @@ export function RegistrationForm({
     private_ack_required: "private_ack",
     vehicle_invalid: "vehicle_id",
     already_registered: "vehicle_id",
+    not_enough_photos: "vehicle_id",
   };
   const errField = state.status === "error" ? fieldOf[state.error] : undefined;
   const errMessage = state.status === "error" ? tErrors(state.error) : undefined;
   const errorFor = (name: string) => (errField === name ? errMessage : undefined);
   useScrollToError(state, errField, formRef);
-  const firstAvailable = vehicles.find((v) => !v.alreadyRegistered)?.id ?? "";
+  const unavailable = (v: VehicleOption) => v.alreadyRegistered || v.photoCount < minPhotos;
+  const firstAvailable = vehicles.find((v) => !unavailable(v))?.id ?? "";
   const [vehicleId, setVehicleId] = useState(firstAvailable);
   const selected = vehicles.find((v) => v.id === vehicleId);
   const needsPrivateAck = profilePrivate || selected?.visibility === "private";
@@ -69,40 +80,68 @@ export function RegistrationForm({
 
       <fieldset className="flex flex-col gap-2" data-field="vehicle_id">
         <legend className="mb-2 text-sm font-medium text-ink">{t("vehicleLabel")}</legend>
-        {vehicles.map((v) => (
-          <label
-            key={v.id}
-            className={cn(
-              "flex items-center gap-3 rounded-control border border-line p-4 transition-colors",
-              v.alreadyRegistered
-                ? "cursor-not-allowed opacity-50"
-                : "cursor-pointer has-[:checked]:border-ink has-[:checked]:bg-muted",
-            )}
-          >
-            <input
-              type="radio"
-              name="vehicle_id"
-              value={v.id}
-              disabled={v.alreadyRegistered}
-              checked={vehicleId === v.id}
-              onChange={() => setVehicleId(v.id)}
-              className="h-5 w-5 shrink-0 accent-ink"
-            />
-            <span className="flex-1">
-              <span className="block font-semibold text-ink">
-                {v.make} {v.model}
-                {v.year ? ` (${v.year})` : ""}
-              </span>
-              <span className="text-sm text-subtle">
-                {v.alreadyRegistered
-                  ? t("alreadyRegistered")
-                  : v.visibility === "private"
-                    ? t("privateVehicle")
-                    : t("publicVehicle")}
-              </span>
-            </span>
-          </label>
-        ))}
+        {minPhotos > 0 ? (
+          <p className="-mt-1 mb-1 text-sm text-subtle">{t("minPhotosNote", { min: minPhotos })}</p>
+        ) : null}
+        {vehicles.map((v) => {
+          const fewPhotos = v.photoCount < minPhotos;
+          const off = unavailable(v);
+          return (
+            <div key={v.id} className="flex flex-col">
+              <label
+                className={cn(
+                  "flex items-center gap-3 rounded-control border border-line p-3 transition-colors",
+                  off
+                    ? "cursor-not-allowed bg-muted/50"
+                    : "cursor-pointer has-[:checked]:border-ink has-[:checked]:bg-muted",
+                )}
+              >
+                <input
+                  type="radio"
+                  name="vehicle_id"
+                  value={v.id}
+                  disabled={off}
+                  checked={vehicleId === v.id}
+                  onChange={() => setVehicleId(v.id)}
+                  className="h-5 w-5 shrink-0 accent-ink"
+                />
+                <span className={cn("h-14 w-20 shrink-0 overflow-hidden rounded-md bg-muted", off && "opacity-50")}>
+                  {v.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={v.coverUrl} alt="" className="h-full w-full object-cover" />
+                  ) : null}
+                </span>
+                <span className={cn("min-w-0 flex-1", off && "opacity-60")}>
+                  <span className="block font-semibold text-ink">
+                    {v.make} {v.model}
+                    {v.year ? ` (${v.year})` : ""}
+                  </span>
+                  <span className="text-sm text-subtle">
+                    {v.alreadyRegistered
+                      ? t("alreadyRegistered")
+                      : fewPhotos
+                        ? t("fewPhotos", { count: v.photoCount, min: minPhotos })
+                        : [
+                            v.visibility === "private" ? t("privateVehicle") : t("publicVehicle"),
+                            t("photoCount", { count: v.photoCount }),
+                          ].join(" · ")}
+                  </span>
+                </span>
+              </label>
+              {!v.alreadyRegistered && fewPhotos ? (
+                <Link
+                  href={`/garage/${v.id}/edit`}
+                  className="mt-1 self-start px-1 text-sm font-semibold text-ink underline underline-offset-2"
+                >
+                  {t("addPhotos")}
+                </Link>
+              ) : null}
+            </div>
+          );
+        })}
+        {selected && selected.photoCount === 0 && minPhotos === 0 ? (
+          <Alert tone="info">{t("noPhotosWarning")}</Alert>
+        ) : null}
         <FieldMessage id="vehicle-message" error={errorFor("vehicle_id")} />
       </fieldset>
 
@@ -120,6 +159,7 @@ export function RegistrationForm({
           required
           minLength={5}
           maxLength={30}
+          defaultValue={phone ?? ""}
           placeholder="+420 777 123 456"
         />
         <Field

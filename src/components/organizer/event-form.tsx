@@ -44,11 +44,15 @@ export type EventFormValues = {
   registration_closes_at: string;
   media_enabled: boolean;
   media_capacity: string;
+  min_photos: number;
+  auto_approve: boolean;
+  participant_info: string;
   social: Partial<Record<"website_url" | "instagram_url" | "facebook_url" | "tiktok_url" | "youtube_url", string | null>>;
 };
 
 const initial: EventFormState = { status: "idle" };
 const HEAD_START = [0, 24, 72, 168, 720] as const;
+const MIN_PHOTOS = [0, 1, 2, 3, 4, 5] as const;
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -265,6 +269,41 @@ export function EventForm({
             <span className="block text-ink-soft">{t("priorityHint")}</span>
           </span>
         </label>
+      </Section>
+
+      <Section title={t("approvalTitle")}>
+        <label className="flex items-start gap-3 text-sm text-ink">
+          <input
+            type="checkbox"
+            name="auto_approve"
+            defaultChecked={values.auto_approve}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
+          />
+          <span>
+            <span className="font-semibold">{t("autoApproveLabel")}</span>
+            <span className="block text-ink-soft">{t("autoApproveHint")}</span>
+          </span>
+        </label>
+        <SelectField
+          label={t("minPhotosLabel")}
+          name="min_photos"
+          defaultValue={String(values.min_photos)}
+          hint={t("minPhotosHint")}
+        >
+          {MIN_PHOTOS.map((n) => (
+            <option key={n} value={n}>
+              {t("minPhotosOption", { count: n })}
+            </option>
+          ))}
+        </SelectField>
+        <TextareaField
+          label={t("participantInfoLabel")}
+          name="participant_info"
+          rows={6}
+          maxLength={5000}
+          defaultValue={values.participant_info}
+          hint={t("participantInfoHint")}
+        />
       </Section>
 
       <Section title={t("mediaTitle")}>

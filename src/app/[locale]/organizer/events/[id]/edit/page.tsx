@@ -7,6 +7,7 @@ import { getMyEvent, getMyOrganizer, listMySeasons } from "@/lib/data/events";
 import { PageShell } from "@/components/page-shell";
 import { EventForm } from "@/components/organizer/event-form";
 import { toEventFormValues } from "@/components/organizer/event-form-values";
+import { getParticipantInfo } from "@/lib/data/registrations";
 import { textLinkClass } from "@/components/auth/auth-shell";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,6 +41,7 @@ async function EditEvent({
     listMySeasons(organizer.id),
   ]);
   if (!event) notFound();
+  const participantInfo = await getParticipantInfo(event.id);
 
   return (
     <PageShell
@@ -52,7 +54,7 @@ async function EditEvent({
     >
       <EventForm
         allowCrewOnly={Boolean(organizer.crew_id)}
-        values={toEventFormValues(event)}
+        values={toEventFormValues(event, participantInfo)}
         seasons={seasons.map((s) => ({ id: s.id, name: s.name, year: s.year }))}
       />
     </PageShell>
