@@ -413,6 +413,11 @@ export type Database = {
         Row: {
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -428,6 +433,11 @@ export type Database = {
         Insert: {
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
@@ -566,6 +576,39 @@ export type Database = {
           },
         ]
       }
+      event_questions: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          kind: Database["public"]["Enums"]["event_question_kind"]
+          label: string
+          options: string[] | null
+          position: number
+          required: boolean
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["event_question_kind"]
+          label: string
+          options?: string[] | null
+          position?: number
+          required?: boolean
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["event_question_kind"]
+          label?: string
+          options?: string[] | null
+          position?: number
+          required?: boolean
+        }
+        Relationships: []
+      }
       event_registration_notes: {
         Row: {
           note: string
@@ -659,6 +702,11 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -680,6 +728,11 @@ export type Database = {
           consent_at?: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
@@ -701,6 +754,11 @@ export type Database = {
           consent_at?: string
           contact_email?: string
           contact_phone?: string
+          answers?: Json
+          info_replied_at?: string | null
+          info_reply?: string | null
+          info_request?: string | null
+          info_requested_at?: string | null
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
@@ -1855,6 +1913,11 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -1919,6 +1982,11 @@ export type Database = {
         Returns: {
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -1945,6 +2013,11 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2063,6 +2136,11 @@ export type Database = {
         Returns: {
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2094,6 +2172,11 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2387,6 +2470,7 @@ export type Database = {
           p_event_id: string
           p_message: string
           p_phone: string
+          p_answers?: Json
           p_private_ack: boolean
           p_vehicle_id: string
         }
@@ -2395,6 +2479,11 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2450,6 +2539,11 @@ export type Database = {
         Returns: {
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2599,6 +2693,81 @@ export type Database = {
           consent_at: string
           contact_email: string
           contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      request_registration_info: {
+        Args: { p_message: string; p_registration_id: string }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_message: string | null
+          event_id: string
+          id: string
+          message: string | null
+          private_vehicle_ack: boolean
+          rejection_reason:
+            | Database["public"]["Enums"]["rejection_reason"]
+            | null
+          status: Database["public"]["Enums"]["registration_status"]
+          updated_at: string
+          user_id: string
+          vehicle_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "event_registrations"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      reply_registration_info: {
+        Args: { p_registration_id: string; p_reply: string }
+        Returns: {
+          cancelled_at: string | null
+          consent_at: string
+          contact_email: string
+          contact_phone: string
+          answers: Json
+          info_replied_at: string | null
+          info_reply: string | null
+          info_request: string | null
+          info_requested_at: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -2668,6 +2837,7 @@ export type Database = {
       dream_status: "dreaming" | "planning" | "searching"
       email_status: "queued" | "sending" | "sent" | "failed"
       event_access: "public" | "verified_only" | "invite_only" | "crew_only"
+      event_question_kind: "text" | "number" | "boolean" | "choice"
       event_category:
         | "tuning"
         | "youngtimer"
@@ -2689,6 +2859,8 @@ export type Database = {
         | "audio"
         | "other"
       notification_type:
+        | "registration_info_requested"
+        | "registration_info_provided"
         | "registration_received"
         | "registration_approved"
         | "registration_rejected"
@@ -2880,6 +3052,7 @@ export const Constants = {
       dream_status: ["dreaming", "planning", "searching"],
       email_status: ["queued", "sending", "sent", "failed"],
       event_access: ["public", "verified_only", "invite_only", "crew_only"],
+      event_question_kind: ["text", "number", "boolean", "choice"],
       event_category: [
         "tuning",
         "youngtimer",
@@ -2903,6 +3076,8 @@ export const Constants = {
         "other",
       ],
       notification_type: [
+        "registration_info_requested",
+        "registration_info_provided",
         "registration_received",
         "registration_approved",
         "registration_rejected",

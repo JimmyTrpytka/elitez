@@ -13,6 +13,8 @@ import {
   type RegistrationStatus,
 } from "@/lib/data/registrations";
 import { StarRating } from "@/components/organizer/star-rating";
+import { RequestInfo } from "@/components/organizer/request-info";
+import { formatAnswer, getEventQuestions } from "@/lib/data/questions";
 import { hpToKw } from "@/lib/validation";
 import { PageShell } from "@/components/page-shell";
 import { Avatar } from "@/components/avatar";
@@ -63,8 +65,9 @@ async function RegistrationDetailContent({
   searchParams: SearchParams;
 }) {
   const [{ id, registrationId }, sp] = await Promise.all([params, searchParams]);
-  const [t, tVehicle, tMods, tReasons, locale, organizer] = await Promise.all([
+  const [t, tQuestions, tVehicle, tMods, tReasons, locale, organizer] = await Promise.all([
     getTranslations("Applications"),
+    getTranslations("Questions"),
     getTranslations("Vehicle"),
     getTranslations("Mods"),
     getTranslations("RejectionReason"),
@@ -90,13 +93,17 @@ async function RegistrationDetailContent({
     ...(verifiedOnly ? { verified: "1" } : {}),
     ...(sort === "rating" ? { sort: "rating" } : {}),
   };
-  const { rows: order } = await listEventRegistrations(event.id, {
-    status,
-    verifiedOnly,
-    verifiedFirst: event.verified_priority,
-    sort,
-    withCovers: false,
-  });
+  const [{ rows: order }, questions] = await Promise.all([
+    listEventRegistrations(event.id, {
+      status,
+      verifiedOnly,
+      verifiedFirst: event.verified_priority,
+      sort,
+      withCovers: false,
+    }),
+    getEventQuestions(event.id),
+  ]);
+  const answers = (reg.answers ?? {}) as Record<string, unknown>;
   const index = order.findIndex((r) => r.id === reg.id);
   const others = order.filter((r) => r.id !== reg.id);
   const next = index >= 0 ? order[index + 1] : others[0];
@@ -190,6 +197,40 @@ async function RegistrationDetailContent({
             nextHref={nextHref}
           />
         </Card>
+
+        <Card>
+          <h2 className="mb-1 text-lg font-semibold">{t("infoTitle")}</h2>
+          <p className="mb-4 text-sm text-subtle">{t("infoHint")}</p>
+          <RequestInfo
+            key={reg.id}
+            registrationId={reg.id}
+            request={reg.info_request}
+            requestedAt={reg.info_requested_at}
+            reply={reg.info_reply}
+            repliedAt={reg.info_replied_at}
+            canRequest={reg.status === "pending" || reg.status === "waitlist"}
+          />
+        </Card>
+
+        {questions.length ? (
+          <Card>
+            <h2 className="mb-4 text-lg font-semibold">{tQuestions("answersTitle")}</h2>
+            <dl className="grid gap-4 sm:grid-cols-2">
+              {questions.map((q) => {
+                const value = formatAnswer(answers[q.id], q.kind, {
+                  yes: tQuestions("yes"),
+                  no: tQuestions("no"),
+                });
+                return (
+                  <div key={q.id}>
+                    <dt className="text-sm text-subtle">{q.label}</dt>
+                    <dd className="font-semibold text-ink">{value || "—"}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </Card>
+        ) : null}
 
         {v?.photos.length ? (
           <PhotoGrid

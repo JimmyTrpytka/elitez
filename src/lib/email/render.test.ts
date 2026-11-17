@@ -33,6 +33,16 @@ describe("e-maily", () => {
     expect(mail.html).toContain("brána &lt;B&gt;");
   });
 
+  it("žádost o doplnění obsahuje text pořadatele a odkaz na Moje registrace", () => {
+    const mail = renderEmail("registration_info_requested", "cs", {
+      ...payload,
+      message: "Přidej prosím fotky interiéru.",
+    });
+    expect(mail.subject).toBe("Doplň prosím přihlášku – Tuning show Trojhalí");
+    expect(mail.text).toContain("Přidej prosím fotky interiéru.");
+    expect(mail.html).toContain("/cs/account/registrations");
+  });
+
   it("anglická verze", () => {
     const mail = renderEmail("registration_waitlist", "en", payload);
     expect(mail.subject).toBe("Waitlist – Tuning show Trojhalí");

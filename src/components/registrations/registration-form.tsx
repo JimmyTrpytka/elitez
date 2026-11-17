@@ -12,6 +12,8 @@ import { TextareaField } from "@/components/ui/textarea";
 import { submitRegistration, type RegistrationFormState } from "@/lib/registrations/actions";
 import { cn } from "@/lib/cn";
 import { Link } from "@/i18n/navigation";
+import { QuestionFields } from "./question-fields";
+import type { EventQuestion } from "@/lib/data/questions";
 
 type VehicleOption = {
   id: string;
@@ -34,6 +36,7 @@ export function RegistrationForm({
   minPhotos,
   profilePrivate,
   selectionCriteria,
+  questions = [],
 }: {
   eventId: string;
   vehicles: VehicleOption[];
@@ -44,6 +47,7 @@ export function RegistrationForm({
   minPhotos: number;
   profilePrivate: boolean;
   selectionCriteria: string | null;
+  questions?: EventQuestion[];
 }) {
   const t = useTranslations("Registration");
   const tErrors = useTranslations("RegistrationErrors");
@@ -59,6 +63,8 @@ export function RegistrationForm({
     vehicle_invalid: "vehicle_id",
     already_registered: "vehicle_id",
     not_enough_photos: "vehicle_id",
+    answer_required: "answers",
+    answers_invalid: "answers",
   };
   const errField = state.status === "error" ? fieldOf[state.error] : undefined;
   const errMessage = state.status === "error" ? tErrors(state.error) : undefined;
@@ -172,6 +178,8 @@ export function RegistrationForm({
           defaultValue={email}
         />
       </div>
+      <QuestionFields questions={questions} error={errorFor("answers")} />
+
       <TextareaField
         label={t("messageLabel")}
         name="message"

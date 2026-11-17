@@ -189,6 +189,16 @@ async function RegistrationsContent({
                       {r.draftStatus ? (
                         <span className="text-xs font-semibold text-subtle">{t("draftBadge")}</span>
                       ) : null}
+                      {r.info_requested_at && (r.status === "pending" || r.status === "waitlist") ? (
+                        <span
+                          className={cn(
+                            "rounded-full px-2 py-0.5 text-xs font-semibold",
+                            r.info_replied_at ? "bg-success-soft text-success" : "bg-muted text-ink",
+                          )}
+                        >
+                          {r.info_replied_at ? t("infoReplied") : t("infoWaiting")}
+                        </span>
+                      ) : null}
                     </span>
                   </div>
                   <p className="text-sm text-subtle">

@@ -9,6 +9,7 @@ import { Constants } from "@/lib/supabase/database.types";
 import type { Enums } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 import { processEmailOutbox } from "@/lib/email/outbox";
+import { answersFromForm } from "@/lib/data/questions";
 
 const UUID = /^[0-9a-f-]{36}$/i;
 
@@ -36,6 +37,9 @@ const KNOWN_ERRORS = [
   "not_editable",
   "crew_only",
   "invalid_rating",
+  "answer_required",
+  "answers_invalid",
+  "message_required",
 ] as const;
 
 export type RegistrationErrorKey = (typeof KNOWN_ERRORS)[number] | "generic";
@@ -86,6 +90,7 @@ export async function submitRegistration(
     p_message: text(formData, "message"),
     p_consent: formData.get("consent") === "on",
     p_private_ack: formData.get("private_ack") === "on",
+    p_answers: answersFromForm(formData),
   });
   if (error || !data) return { status: "error", error: toErrorKey(error?.message) };
 
@@ -218,5 +223,39 @@ export async function releaseDecisions(eventId: string): Promise<ReleaseResult> 
   if (error) return { ok: false, error: toErrorKey(error.message) };
   refresh();
   return { ok: true, count: data ?? 0 };
+}
+
+/** Pořadatel požádá uchazeče o doplnění (fotky, informace). Přijde mu upozornění a e-mail. */
+export async function requestRegistrationInfo(
+  registrationId: string,
+  message: string,
+): Promise<SimpleResult> {
+  if (!UUID.test(registrationId)) return { ok: false, error: "not_allowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("request_registration_info", {
+    p_registration_id: registrationId,
+    p_message: message.slice(0, 1100),
+  });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  refresh();
+  return { ok: true };
+}
+
+/** Uchazeč odpoví na žádost o doplnění. Pořadatel dostane upozornění. */
+export async function replyRegistrationInfo(
+  registrationId: string,
+  reply: string,
+): Promise<SimpleResult> {
+  if (!UUID.test(registrationId)) return { ok: false, error: "not_allowed" };
+  const supabase = await createClient();
+  if (!supabase) return { ok: false, error: "generic" };
+  const { error } = await supabase.rpc("reply_registration_info", {
+    p_registration_id: registrationId,
+    p_reply: reply.slice(0, 1100),
+  });
+  if (error) return { ok: false, error: toErrorKey(error.message) };
+  refresh();
+  return { ok: true };
 }
 

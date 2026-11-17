@@ -10,6 +10,7 @@ import {
   getRegistrationFormContext,
 } from "@/lib/data/registrations";
 import { registrationWindow } from "@/lib/registration-window";
+import { getEventQuestions } from "@/lib/data/questions";
 import { PageShell } from "@/components/page-shell";
 import { RegistrationForm } from "@/components/registrations/registration-form";
 import { Alert } from "@/components/ui/alert";
@@ -84,7 +85,9 @@ async function RegisterContent({
     );
   }
 
-  const mine = blocker ? [] : await getMyRegistrationsForEvent(event.id);
+  const [mine, questions] = blocker
+    ? [[], []]
+    : await Promise.all([getMyRegistrationsForEvent(event.id), getEventQuestions(event.id)]);
   const taken = new Set(mine.filter((r) => r.status !== "cancelled").map((r) => r.vehicle_id));
   const vehicles = ctx.vehicles.map((v) => ({ ...v, alreadyRegistered: taken.has(v.id) }));
   if (!blocker && vehicles.every((v) => v.alreadyRegistered)) {
@@ -102,6 +105,7 @@ async function RegisterContent({
           minPhotos={event.min_photos}
           profilePrivate={ctx.profilePrivate}
           selectionCriteria={event.selection_criteria}
+          questions={questions}
         />
       )}
     </PageShell>
