@@ -148,17 +148,17 @@ export function PhotoManager({
       {photos.length > 0 ? (
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {photos.map((photo, index) => (
-            <li key={photo.id} className="overflow-hidden rounded-control bg-muted">
-              <div className="relative aspect-[4/3]">
+            <li key={photo.id} className="min-w-0 overflow-hidden rounded-control bg-muted">
+              <div className="relative aspect-[4/3] w-full overflow-hidden">
                 {photo.urls.sm ? (
                   <button
                     type="button"
                     onClick={() => setViewing(index)}
                     aria-label={t("view", { n: index + 1 })}
-                    className="block h-full w-full cursor-zoom-in"
+                    className="absolute inset-0 block cursor-zoom-in"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo.urls.sm} alt="" className="h-full w-full object-cover" />
+                    <img src={photo.urls.sm} alt="" className="absolute inset-0 h-full w-full object-cover" />
                   </button>
                 ) : null}
                 {index === 0 ? (
