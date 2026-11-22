@@ -1716,6 +1716,24 @@ do $$ begin
   end if;
 end $$;
 
+-- Žádost o akreditaci: potvrzení žadateli (i e-mailem) a upozornění pořadateli
+do $$ begin
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and type = 'media_request_received'
+                   and event_id = '00000000-0000-4000-e000-000000000070') then
+    raise exception 'FAIL: žadatel o akreditaci nedostal potvrzení';
+  end if;
+  if not exists (select 1 from public.email_outbox
+                 where user_id = '00000000-0000-4000-a000-000000000b0b' and template = 'media_request_received') then
+    raise exception 'FAIL: potvrzení akreditace nejde e-mailem';
+  end if;
+  if not exists (select 1 from public.notifications
+                 where user_id = '00000000-0000-4000-a000-00000000a11c' and type = 'media_requested'
+                   and event_id = '00000000-0000-4000-e000-000000000070') then
+    raise exception 'FAIL: pořadatel nedostal upozornění na žádost o akreditaci';
+  end if;
+end $$;
+
 -- Veřejný profil Boba je teď vidět v seznamu médií (bez kontaktů)
 update public.profiles set visibility = 'public' where id = '00000000-0000-4000-a000-000000000b0b';
 select set_config('request.jwt.claims', '{"role":"anon"}', true);

@@ -11,6 +11,7 @@ import { Link } from "@/i18n/navigation";
 import { countryName } from "@/lib/countries";
 import { formatDateTime, formatEventDates, formatTime, hasEnded } from "@/lib/dates";
 import { getEventBySlug } from "@/lib/data/events";
+import { countPendingRegistrations } from "@/lib/data/registrations";
 import { listMyOrganizers } from "@/lib/organizer/current";
 import { EventMap } from "@/components/events/event-map";
 import { RegistrationBox } from "@/components/registrations/registration-box";
@@ -84,6 +85,7 @@ async function EventDetail({
     rules: translated?.[3]?.text || event.rules,
   };
   const isOrganizer = organizer.some((o) => o.id === event.organizer_id);
+  const pendingCount = isOrganizer ? ((await countPendingRegistrations([event.id]))[event.id] ?? 0) : 0;
   const cohosts = await listEventCohosts(event.id);
   const acceptedCohosts = cohosts.filter((c) => c.status === "accepted");
 
@@ -186,7 +188,17 @@ async function EventDetail({
         </div>
         <EventCohostBox event={event} myOrganizers={organizer} cohosts={cohosts} />
         {isOrganizer ? (
-          <div className="mb-8">
+          <div className="mb-8 flex flex-wrap gap-3">
+            {event.status !== "draft" ? (
+              <Link href={`/organizer/events/${event.id}/registrations`} className={buttonClasses("primary")}>
+                {t("registrations")}
+                {pendingCount > 0 ? (
+                  <span className="rounded-full bg-ink px-2 py-0.5 text-xs font-bold text-accent">
+                    {t("pendingCount", { count: pendingCount })}
+                  </span>
+                ) : null}
+              </Link>
+            ) : null}
             <Link href={`/organizer/events/${event.id}`} className={buttonClasses("light")}>
               {t("manage")}
             </Link>

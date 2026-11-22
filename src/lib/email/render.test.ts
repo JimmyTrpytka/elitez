@@ -43,6 +43,13 @@ describe("e-maily", () => {
     expect(mail.html).toContain("/cs/account/registrations");
   });
 
+  it("potvrzení žádosti o akreditaci médií vede na event", () => {
+    const mail = renderEmail("media_request_received", "cs", payload);
+    expect(mail.subject).toBe("Žádost o akreditaci odeslána – Tuning show Trojhalí");
+    expect(mail.text).toContain("dorazila k pořadateli");
+    expect(mail.html).toMatch(/\/cs\/e\//);
+  });
+
   it("anglická verze", () => {
     const mail = renderEmail("registration_waitlist", "en", payload);
     expect(mail.subject).toBe("Waitlist – Tuning show Trojhalí");

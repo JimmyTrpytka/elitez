@@ -23,6 +23,25 @@ async function currentUserId(supabase: TypedSupabaseClient): Promise<string | nu
   return data.user?.id ?? null;
 }
 
+/**
+ * Počet přihlášek ke schválení (stav „pending“) pro eventy pořadatele.
+ * RLS vrátí jen přihlášky eventů, které uživatel spravuje – u cizích je 0.
+ */
+export async function countPendingRegistrations(eventIds: string[]): Promise<Record<string, number>> {
+  const ids = eventIds.filter((id) => UUID.test(id));
+  if (ids.length === 0) return {};
+  const supabase = await createClient();
+  if (!supabase) return {};
+  const { data } = await supabase
+    .from("event_registrations")
+    .select("event_id")
+    .in("event_id", ids)
+    .eq("status", "pending");
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) counts[row.event_id] = (counts[row.event_id] ?? 0) + 1;
+  return counts;
+}
+
 // ---------------------------------------------------------------------
 // Uchazeč
 // ---------------------------------------------------------------------

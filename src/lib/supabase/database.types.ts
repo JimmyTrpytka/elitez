@@ -2911,6 +2911,8 @@ export type Database = {
         | "audio"
         | "other"
       notification_type:
+        | "media_request_received"
+        | "media_requested"
         | "registration_received"
         | "registration_approved"
         | "registration_rejected"
@@ -3129,6 +3131,8 @@ export const Constants = {
         "other",
       ],
       notification_type: [
+        "media_request_received",
+        "media_requested",
         "registration_received",
         "registration_approved",
         "registration_rejected",
