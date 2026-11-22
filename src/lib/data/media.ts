@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { signAvatarThumbs } from "@/lib/storage-sign";
 
 export type MediaRequest = Tables<"event_media_requests">;
 export type MediaStatus = "pending" | "approved" | "rejected" | "cancelled";
@@ -24,10 +23,7 @@ export async function listEventMedia(eventId: string): Promise<PublicMedia[]> {
   if (!supabase) return [];
   const { data } = await supabase.rpc("event_media_list", { p_event_id: eventId });
   const rows = data ?? [];
-  const urls = await signFiles(
-    supabase,
-    AVATARS_BUCKET,
-    rows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p)),
+  const urls = await signAvatarThumbs(supabase, rows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p)),
   );
   return rows.map((r) => ({
     userId: r.user_id,
@@ -88,10 +84,7 @@ export async function listEventMediaRequests(eventId: string): Promise<Organizer
     .neq("status", "cancelled")
     .order("created_at", { ascending: true });
   const rows = data ?? [];
-  const urls = await signFiles(
-    supabase,
-    AVATARS_BUCKET,
-    rows.map((r) => r.profile?.avatar_path).filter((p): p is string => Boolean(p)),
+  const urls = await signAvatarThumbs(supabase, rows.map((r) => r.profile?.avatar_path).filter((p): p is string => Boolean(p)),
   );
   return rows.map(({ profile, ...r }) => ({
     ...r,

@@ -1,4 +1,10 @@
 export const AVATARS_BUCKET = "avatars";
+
+/** Malá verze profilovky (128 px) vedle původní: `…/avatar-123.webp` → `…/avatar-123-sm.webp`. */
+export function avatarThumbPath(path: string): string {
+  const dot = path.lastIndexOf(".");
+  return dot > path.lastIndexOf("/") ? `${path.slice(0, dot)}-sm${path.slice(dot)}` : `${path}-sm`;
+}
 export const VEHICLE_PHOTOS_BUCKET = "vehicle-photos";
 
 export type PhotoSize = "sm" | "md" | "lg";

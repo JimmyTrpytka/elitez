@@ -215,3 +215,10 @@ Vlastník projektu **není programátor**. Proto:
 - Vlastní otázky: `event_questions` (RLS čtení přes viditelnost eventu), odpovědi `event_registrations.answers` (jsonb `{id otázky: hodnota}`), kontrola `clean_registration_answers` v `register_for_event(…, p_answers)`. Editor `QuestionsEditor` → `questions_json` → `parseQuestionsJson` (`src/lib/questions-parse.ts`, testy) → synchronizace v `saveEvent`. Formulář: pole `q_<id>` (`answersFromForm`). Export CSV má sloupec pro každou otázku.
 - Potvrzení účasti: `events.confirm_days_before`, `event_registrations.attendance_confirmed_at` / `confirm_requested_at`. Okno `attendance_window_open` (DB) = `attendanceWindowOpen` (`src/lib/registration-window.ts`, testy). Člen: `confirm_attendance`, „Nepřijedu“ = `cancel_registration`. Výzvy rozesílá `send_attendance_requests` (jen service_role) v denním cronu `/api/cron/emails`.
 
+
+## Technické poznámky (audit výkonu a UX, 22. 11. 2026)
+- Profilovky mají malou verzi `-sm` (128 px, `avatarThumbPath`). Seznamy, žebříčky a „Turbo dali“ podepisují přes `signAvatarThumbs` (chybí-li malá, použije velkou). Starší profilovky doplnil skript `scripts/backfill-avatar-thumbs.mjs` (bez `--write` jen počítá).
+- Úvodní fotky (auto, event, prohlížeč) mají `srcset` md/lg přes `photoSrcSet` (`src/lib/images/srcset.ts`) – telefon stáhne 1200 px místo 2048 px. `LightboxPhoto.medium`.
+- Do prohlížeče jdou jen překlady z `CLIENT_NAMESPACES` (`src/i18n/client-namespaces.ts`). Nová část překladů použitá přes `useTranslations` → přidat sem (hlídá test `client-namespaces.test.ts`).
+- Štítky na kartách eventů: `cardRegistrationBadge` (`src/lib/registration-window.ts`, testy) + `EventView.approvedCount` z `event_approved_counts` (jen počet, jen viditelné eventy s kapacitou).
+- Mřížky se zkracovaným textem (`truncate`) musí mít `grid-cols-1` (jinak se na mobilu roztáhnou přes okraj).

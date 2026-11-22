@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { parseSocialFields } from "@/lib/social-links";
 import { isSupportedCountry } from "@/lib/countries";
-import { AVATARS_BUCKET } from "@/lib/storage";
+import { AVATARS_BUCKET, avatarThumbPath } from "@/lib/storage";
 import { CREATOR_SKILLS } from "@/lib/portfolio/skills";
 import {
   LIMITS,
@@ -113,7 +113,7 @@ export async function setAvatar(path: string): Promise<{ ok: boolean }> {
   if (error) return { ok: false };
 
   if (current?.avatar_path && current.avatar_path !== path) {
-    await supabase.storage.from(AVATARS_BUCKET).remove([current.avatar_path]);
+    await supabase.storage.from(AVATARS_BUCKET).remove([current.avatar_path, avatarThumbPath(current.avatar_path)]);
   }
   revalidatePath("/", "layout");
   return { ok: true };
@@ -138,7 +138,7 @@ export async function removeAvatar(): Promise<{ ok: boolean }> {
   if (error) return { ok: false };
 
   if (current?.avatar_path) {
-    await supabase.storage.from(AVATARS_BUCKET).remove([current.avatar_path]);
+    await supabase.storage.from(AVATARS_BUCKET).remove([current.avatar_path, avatarThumbPath(current.avatar_path)]);
   }
   revalidatePath("/", "layout");
   return { ok: true };

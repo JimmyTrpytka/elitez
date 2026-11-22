@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Barlow_Condensed, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
+import { pickClientMessages } from "@/i18n/client-namespaces";
 import { locale as rootLocale } from "next/root-params";
 import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
@@ -63,11 +64,13 @@ export default async function LocaleLayout({
 }: LayoutProps<"/[locale]">) {
   const locale = await rootLocale();
   if (!hasLocale(routing.locales, locale)) notFound();
+  // Do prohlížeče jen překlady, které potřebují klientské komponenty
+  const messages = pickClientMessages(await getMessages());
 
   return (
     <html lang={locale} className={`${inter.variable} ${display.variable}`}>
       <body className="flex min-h-dvh flex-col">
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={messages}>
           {SITE.beta ? (
             <Suspense fallback={<BetaBannerFallback />}>
               <BetaBanner />

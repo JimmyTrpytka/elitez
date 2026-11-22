@@ -2265,6 +2265,13 @@ export type Database = {
         Returns: string[]
       }
       event_email_queue_count: { Args: { p_event_id: string }; Returns: number }
+      event_approved_counts: {
+        Args: { p_event_ids: string[] }
+        Returns: {
+          approved: number
+          event_id: string
+        }[]
+      }
       event_is_visible: { Args: { p_event_id: string }; Returns: boolean }
       event_media_list: {
         Args: { p_event_id: string }

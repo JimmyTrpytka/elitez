@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { AVATARS_BUCKET } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { signAvatarThumbs } from "@/lib/storage-sign";
 
 export type MemberCard = {
   id: string;
@@ -29,10 +28,7 @@ export async function listPublicMembers(
   });
   const rows = data ?? [];
   const pageRows = rows.slice(0, MEMBERS_PAGE_SIZE);
-  const avatars = await signFiles(
-    supabase,
-    AVATARS_BUCKET,
-    pageRows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p)),
+  const avatars = await signAvatarThumbs(supabase, pageRows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p)),
   );
   return {
     hasMore: rows.length > MEMBERS_PAGE_SIZE,

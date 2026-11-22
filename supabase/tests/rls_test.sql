@@ -2575,6 +2575,37 @@ do $$ declare r public.event_registrations; begin
 end $$;
 reset role;
 
+-- =====================================================================
+-- Počet schválených (štítky na kartách eventů): jen počet, jen viditelné eventy
+-- =====================================================================
+insert into public.events
+  (id, organizer_id, slug, title, starts_at, ends_at, status, access, capacity)
+values
+  ('00000000-0000-4000-e000-000000000090', '00000000-0000-4000-c000-00000000000a',
+   'rls-pocty', 'Počty', now() + interval '20 days', now() + interval '21 days', 'published', 'public', 5),
+  ('00000000-0000-4000-e000-000000000091', '00000000-0000-4000-c000-00000000000a',
+   'rls-pocty-pozvanky', 'Počty pozvánky', now() + interval '20 days', now() + interval '21 days', 'published', 'invite_only', 5);
+insert into public.event_registrations (event_id, vehicle_id, user_id, status, contact_phone, contact_email)
+values
+  ('00000000-0000-4000-e000-000000000090', '00000000-0000-4000-b000-0000000f0a01',
+   '00000000-0000-4000-a000-0000000f0a01', 'approved', '+420777000111', 'f@example.invalid'),
+  ('00000000-0000-4000-e000-000000000091', '00000000-0000-4000-b000-0000000f0a01',
+   '00000000-0000-4000-a000-0000000f0a01', 'approved', '+420777000111', 'f@example.invalid');
+
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+set local role anon;
+do $$ begin
+  if (select approved from public.event_approved_counts(array[
+        '00000000-0000-4000-e000-000000000090'::uuid]) ) is distinct from 1 then
+    raise exception 'FAIL: počet schválených u veřejného eventu nesedí';
+  end if;
+  if exists (select 1 from public.event_approved_counts(array[
+        '00000000-0000-4000-e000-000000000091'::uuid])) then
+    raise exception 'FAIL: počet schválených prozradil event na pozvánky';
+  end if;
+end $$;
+reset role;
+
 select 'OK: všechny testy pravidel přístupu prošly' as vysledek;
 
 rollback;

@@ -1,5 +1,6 @@
 import "server-only";
 import { createPublicClient, type TypedSupabaseClient } from "@/lib/supabase/server";
+import { AVATARS_BUCKET, avatarThumbPath } from "@/lib/storage";
 
 /** Platnost dočasných odkazů na soubory (90 minut). */
 const SIGNED_URL_TTL = 90 * 60;
@@ -86,5 +87,27 @@ export async function signFiles(
   }
 
   for (const [path, url] of await signWith(supabase, bucket, rest)) result.set(path, url);
+  return result;
+}
+
+/**
+ * Odkazy na MALÉ profilovky (seznamy, žebříčky, „Turbo dali“). Klíčem je původní
+ * cesta. Kde malá verze chybí (starší nahrání), použije se původní velká.
+ */
+export async function signAvatarThumbs(
+  supabase: TypedSupabaseClient,
+  paths: string[],
+): Promise<Map<string, string>> {
+  const unique = Array.from(new Set(paths));
+  const result = new Map<string, string>();
+  if (unique.length === 0) return result;
+  const thumbs = await signFiles(supabase, AVATARS_BUCKET, unique.map(avatarThumbPath));
+  const missing: string[] = [];
+  for (const path of unique) {
+    const url = thumbs.get(avatarThumbPath(path));
+    if (url) result.set(path, url);
+    else missing.push(path);
+  }
+  for (const [path, url] of await signFiles(supabase, AVATARS_BUCKET, missing)) result.set(path, url);
   return result;
 }

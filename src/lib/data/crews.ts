@@ -1,7 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, CREW_IMAGES_BUCKET, crewImagePath, type PhotoSize } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { CREW_IMAGES_BUCKET, crewImagePath, type PhotoSize } from "@/lib/storage";
+import { signAvatarThumbs, signFiles } from "@/lib/storage-sign";
 
 export type Crew = Tables<"crews">;
 export type CrewRole = Enums<"crew_role">;
@@ -119,7 +119,7 @@ export async function listCrewMembers(crewId: string, includePending: boolean): 
   const { data } = await supabase.rpc("crew_member_list", { p_crew_id: crewId, p_include_pending: includePending });
   const rows = data ?? [];
   const paths = rows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p));
-  const urls = await signFiles(supabase, AVATARS_BUCKET, paths);
+  const urls = await signAvatarThumbs(supabase, paths);
   return rows.map((r) => ({
     userId: r.user_id,
     username: r.username,
