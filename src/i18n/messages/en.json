@@ -499,7 +499,9 @@
     "showOriginal": "Show original",
     "showingOriginal": "You're viewing the original text.",
     "showTranslation": "Show translation",
-    "organizedByMany": "Organized by:"
+    "organizedByMany": "Organized by:",
+    "registrations": "Applications",
+    "pendingCount": "{count} to review"
   },
   "Organizer": {
     "title": "Organizer",

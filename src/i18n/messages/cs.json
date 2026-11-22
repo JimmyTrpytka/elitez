@@ -499,7 +499,9 @@
     "showOriginal": "Zobrazit originál",
     "showingOriginal": "Zobrazuješ původní text.",
     "showTranslation": "Zobrazit překlad",
-    "organizedByMany": "Pořádají:"
+    "organizedByMany": "Pořádají:",
+    "registrations": "Přihlášky",
+    "pendingCount": "{count} ke schválení"
   },
   "Organizer": {
     "title": "Pořadatel",
