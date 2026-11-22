@@ -2911,8 +2911,6 @@ export type Database = {
         | "audio"
         | "other"
       notification_type:
-        | "media_request_received"
-        | "media_requested"
         | "registration_received"
         | "registration_approved"
         | "registration_rejected"
@@ -2944,6 +2942,8 @@ export type Database = {
         | "registration_info_requested"
         | "registration_info_provided"
         | "attendance_confirm_request"
+        | "media_request_received"
+        | "media_requested"
       organizer_status: "pending" | "approved" | "suspended"
       registration_status:
         | "pending"
@@ -3131,8 +3131,6 @@ export const Constants = {
         "other",
       ],
       notification_type: [
-        "media_request_received",
-        "media_requested",
         "registration_received",
         "registration_approved",
         "registration_rejected",
@@ -3164,6 +3162,8 @@ export const Constants = {
         "registration_info_requested",
         "registration_info_provided",
         "attendance_confirm_request",
+        "media_request_received",
+        "media_requested",
       ],
       organizer_status: ["pending", "approved", "suspended"],
       registration_status: [
