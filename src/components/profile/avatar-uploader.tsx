@@ -10,7 +10,7 @@ import { loadImage, resizeImage } from "@/lib/images/resize";
 import { classifyUploadError, precheckImage, type UploadErrorKind } from "@/lib/images/upload-error";
 import { removeAvatar, setAvatar } from "@/lib/profile/actions";
 import { createBrowserSupabase } from "@/lib/supabase/client";
-import { AVATARS_BUCKET } from "@/lib/storage";
+import { AVATARS_BUCKET, avatarThumbPath } from "@/lib/storage";
 
 export function AvatarUploader({
   userId,
@@ -40,6 +40,8 @@ export function AvatarUploader({
     try {
       const bitmap = await loadImage(file);
       const image = await resizeImage(bitmap, 512, { square: true });
+      // Malá verze do seznamů a žebříčků (stejný formát jako velká – cesta se z ní odvodí)
+      const thumb = await resizeImage(bitmap, 128, { square: true, preferJpeg: image.format === "jpg" });
       bitmap.close();
       const path = `${userId}/avatar-${Date.now()}.${image.format}`;
       const supabase = createBrowserSupabase();
@@ -47,6 +49,10 @@ export function AvatarUploader({
         .from(AVATARS_BUCKET)
         .upload(path, image.blob, { contentType: image.contentType });
       if (error) throw error;
+      // Malá verze je jen zrychlení – když selže, zobrazí se velká
+      await supabase.storage
+        .from(AVATARS_BUCKET)
+        .upload(avatarThumbPath(path), thumb.blob, { contentType: thumb.contentType });
       const result = await setAvatar(path);
       if (!result.ok) throw new Error("setAvatar failed");
       router.refresh();

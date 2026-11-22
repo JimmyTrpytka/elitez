@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { formatEventDates } from "@/lib/dates";
 import type { EventView } from "@/lib/data/events";
 import { cn } from "@/lib/cn";
+import { cardRegistrationBadge } from "@/lib/registration-window";
 
 /** Den a měsíc pro „štítek“ s datem, např. 19 / ČVN. */
 function dateParts(iso: string, locale: string, tz: string) {
@@ -38,6 +39,20 @@ export async function EventCard({
   ]);
   const { day, month } = dateParts(event.starts_at, locale, event.timezone);
   const cover = size === "lg" ? (event.cover.lg ?? event.cover.md) : event.cover.md;
+  const badge = cardRegistrationBadge(event, event.approvedCount);
+  const badgeText = !badge
+    ? null
+    : badge.kind === "open"
+      ? t("badgeOpen")
+      : badge.kind === "last"
+        ? t("badgeLast", { left: badge.left })
+        : badge.kind === "full"
+          ? t("badgeFull")
+          : t("badgeSoon", {
+              date: new Intl.DateTimeFormat(locale, { timeZone: event.timezone, day: "numeric", month: "numeric" }).format(
+                new Date(badge.opensAt),
+              ),
+            });
 
   return (
     <Link
@@ -75,6 +90,19 @@ export async function EventCard({
         {event.status === "cancelled" ? (
           <span className="rounded-full bg-danger px-3 py-1 text-xs font-semibold text-white">
             {t("cancelled")}
+          </span>
+        ) : null}
+        {badgeText ? (
+          <span
+            className={cn(
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
+              badge?.kind === "open" || badge?.kind === "last"
+                ? "bg-accent text-ink"
+                : "border border-white/20 bg-black/50 text-white backdrop-blur",
+            )}
+          >
+            {badge?.kind === "last" ? <span aria-hidden className="h-1.5 w-1.5 animate-pulse rounded-full bg-ink" /> : null}
+            {badgeText}
           </span>
         ) : null}
         {event.access !== "public" ? (

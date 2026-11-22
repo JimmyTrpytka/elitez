@@ -158,7 +158,7 @@ export function PhotoManager({
                     className="absolute inset-0 block cursor-zoom-in"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo.urls.sm} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                    <img src={photo.urls.sm} alt="" loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover" />
                   </button>
                 ) : null}
                 {index === 0 ? (

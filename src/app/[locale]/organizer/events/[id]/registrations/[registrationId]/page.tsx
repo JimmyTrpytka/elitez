@@ -251,7 +251,7 @@ async function RegistrationDetailContent({
 
         {v?.photos.length ? (
           <PhotoGrid
-            photos={v.photos.map((p) => ({ id: p.id, thumb: p.md, full: p.lg ?? p.md }))}
+            photos={v.photos.map((p) => ({ id: p.id, thumb: p.md, medium: p.md, full: p.lg ?? p.md }))}
             alt={`${v.make} ${v.model}`}
           />
         ) : (

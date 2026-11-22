@@ -1,7 +1,7 @@
 import { createClient, type TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Enums, Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
+import { signAvatarThumbs, signFiles } from "@/lib/storage-sign";
 import { attendanceWindowOpen } from "@/lib/registration-window";
 
 export type Registration = Tables<"event_registrations">;
@@ -398,10 +398,7 @@ export async function getRegistrationDetail(registrationId: string): Promise<Reg
   ]);
   const [photoUrls, avatarUrls, { count }] = await Promise.all([
     signFiles(supabase, VEHICLE_PHOTOS_BUCKET, photoPaths),
-    signFiles(
-      supabase,
-      AVATARS_BUCKET,
-      data.applicant?.avatar_path ? [data.applicant.avatar_path] : [],
+    signAvatarThumbs(supabase, data.applicant?.avatar_path ? [data.applicant.avatar_path] : [],
     ),
     supabase
       .from("event_registrations")

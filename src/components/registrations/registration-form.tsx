@@ -114,7 +114,7 @@ export function RegistrationForm({
                 <span className={cn("h-14 w-20 shrink-0 overflow-hidden rounded-md bg-muted", off && "opacity-50")}>
                   {v.coverUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={v.coverUrl} alt="" className="h-full w-full object-cover" />
+                    <img src={v.coverUrl} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   ) : null}
                 </span>
                 <span className={cn("min-w-0 flex-1", off && "opacity-60")}>

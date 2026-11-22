@@ -100,7 +100,7 @@ async function Boards({ searchParams }: { searchParams: PageProps<"/[locale]/lea
       <section>
         <h2 className="mb-5 font-display text-4xl font-extrabold text-white uppercase">{t("vehiclesTitle")}</h2>
         {vehicles.length ? (
-          <ol className="grid gap-3 lg:grid-cols-2">
+          <ol className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {vehicles.map((v, i) => (
               <li key={v.vehicleId}>
                 <Link
@@ -132,7 +132,7 @@ async function Boards({ searchParams }: { searchParams: PageProps<"/[locale]/lea
         )}
       </section>
 
-      <div className="grid gap-14 lg:grid-cols-2 lg:gap-8">
+      <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-8">
         <MemberBoard title={t("garagesTitle")} members={garages} empty={t("empty")} />
         <MemberBoard
           title={t("fansTitle")}
@@ -142,7 +142,7 @@ async function Boards({ searchParams }: { searchParams: PageProps<"/[locale]/lea
         />
       </div>
 
-      <div className="grid gap-14 lg:grid-cols-2 lg:gap-8">
+      <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-8">
         <CrewBoard title={t("crewsActiveTitle")} hint={t("crewsActiveHint")} rows={crewsActive} empty={t("emptyCrews")} unit="turbo" />
         <CrewBoard title={t("crewsSizeTitle")} hint={t("crewsSizeHint")} rows={crewsSize} empty={t("emptyCrews")} unit="members" />
       </div>

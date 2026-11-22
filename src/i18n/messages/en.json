@@ -501,7 +501,11 @@
     "showTranslation": "Show translation",
     "organizedByMany": "Organized by:",
     "registrations": "Applications",
-    "pendingCount": "{count} to review"
+    "pendingCount": "{count} to review",
+    "badgeOpen": "Registration open",
+    "badgeLast": "{left, plural, one {Last spot} other {Last # spots}}",
+    "badgeFull": "Full · waitlist",
+    "badgeSoon": "Registration from {date}"
   },
   "Organizer": {
     "title": "Organizer",

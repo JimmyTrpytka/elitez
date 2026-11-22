@@ -21,6 +21,7 @@ import { EventCohostBox } from "@/components/cohosts/event-cohost-box";
 import { EventGallerySection } from "@/components/gallery/event-gallery-section";
 import { EventAccessBadge, EventStatusBadge } from "@/components/events/status-badge";
 import { Alert } from "@/components/ui/alert";
+import { photoSrcSet } from "@/lib/images/srcset";
 import { DisplayHeading } from "@/components/brand";
 import { buttonClasses } from "@/components/ui/button";
 
@@ -96,14 +97,17 @@ async function EventDetail({
   ]
     .filter(Boolean)
     .join(", ");
+  // Navigace: podle souřadnic z mapy, jinak podle adresy
   const navigateUrl =
     event.lat !== null && event.lng !== null
       ? `https://www.google.com/maps/dir/?api=1&destination=${event.lat},${event.lng}`
-      : null;
+      : place
+        ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place)}`
+        : null;
 
-  const facts: Array<[string, string]> = [
+  const facts: Array<[string, string] | [string, string, string | null]> = [
     [t("when"), `${formatEventDates(event.starts_at, event.ends_at, locale, event.timezone)}, ${formatTime(event.starts_at, locale, event.timezone)}–${formatTime(event.ends_at, locale, event.timezone)}`],
-    ...(place ? [[t("where"), place] as [string, string]] : []),
+    ...(place ? [[t("where"), place, navigateUrl] as [string, string, string | null]] : []),
     [t("category"), tCat(event.category)],
     ...(event.capacity ? [[t("capacity"), t("capacityValue", { count: event.capacity })] as [string, string]] : []),
     ...(event.registration_opens_at
@@ -125,6 +129,8 @@ async function EventDetail({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={event.cover.lg}
+            {...photoSrcSet(event.cover.md, event.cover.lg)}
+            fetchPriority="high"
             alt=""
             className="absolute inset-0 h-full w-full object-cover opacity-70"
           />
@@ -231,10 +237,22 @@ async function EventDetail({
         ) : null}
 
         <dl className="mb-12 grid gap-x-8 gap-y-6 border-y border-white/10 py-8 sm:grid-cols-2">
-          {facts.map(([label, value]) => (
+          {facts.map(([label, value, href]) => (
             <div key={label}>
               <dt className="text-xs font-semibold tracking-[0.18em] text-night-subtle uppercase">{label}</dt>
               <dd className="mt-1 text-lg font-semibold text-white">{value}</dd>
+              {href ? (
+                <dd className="mt-2">
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent underline decoration-accent/50 decoration-2 underline-offset-4 hover:decoration-accent"
+                  >
+                    {t("navigate")} <span aria-hidden>↗</span>
+                  </a>
+                </dd>
+              ) : null}
             </div>
           ))}
         </dl>

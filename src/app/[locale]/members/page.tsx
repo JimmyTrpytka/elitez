@@ -74,7 +74,7 @@ async function MembersList({
           {search ? t("noResults") : t("empty")}
         </p>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((m) => {
             const name = m.displayName ?? m.username;
             const place = [m.city, m.country ? countryName(m.country, locale) : null]
@@ -87,9 +87,9 @@ async function MembersList({
                   className="group flex items-center gap-4 rounded-card bg-night-soft p-4 ring-1 ring-white/10 transition-all hover:-translate-y-0.5 hover:ring-accent/40"
                 >
                   <Avatar url={m.avatarUrl} name={name} size={56} />
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="truncate font-display text-2xl leading-tight font-extrabold text-white uppercase">{name}</p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <p className="min-w-0 truncate font-display text-2xl leading-tight font-extrabold text-white uppercase">{name}</p>
                       {m.verified ? <Badge>Verified</Badge> : null}
                     </div>
                     <p className="truncate text-sm text-night-subtle">

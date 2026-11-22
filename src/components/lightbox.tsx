@@ -1,5 +1,6 @@
 "use client";
 
+import { photoSrcSet } from "@/lib/images/srcset";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toggleTurbo } from "@/lib/social/actions";
 import { useTranslations } from "next-intl";
@@ -18,7 +19,10 @@ export type LightboxPhoto = {
   thumb: string | null;
   /** Velká verze (do prohlížeče) */
   full: string | null;
+  /** Střední verze (1200 px) – telefon ji dostane místo velké (srcset) */
+  medium?: string | null;
 };
+
 
 /**
  * Prohlížeč fotek přes celou obrazovku:
@@ -122,6 +126,7 @@ export function Lightbox({
             <img
               key={photo.id}
               src={photo.full ?? photo.thumb ?? ""}
+              {...photoSrcSet(photo.medium, photo.full)}
               alt={`${alt} – ${index + 1}`}
               className="max-h-[calc(100svh-7rem)] max-w-full touch-manipulation rounded-control object-contain select-none"
               draggable={false}
@@ -330,6 +335,8 @@ export function HeroGallery({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={cover.full}
+              {...photoSrcSet(cover.medium, cover.full)}
+              fetchPriority="high"
               alt={alt}
               className="mx-auto max-h-[82vh] min-h-[50svh] w-full object-cover"
             />

@@ -72,3 +72,30 @@ export function attendanceWindowOpen(
   return now >= start - confirmDaysBefore * 24 * 60 * 60 * 1000 && now < start;
 }
 
+
+export type CardBadge =
+  | { kind: "open" }
+  | { kind: "last"; left: number }
+  | { kind: "full" }
+  | { kind: "soon"; opensAt: string };
+
+/**
+ * Štítek na kartě eventu v seznamu: registrace otevřená / poslední místa /
+ * plno (čekací listina) / registrace od… Čas se bere jako pro Verified,
+ * aby karta ukázala nejbližší otevření (detail pak vysvětlí podrobnosti).
+ */
+export function cardRegistrationBadge(
+  event: RegistrationEventFields & { capacity: number | null },
+  approvedCount: number | null,
+  now: Date = new Date(),
+): CardBadge | null {
+  const w = registrationWindow(event, true, now);
+  if (w.kind === "not_open_yet") return { kind: "soon", opensAt: w.opensAt };
+  if (w.kind !== "open") return null;
+  if (event.capacity !== null && approvedCount !== null) {
+    const left = event.capacity - approvedCount;
+    if (left <= 0) return { kind: "full" };
+    if (left <= Math.max(2, Math.ceil(event.capacity * 0.1))) return { kind: "last", left };
+  }
+  return { kind: "open" };
+}

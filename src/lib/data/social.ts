@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { Database, Tables } from "@/lib/supabase/database.types";
-import { AVATARS_BUCKET, VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { VEHICLE_PHOTOS_BUCKET, vehiclePhotoPath } from "@/lib/storage";
+import { signAvatarThumbs, signFiles } from "@/lib/storage-sign";
 
 /** Turbo/sledování: počty čte databáze funkcemi, které vrací jen veřejná data. */
 
@@ -95,7 +95,7 @@ export async function listTurboGivers(
   });
   const rows = data ?? [];
   const paths = rows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p));
-  const urls = await signFiles(supabase, AVATARS_BUCKET, paths);
+  const urls = await signAvatarThumbs(supabase, paths);
   return rows.map((r) => ({
     username: r.username,
     displayName: r.display_name,
@@ -189,7 +189,7 @@ export async function getLeaderboards(period: LeaderboardPeriod, limit = 10) {
   const avatarPaths = memberRows.map((r) => r.avatar_path).filter((p): p is string => Boolean(p));
   const [covers, avatars] = await Promise.all([
     signFiles(supabase, VEHICLE_PHOTOS_BUCKET, coverPaths),
-    signFiles(supabase, AVATARS_BUCKET, avatarPaths),
+    signAvatarThumbs(supabase, avatarPaths),
   ]);
 
   const vehicles: LeaderboardVehicle[] = vehicleRows.map((r) => ({

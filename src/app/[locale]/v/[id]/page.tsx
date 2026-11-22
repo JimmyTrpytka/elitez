@@ -81,7 +81,7 @@ async function PublicVehicle({ params }: { params: PageProps<"/[locale]/v/[id]">
   return (
     <article className="flex-1 bg-night pb-20 text-night-text">
       <HeroGallery
-        photos={vehicle.photos.map((p) => ({ id: p.id, thumb: p.urls.md ?? null, full: p.urls.lg ?? p.urls.md ?? null }))}
+        photos={vehicle.photos.map((p) => ({ id: p.id, thumb: p.urls.md ?? null, medium: p.urls.md ?? null, full: p.urls.lg ?? p.urls.md ?? null }))}
         alt={title}
         galleryTitle={t("gallery")}
         turbo={

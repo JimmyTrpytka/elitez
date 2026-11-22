@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getMyOrganizer } from "@/lib/data/events";
 import { ORGANIZER_LOGOS_BUCKET, organizerLogoPath } from "@/lib/storage";
-import { signFiles } from "@/lib/storage-sign";
+import { signAvatarThumbs, signFiles } from "@/lib/storage-sign";
 import { createClient } from "@/lib/supabase/server";
 import { PageShell } from "@/components/page-shell";
 import { OrganizerProfileForm } from "@/components/organizer/organizer-profile-form";
@@ -13,7 +13,6 @@ import { OrganizerLogoUpload } from "@/components/organizer/organizer-logo-uploa
 import { CoOrganizers } from "@/components/organizer/co-organizers";
 import { DeleteOrganizer } from "@/components/organizer/delete-organizer";
 import { getCurrentUser } from "@/lib/auth/user";
-import { AVATARS_BUCKET } from "@/lib/storage";
 import { textLinkClass } from "@/components/auth/auth-shell";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,7 +63,7 @@ async function Content() {
     : { count: null };
   const canDelete = Boolean(canManage) && eventCount === 0;
   const avatarPaths = (memberRows ?? []).map((m) => m.avatar_path).filter((x): x is string => Boolean(x));
-  const avatarUrls = supabaseForMembers ? await signFiles(supabaseForMembers, AVATARS_BUCKET, avatarPaths) : new Map<string, string>();
+  const avatarUrls = supabaseForMembers ? await signAvatarThumbs(supabaseForMembers, avatarPaths) : new Map<string, string>();
   const coMembers = (memberRows ?? []).map((m) => ({
     userId: m.user_id,
     username: m.username ?? "",

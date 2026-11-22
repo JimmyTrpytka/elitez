@@ -13,6 +13,8 @@ export type EventView = EventRow & {
   organizerName: string | null;
   organizerSlug: string | null;
   seasonName: string | null;
+  /** Počet schválených (jen u eventů s kapacitou, jinak null) – pro štítky na kartách */
+  approvedCount: number | null;
 };
 
 async function withCovers(
@@ -25,9 +27,17 @@ async function withCovers(
       ? sizes.map((s) => eventImagePath(r.cover_path!, s, r.cover_format!))
       : [],
   );
-  const urls = await signFiles(supabase, EVENT_IMAGES_BUCKET, paths);
+  const withCapacity = rows.filter((r) => r.capacity !== null).map((r) => r.id);
+  const [urls, counts] = await Promise.all([
+    signFiles(supabase, EVENT_IMAGES_BUCKET, paths),
+    withCapacity.length
+      ? supabase.rpc("event_approved_counts", { p_event_ids: withCapacity }).then(({ data }) => data ?? [])
+      : Promise.resolve([]),
+  ]);
+  const approved = new Map(counts.map((c) => [c.event_id, c.approved]));
   return rows.map(({ organizer, season, ...r }) => ({
     ...r,
+    approvedCount: approved.get(r.id) ?? null,
     organizerName: organizer?.name ?? null,
     organizerSlug: organizer?.slug ?? null,
     seasonName: season?.name ?? null,
