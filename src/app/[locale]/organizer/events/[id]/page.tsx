@@ -167,7 +167,7 @@ async function ManageEvent({
             options={allOrganizers.filter((o) => o.id !== event.organizer_id).map((o) => ({ slug: o.slug, name: o.name }))}
           />
         </Card>
-        <Card>
+        <Card id="media" className="scroll-mt-24">
           <h2 className="mb-1 text-lg font-semibold">{tMedia("organizerTitle")}</h2>
           <p className="mb-4 text-sm text-ink-soft">
             {event.media_enabled

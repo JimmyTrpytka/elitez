@@ -919,6 +919,11 @@
       "heading": "Přijedeš?",
       "body": "Ahoj {name},\n\n{event} ({when}) se blíží a tvoje vozidlo {vehicle} je mezi schválenými. Potvrď prosím jedním klepnutím, že přijedeš. Pokud nemůžeš, dej vědět „Nepřijedu“ – místo dostane někdo z čekací listiny.",
       "button": "Potvrdit účast"
+    },
+    "mediaReceived": {
+      "subject": "Žádost o akreditaci odeslána – {event}",
+      "heading": "Žádost o akreditaci je odeslaná",
+      "body": "Ahoj {name},\n\ntvoje žádost o akreditaci médií na {event} ({when}) dorazila k pořadateli. Jakmile rozhodne, dáme ti vědět.\n\nŽádost najdeš a případně zrušíš v sekci Moje registrace."
     }
   },
   "Notifications": {
@@ -1040,6 +1045,14 @@
       "attendance_confirm_request": {
         "title": "Potvrď účast: {event}",
         "text": "Blíží se {event}. Potvrď prosím, že přijedeš s vozidlem {vehicle}, nebo uvolni místo."
+      },
+      "media_request_received": {
+        "title": "Žádost o akreditaci odeslána",
+        "text": "Tvoje žádost o akreditaci médií na {event} dorazila k pořadateli. Jakmile rozhodne, dáme ti vědět."
+      },
+      "media_requested": {
+        "title": "Nová žádost o akreditaci",
+        "text": "{name} žádá o akreditaci médií na {event}."
       }
     },
     "openVehicle": "Zobrazit auto",
@@ -1065,7 +1078,8 @@
     "turboPortfolioTitle": "Turbo pro tvou práci!",
     "turboPortfolioText": "{who} {count, plural, one {dal(a) turbo} other {dali turbo}} tvé práci v portfoliu.",
     "openPortfolio": "Zobrazit portfolio",
-    "openApplication": "Otevřít přihlášku"
+    "openApplication": "Otevřít přihlášku",
+    "openMediaRequests": "Otevřít žádosti médií"
   },
   "Broadcast": {
     "title": "Zprávy účastníkům",
