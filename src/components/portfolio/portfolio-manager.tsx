@@ -260,12 +260,12 @@ function ManagedItem({
 
   return (
     <li className="flex flex-col overflow-hidden rounded-card border border-line bg-surface">
-      <div className="relative aspect-[4/3] bg-night">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-night">
         {item.thumbUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={item.thumbUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
+          <img src={item.thumbUrl} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
-          <div className="glow-accent flex h-full w-full items-center justify-center text-white/70">
+          <div className="glow-accent absolute inset-0 flex items-center justify-center text-white/70">
             {item.video ? <VideoProviderIcon provider={item.video.provider} className="h-12 w-12" /> : null}
           </div>
         )}
