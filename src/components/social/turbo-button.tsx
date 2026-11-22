@@ -113,7 +113,8 @@ export function TurboButton({
         className={cn(
           base,
           "cursor-pointer disabled:cursor-wait",
-          state.given && "bg-accent/15 text-accent ring-accent/60 hover:bg-accent/25",
+          // Dané turbo = plně žluté (jako zakliknutý like), na žluté černý text
+          state.given && "bg-accent text-ink ring-accent hover:bg-accent-strong",
         )}
       >
         <span key={spin} className={cn("inline-flex", spin > 0 && state.given && "turbo-spin")}>
