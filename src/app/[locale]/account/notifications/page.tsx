@@ -235,6 +235,24 @@ async function NotificationsList() {
           eventTitle: p.event_title,
         };
       }
+      case "media_request_received":
+        return {
+          title: t("types.media_request_received.title", { event: p.event_title ?? "" }),
+          text: t("types.media_request_received.text", { event: p.event_title ?? "" }),
+          href: "/account/registrations",
+          linkLabel: t("openRegistrations"),
+          eventTitle: p.event_title,
+        };
+      case "media_requested": {
+        const v = { event: p.event_title ?? "", name: p.name ?? "" };
+        return {
+          title: t("types.media_requested.title", v),
+          text: t("types.media_requested.text", v),
+          href: p.event_id ? `/organizer/events/${p.event_id}#media` : "/organizer",
+          linkLabel: t("openMediaRequests"),
+          eventTitle: p.event_title,
+        };
+      }
       case "organizer_member_added":
         return {
           title: t("types.organizer_member_added.title", { organizer: p.organizer_name ?? "" }),

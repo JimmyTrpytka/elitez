@@ -921,6 +921,11 @@
       "heading": "Are you coming?",
       "body": "Hi {name},\n\n{event} ({when}) is coming up and your {vehicle} is among the approved. Please confirm with one tap that you're coming. If you can't, choose “Not coming” – the spot goes to someone on the waitlist.",
       "button": "Confirm attendance"
+    },
+    "mediaReceived": {
+      "subject": "Accreditation request sent – {event}",
+      "heading": "Your accreditation request is in",
+      "body": "Hi {name},\n\nyour media accreditation request for {event} ({when}) has reached the organizer. We'll let you know once they decide.\n\nYou can find (or cancel) the request in My registrations."
     }
   },
   "Notifications": {
@@ -1042,6 +1047,14 @@
       "attendance_confirm_request": {
         "title": "Confirm attendance: {event}",
         "text": "{event} is coming up. Please confirm you're coming with {vehicle}, or free your spot."
+      },
+      "media_request_received": {
+        "title": "Accreditation request sent",
+        "text": "Your media accreditation request for {event} has reached the organizer. We'll let you know once they decide."
+      },
+      "media_requested": {
+        "title": "New accreditation request",
+        "text": "{name} is requesting media accreditation for {event}."
       }
     },
     "openVehicle": "View car",
@@ -1067,7 +1080,8 @@
     "turboPortfolioTitle": "A turbo for your work!",
     "turboPortfolioText": "{who} gave your portfolio work a turbo.",
     "openPortfolio": "View portfolio",
-    "openApplication": "Open application"
+    "openApplication": "Open application",
+    "openMediaRequests": "Open media requests"
   },
   "Broadcast": {
     "title": "Messages to participants",
